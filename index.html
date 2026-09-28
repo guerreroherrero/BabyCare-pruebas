@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BabyCare v1.2.2 - Control Completo del Bebé</title>
+  <title>BabyCare v1.3.0 - Control Completo del Bebé</title>
   
   <link rel="icon" type="image/png" sizes="192x192" href="https://img.icons8.com/emoji/192/baby-emoji.png">
   <link rel="apple-touch-icon" href="https://img.icons8.com/emoji/192/baby-emoji.png">
@@ -163,7 +163,7 @@
     .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
 
     .btn-submit { width: 100%; padding: 0.65rem; border-radius: 10px; border: none; background: var(--primary); color: white; font-size: 0.9rem; font-weight: 800; cursor: pointer; }
-    .btn-danger { background: var(--danger); color: white; border: none; padding: 0.5rem 1rem; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.8rem; margin-top: 10px; }
+    .btn-danger { background: var(--danger); color: white; border: none; padding: 0.5rem 1rem; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.8rem; margin-top: 10px; width: 100%; }
 
     .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 0.6rem 0; z-index: 90; }
     .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-muted); font-size: 0.72rem; font-weight: 800; cursor: pointer; text-decoration: none; }
@@ -188,7 +188,7 @@
   <header>
     <div class="brand">
       <div class="brand-icon">👶</div>
-      <div class="brand-title">BabyCare <small style="font-size:0.75rem; color:#555; font-weight:800;">v1.2.2</small></div>
+      <div class="brand-title">BabyCare <small style="font-size:0.75rem; color:#555; font-weight:800;">v1.3.0</small></div>
     </div>
     <button class="burger-btn" onclick="openDrawer()"><i data-lucide="menu"></i></button>
   </header>
@@ -287,9 +287,9 @@
       </div>
     </div>
 
-    <!-- TAB 2: Calendario, Gráfico de Barras con Desplegable y Matriz Semanal de 24h -->
+    <!-- TAB 2: Calendario, Gráfico de Barras y Matriz 24h -->
     <div class="tab-content" id="tab-calendar">
-      <!-- 1. Vista Mensual de Calendario -->
+      <!-- Vista Mensual -->
       <div class="card">
         <div class="calendar-header">
           <button class="burger-btn" onclick="prevMonth()"><i data-lucide="chevron-left"></i></button>
@@ -299,7 +299,7 @@
         <div class="calendar-grid" id="calendarGrid"></div>
       </div>
 
-      <!-- 2. Gráfica de Barras Interactivas con Desplegable -->
+      <!-- Gráfico de Barras -->
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; flex-wrap:wrap; gap:8px;">
           <h3 style="font-size:1rem; font-weight:800;" id="txt-bar-chart-title">Análisis de Frecuencias y Hábitos</h3>
@@ -311,13 +311,20 @@
         <canvas id="barRoutinesChart" height="180"></canvas>
       </div>
 
-      <!-- 3. MATRIZ SEMANAL DE RUTINA DE 24 HORAS EN CALENDARIO (AMPLIADA A 576px CON SUB-COLUMNAS PARALELAS) -->
+      <!-- Matriz Semanal 24 Horas -->
       <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
-          <h3 style="font-size:1.05rem; font-weight:800;" id="txt-weekly-matrix-title">Matriz Semanal de Rutina de 24 Horas</h3>
-          <div style="display:flex; gap:6px;">
-            <button class="date-nav-btn" onclick="changeMatrixWeek(-1)"><i data-lucide="chevron-left"></i></button>
-            <button class="date-nav-btn" onclick="changeMatrixWeek(1)"><i data-lucide="chevron-right"></i></button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; gap:6px;">
+          <h3 style="font-size:1rem; font-weight:800;" id="txt-weekly-matrix-title">Matriz Semanal de 24 Horas</h3>
+          <select class="form-control" id="matrixFilterSelect" onchange="renderWeeklyMatrix24h()" style="width:auto; padding:0.3rem 0.6rem; font-size:0.75rem;">
+            <option value="all" id="opt-filter-all" selected>Mostrar Todos</option>
+            <option value="feeding" id="opt-filter-feed">Solo Tomas</option>
+            <option value="diaper" id="opt-filter-diaper">Solo Pañales</option>
+            <option value="sleep" id="opt-filter-sleep">Solo Sueño</option>
+            <option value="bath" id="opt-filter-bath">Solo Baños</option>
+          </select>
+          <div style="display:flex; gap:4px;">
+            <button class="date-nav-btn" onclick="changeMatrixWeek(-1)" style="width:28px;height:28px;"><i data-lucide="chevron-left" style="width:16px;"></i></button>
+            <button class="date-nav-btn" onclick="changeMatrixWeek(1)" style="width:28px;height:28px;"><i data-lucide="chevron-right" style="width:16px;"></i></button>
           </div>
         </div>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.8rem;" id="matrixWeekLabel">Semana del 21 al 27 de Septiembre</p>
@@ -338,17 +345,14 @@
         <h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-weight-chart">1. Evolución de Peso (kg) vs Percentil 50 OMS</h3>
         <canvas id="weightChart" height="180"></canvas>
       </div>
-
       <div class="card">
         <h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-height-chart">2. Evolución de Talla / Longitud (cm) vs OMS</h3>
         <canvas id="heightChart" height="180"></canvas>
       </div>
-
       <div class="card">
         <h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-head-chart">3. Perímetro Cefálico (cm) vs OMS</h3>
         <canvas id="headChart" height="180"></canvas>
       </div>
-
       <div class="card">
         <h3 style="font-size:1rem; font-weight:800; margin-bottom:0.5rem;" id="txt-who-routines">4. Control Diario de Tomas y Pañales</h3>
         <p style="font-size:0.83rem; color:var(--text-muted);" id="txt-who-routines-desc">Frecuencias normales recomendadas según etapa OMS:</p>
@@ -367,7 +371,7 @@
       </div>
     </div>
 
-    <!-- TAB 5: Manual Completo Traducido (8 Pasos) -->
+    <!-- TAB 5: Manual Completo Traducido -->
     <div class="tab-content" id="tab-manual">
       <div class="card">
         <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1.2rem; display:flex; align-items:center; gap:8px;" id="txt-manual-header">
@@ -378,7 +382,7 @@
         <div class="manual-step"><div class="step-number">2</div><div class="step-content"><h4 id="mstep2-title">Registro Rápido de Eventos</h4><p id="mstep2-desc">Pulsa sobre cualquier botón de la cuadrícula superior (Alimentación, Pañal, Sueño, Crecimiento, Salud, Baño). La hora actual y 'Leche Extraída (110 ml)' se seleccionan por defecto.</p></div></div>
         <div class="manual-step"><div class="step-number">3</div><div class="step-content"><h4 id="mstep3-title">Registro y Cálculo de Sueño</h4><p id="mstep3-desc">Al registrar el sueño, indica la 'Hora Inicio' y 'Hora Fin'. La app calculará automáticamente la duración de la siesta en horas y minutos.</p></div></div>
         <div class="manual-step"><div class="step-number">4</div><div class="step-content"><h4 id="mstep4-title">Diario, Timeline y Totales Acumulados</h4><p id="mstep4-desc">Navega con las flechas día a día para consultar la secuencia cronológica de eventos. En la parte superior verás el resumen acumulado del día.</p></div></div>
-        <div class="manual-step"><div class="step-number">5</div><div class="step-content"><h4 id="mstep5-title">Calendario, Gráfico de Barras y Matriz 24h</h4><p id="mstep5-desc">En la pestaña 'Calendario', consulta el calendario mensual, la gráfica comparativa (con filtro de 4 semanas o 6 meses) y la matriz visual de 24 horas.</p></div></div>
+        <div class="manual-step"><div class="step-number">5</div><div class="step-content"><h4 id="mstep5-title">Calendario, Gráfico de Barras y Matriz 24h</h4><p id="mstep5-desc">En la pestaña 'Calendario', consulta el calendario mensual, la gráfica comparativa (con filtro de 4 semanas o 6 meses) y la matriz visual de 24 horas con filtro.</p></div></div>
         <div class="manual-step"><div class="step-number">6</div><div class="step-content"><h4 id="mstep6-title">Gráficas de Crecimiento y Percentiles OMS</h4><p id="mstep6-desc">En la pestaña 'Curvas OMS', examina las 3 gráficas independientes de Peso, Talla y Perímetro Cefálico comparadas con la mediana P50 de la OMS.</p></div></div>
         <div class="manual-step"><div class="step-number">7</div><div class="step-content"><h4 id="mstep7-title">Sincronización entre dos Móviles</h4><p id="mstep7-desc">Para pasar todos los datos al otro progenitor: Pulsa 'Sincronizar' y envía el archivo por WhatsApp. En el otro móvil, pulsa 'Cargar Archivo Recibido'.</p></div></div>
         <div class="manual-step"><div class="step-number">8</div><div class="step-content"><h4 id="mstep8-title">Copias de Seguridad e Idiomas</h4><p id="mstep8-desc">Desde el menú lateral puedes cambiar de idioma (Español 🇪🇸, Francés 🇫🇷, Inglés 🇬🇧), activar el Modo Oscuro o Exportar/Importar archivos JSON de respaldo.</p></div></div>
@@ -425,6 +429,7 @@
     </div>
   </div>
 
+  <!-- Modal Perfil -->
   <div class="modal-overlay" id="profileModal">
     <div class="modal">
       <form onsubmit="saveProfile(event)" style="display:flex; flex-direction:column; height:100%; overflow:hidden;">
@@ -436,8 +441,8 @@
           </div>
         </div>
         <div class="modal-body">
-          <div class="form-group"><label id="lbl-baby-name">Nombre del Bebé</label><input type="text" class="form-control" id="profName" required value="Léo"></div>
-          <div class="form-group"><label id="lbl-baby-dob">Fecha de Nacimiento</label><input type="date" class="form-control" id="profDob" required value="2026-07-19"></div>
+          <div class="form-group"><label id="lbl-baby-name">Nombre del Bebé</label><input type="text" class="form-control" id="profName" required></div>
+          <div class="form-group"><label id="lbl-baby-dob">Fecha de Nacimiento</label><input type="date" class="form-control" id="profDob" required></div>
           <div class="form-group"><label id="lbl-baby-gender">Género</label><select class="form-control" id="profGender"><option value="male" id="opt-male">Niño 👦</option><option value="female" id="opt-female">Niña 👧</option></select></div>
         </div>
         <div class="modal-footer">
@@ -470,7 +475,7 @@
     </div>
   </div>
 
-  <!-- Modal Alarmas y Avisos -->
+  <!-- Modal Alarmas y Avisos (Con Selección de Hora Exacta) -->
   <div class="modal-overlay" id="alarmsModal">
     <div class="modal">
       <div class="modal-header">
@@ -494,14 +499,8 @@
           </div>
           <div class="form-grid-2">
             <div class="form-group">
-              <label id="lbl-alarm-time">Avisar en...</label>
-              <select class="form-control" id="newAlarmOffset">
-                <option value="30">30 Minutos</option>
-                <option value="60">1 Hora</option>
-                <option value="120">2 Horas</option>
-                <option value="180">3 Horas</option>
-                <option value="240">4 Horas</option>
-              </select>
+              <label id="lbl-alarm-time">Hora de la Alarma</label>
+              <input type="datetime-local" class="form-control" id="newAlarmTime" required>
             </div>
             <div class="form-group">
               <label id="lbl-alarm-sound">Sonido</label>
@@ -517,7 +516,7 @@
     </div>
   </div>
 
-  <!-- Modal Único de Sincronización Directa por WhatsApp / Archivo -->
+  <!-- Modal Sincronización -->
   <div class="modal-overlay" id="syncModal">
     <div class="modal">
       <div class="modal-header">
@@ -528,17 +527,13 @@
         <p style="font-size:0.88rem; color:var(--text-color); margin-bottom:1.2rem; text-align:center; line-height:1.4;" id="txt-sync-desc">
           Comparte los datos actualizados de tu bebé de forma instantánea mediante WhatsApp o guardando el archivo de respaldo.
         </p>
-
         <button onclick="shareViaWhatsApp()" style="background:#25D366; color:white; border:none; padding:0.85rem 1rem; border-radius:14px; font-weight:800; font-size:0.92rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:0.8rem; box-shadow:0 4px 12px rgba(37,211,102,0.25);">
           💬 <span id="txt-btn-wa">Enviar datos por WhatsApp</span>
         </button>
-
         <button onclick="shareDataDirectly()" style="background:var(--primary); color:white; border:none; padding:0.85rem 1rem; border-radius:14px; font-weight:800; font-size:0.92rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:1rem; box-shadow:0 4px 12px rgba(122,162,247,0.25);">
           📲 <span id="txt-btn-share">Compartir Archivo JSON</span>
         </button>
-
         <hr style="border:none; border-top:1px solid var(--border-color); margin:1rem 0;">
-
         <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:0.5rem;" id="txt-sync-import-title">¿Recibiste el archivo de la pareja?</h4>
         <button onclick="triggerFileInput()" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--border-color); padding:0.75rem 1rem; border-radius:14px; font-weight:800; font-size:0.85rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:8px;">
           📥 <span id="txt-btn-import">Cargar Archivo Recibido</span>
@@ -562,12 +557,16 @@
   </script>
 
   <script>
-    let appData = { lang: 'es', theme: 'light', activeBabyId: 1, babies: [{ id: 1, name: 'Léo', dob: '2026-07-19', gender: 'male', photo: null, logs: [], vaccines: {}, alarms: [] }] };
+    let appData = { 
+      lang: 'es', theme: 'light', activeBabyId: 1, 
+      babies: [{ id: 1, name: 'Léo', dob: '2026-07-19', gender: 'male', photo: null, logs: [], vaccines: {}, alarms: [] }] 
+    };
     let selectedDate = new Date();
     let selectedMatrixWeekDate = new Date();
 
     function getActiveBaby() { 
-      const b = appData.babies.find(b => b.id === appData.activeBabyId) || appData.babies[0]; 
+      let b = appData.babies.find(b => b.id === appData.activeBabyId);
+      if (!b) b = appData.babies[0];
       if (!b.alarms) b.alarms = [];
       if (!b.vaccines) b.vaccines = {};
       return b;
@@ -575,7 +574,7 @@
 
     const i18n = {
       es: {
-        menuTitle: "Menú BabyCare", menuProfile: "Perfil del Bebé", menuQR: "Compartir datos (Enlace)", menuScan: "Sincronizar", menuManual: "Manual de Uso", menuExport: "Exportar JSON", menuImport: "Importar JSON", langLabel: "Idioma", themeLabel: "Apariencia", themeBtn: "Modo Claro/Oscuro", quickActions: "Registrar Evento", actFeed: "Alimentación", actDiaper: "Pañal", actSleep: "Sueño", actGrowth: "Crecimiento", actHealth: "Salud / Temp", actBath: "Baño / Ducha", tabLogs: "Diario", tabCal: "Calendario", tabCharts: "Curvas OMS", tabVac: "Vacunas", recentLogs: "Actividad Reciente", today: "Hoy", barChartTitle: "Frecuencia Diaria de Eventos (Comparativa)", weightChart: "1. Evolución de Peso (kg) vs OMS", heightChart: "2. Evolución de Talla / Longitud (cm) vs OMS", headChart: "3. Perímetro Cefálico (cm) vs OMS", weeklyMatrixTitle: "Matriz Semanal de Rutina de 24 Horas", whoRoutines: "4. Control Diario de Tomas y Pañales", whoRoutinesDesc: "Frecuencias normales recomendadas según etapa OMS:", vaccineTitle: "Calendario Vacunal Recomendado", bnavHome: "Inicio", bnavAdd: "Añadir", bnavShare: "Sincronizar", saveEntry: "Guardar Registro", saveProfile: "Actualizar Perfil", lblTimestamp: "Fecha y Hora", lblNotes: "Notas / Observaciones", qrTitle: "Compartir Datos de Sincronización", qrDesc: "Comparte los datos actualizados de tu bebé.", scanTitle: "Sincronizar con Pareja", scanDesc: "Comparte los datos actualizados.", alertFeed: "⚠️ Alerta: Han pasado más de 3.5h desde la última toma.", daysShort: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+        menuTitle: "Menú BabyCare", menuProfile: "Perfil del Bebé", menuScan: "Sincronizar", menuManual: "Manual de Uso", menuExport: "Exportar JSON", menuImport: "Importar JSON", langLabel: "Idioma", themeLabel: "Apariencia", themeBtn: "Modo Claro/Oscuro", quickActions: "Registrar Evento", actFeed: "Alimentación", actDiaper: "Pañal", actSleep: "Sueño", actGrowth: "Crecimiento", actHealth: "Salud / Temp", actBath: "Baño / Ducha", tabLogs: "Diario", tabCal: "Calendario", tabCharts: "Curvas OMS", tabVac: "Vacunas", recentLogs: "Actividad Reciente", today: "Hoy", barChartTitle: "Frecuencia Diaria de Eventos (Comparativa)", weightChart: "1. Evolución de Peso (kg) vs OMS", heightChart: "2. Evolución de Talla / Longitud (cm) vs OMS", headChart: "3. Perímetro Cefálico (cm) vs OMS", weeklyMatrixTitle: "Matriz Semanal de Rutina de 24 Horas", whoRoutines: "4. Control Diario de Tomas y Pañales", whoRoutinesDesc: "Frecuencias normales recomendadas según etapa OMS:", vaccineTitle: "Calendario Vacunal Recomendado", bnavHome: "Inicio", bnavAdd: "Añadir", bnavShare: "Sincronizar", saveEntry: "Guardar Registro", saveProfile: "Actualizar Perfil", lblTimestamp: "Fecha y Hora", lblNotes: "Notas / Observaciones", scanTitle: "Sincronizar con Pareja", scanDesc: "Comparte los datos actualizados de tu bebé.", alertFeed: "⚠️ Alerta: Han pasado más de 3.5h desde la última toma.", daysShort: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
         lblBabyName: "Nombre del Bebé", lblBabyDob: "Fecha de Nacimiento", lblBabyGender: "Género", optMale: "Niño 👦", optFemale: "Niña 👧",
         sumFeed: "🍼 Leche total", sumSleep: "💤 Sueño total", sumDiaper: "💦 Pañales",
         mHeader: "Manual de Uso Paso a Paso Completo",
@@ -583,16 +582,17 @@
         ms2Title: "2. Registro Rápido de Eventos", ms2Desc: "Pulsa sobre cualquier botón de la cuadrícula superior (Alimentación, Pañal, Sueño, Crecimiento, Salud, Baño). La hora actual y 'Leche Extraída (110 ml)' se seleccionan por defecto.",
         ms3Title: "3. Registro y Cálculo de Sueño", ms3Desc: "Al registrar el sueño, indica la 'Hora Inicio' y 'Hora Fin'. La app calculará automáticamente la duración de la siesta en horas y minutos.",
         ms4Title: "4. Diario, Timeline y Totales Acumulados", ms4Desc: "Navega con las flechas día a día para consultar la secuencia cronológica de eventos. En la parte superior verás el resumen acumulado de ml de leche, horas de sueño y pañales del día.",
-        ms5Title: "5. Calendario, Gráfico de Barras y Matriz 24h", ms5Desc: "En la pestaña 'Calendario', consulta el calendario mensual, la gráfica comparativa (con filtro de 4 semanas o 6 meses) y la matriz visual de 24 horas. Pulsa cualquier bloque para ver sus detalles.",
+        ms5Title: "5. Calendario, Gráfico de Barras y Matriz 24h", ms5Desc: "En la pestaña 'Calendario', consulta el calendario mensual, la gráfica comparativa (con filtro de 4 semanas o 6 meses) y la matriz visual de 24 horas. Usa el filtro para mostrar solo tomas, pañales, etc.",
         ms6Title: "6. Gráficas de Crecimiento y Percentiles OMS", ms6Desc: "En la pestaña 'Curvas OMS', examina las 3 gráficas independientes de Peso, Talla y Perímetro Cefálico comparadas con la mediana P50 de la OMS.",
         ms7Title: "7. Sincronización entre dos Móviles", ms7Desc: "Para pasar todos los datos al otro progenitor: Pulsa 'Sincronizar' y envía el archivo por WhatsApp. En el otro móvil, pulsa 'Cargar Archivo Recibido'.",
         ms8Title: "8. Copias de Seguridad e Idiomas", ms8Desc: "Desde el menú lateral puedes cambiar de idioma (Español 🇪🇸, Francés 🇫🇷, Inglés 🇬🇧), activar el Modo Oscuro o Exportar/Importar archivos JSON de respaldo.",
         opt4w: "Últimas 4 semanas", opt6m: "Últimos 6 meses", legFeed: "Toma", legSleep: "Sueño", legDiaper: "Pañal",
-        babySelect: "Bebé Activo", addBaby: "+ Añadir Bebé", newBabyTitle: "Añadir Nuevo Bebé", createBabyBtn: "Añadir Bebé", deleteBabyBtn: "Eliminar Bebé", menuAlarms: "Alarmas y Avisos", alarmTitle: "Alarmas y Avisos", newAlarmTitle: "Crear Nueva Alarma", alarmType: "Tipo de Aviso", alarmTime: "Avisar en...", alarmSound: "Sonido", alarmSaveBtn: "Añadir Alarma",
-        btnWa: "Enviar datos por WhatsApp", btnShare: "Compartir Archivo JSON", btnImport: "Cargar Archivo Recibido", syncImportTitle: "¿Recibiste el archivo de la pareja?"
+        babySelect: "Bebé Activo", addBaby: "+ Añadir Bebé", newBabyTitle: "Añadir Nuevo Bebé", createBabyBtn: "Añadir Bebé", deleteBabyBtn: "Eliminar Bebé", menuAlarms: "Alarmas y Avisos", alarmTitle: "Alarmas y Avisos", newAlarmTitle: "Crear Nueva Alarma", alarmType: "Tipo de Aviso", alarmTime: "Hora de la Alarma", alarmSound: "Sonido", alarmSaveBtn: "Añadir Alarma",
+        btnWa: "Enviar datos por WhatsApp", btnShare: "Compartir Archivo JSON", btnImport: "Cargar Archivo Recibido", syncImportTitle: "¿Recibiste el archivo de la pareja?",
+        filterAll: "Mostrar Todos", filterFeed: "Solo Tomas", filterDiaper: "Solo Pañales", filterSleep: "Solo Sueño", filterBath: "Solo Baños"
       },
       fr: {
-        menuTitle: "Menu BabyCare", menuProfile: "Profil du Bébé", menuQR: "Partager les données", menuScan: "Synchroniser", menuManual: "Guide d'utilisation", menuExport: "Exporter JSON", menuImport: "Importer JSON", langLabel: "Langue", themeLabel: "Apparence", themeBtn: "Mode Clair/Sombre", quickActions: "Enregistrer Événement", actFeed: "Alimentation", actDiaper: "Couche", actSleep: "Sommeil", actGrowth: "Croissance", actHealth: "Santé / Temp", actBath: "Bain / Douche", tabLogs: "Journal", tabCal: "Calendrier", tabCharts: "Courbes OMS", tabVac: "Vaccins", recentLogs: "Activité Récente", today: "Aujourd'hui", barChartTitle: "Fréquence Quotidienne des Événements", weightChart: "1. Évolution du Poids (kg) vs OMS", heightChart: "2. Évolution de la Taille (cm) vs OMS", headChart: "3. Périmètre Crânien (cm) vs OMS", weeklyMatrixTitle: "Matrice Hebdomadaire de Routine (24h)", whoRoutines: "4. Contrôle Quotidien des Tétées et Couches", whoRoutinesDesc: "Fréquences recommandées selon l'OMS :", vaccineTitle: "Calendrier Vaccinal Recommandé", bnavHome: "Accueil", bnavAdd: "Ajouter", bnavShare: "Synchroniser", saveEntry: "Sauvegarder", saveProfile: "Mettre à jour", lblTimestamp: "Date et Heure", lblNotes: "Notes / Observations", qrTitle: "Partager les Données", qrDesc: "Partagez les données par WhatsApp.", scanTitle: "Synchroniser", scanDesc: "Partagez les données.", alertFeed: "⚠️ Attention : Plus de 3,5 h depuis la dernière tétée.", daysShort: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+        menuTitle: "Menu BabyCare", menuProfile: "Profil du Bébé", menuScan: "Synchroniser", menuManual: "Guide d'utilisation", menuExport: "Exporter JSON", menuImport: "Importer JSON", langLabel: "Langue", themeLabel: "Apparence", themeBtn: "Mode Clair/Sombre", quickActions: "Enregistrer Événement", actFeed: "Alimentation", actDiaper: "Couche", actSleep: "Sommeil", actGrowth: "Croissance", actHealth: "Santé / Temp", actBath: "Bain / Douche", tabLogs: "Journal", tabCal: "Calendrier", tabCharts: "Courbes OMS", tabVac: "Vaccins", recentLogs: "Activité Récente", today: "Aujourd'hui", barChartTitle: "Fréquence Quotidienne des Événements", weightChart: "1. Évolution du Poids (kg) vs OMS", heightChart: "2. Évolution de la Taille (cm) vs OMS", headChart: "3. Périmètre Crânien (cm) vs OMS", weeklyMatrixTitle: "Matrice Hebdomadaire de Routine (24h)", whoRoutines: "4. Contrôle Quotidien des Tétées et Couches", whoRoutinesDesc: "Fréquences recommandées selon l'OMS :", vaccineTitle: "Calendrier Vaccinal Recommandé", bnavHome: "Accueil", bnavAdd: "Ajouter", bnavShare: "Synchroniser", saveEntry: "Sauvegarder", saveProfile: "Mettre à jour", lblTimestamp: "Date et Heure", lblNotes: "Notes / Observations", scanTitle: "Synchroniser", scanDesc: "Partagez les données actualisées du bébé.", alertFeed: "⚠️ Attention : Plus de 3,5 h depuis la dernière tétée.", daysShort: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
         lblBabyName: "Nom du Bébé", lblBabyDob: "Date de Naissance", lblBabyGender: "Sexe", optMale: "Garçon 👦", optFemale: "Fille 👧",
         sumFeed: "🍼 Lait total", sumSleep: "💤 Sommeil total", sumDiaper: "💦 Couches",
         mHeader: "Guide d'Utilisation Étape par Étape Complet",
@@ -600,16 +600,17 @@
         ms2Title: "2. Enregistrer rapidement des événements", ms2Desc: "Cliquez sur l'un des boutons supérieurs. Le lait tiré (110 ml) est sélectionné par défaut.",
         ms3Title: "3. Calcul du Sommeil", ms3Desc: "Indiquez l'heure de début et de fin de sommeil pour calculer automatiquement la durée.",
         ms4Title: "4. Journal et Totaux Quotidiens", ms4Desc: "Consultez la chronologie quotidienne et le résumé des ml de lait, heures de sommeil et couches.",
-        ms5Title: "5. Calendrier, Graphique et Matrice 24h", ms5Desc: "Consultez le calendrier, le graphique comparatif (4 semaines / 6 mois) et la matrice 24h.",
+        ms5Title: "5. Calendrier, Graphique et Matrice 24h", ms5Desc: "Consultez le calendrier, le graphique comparatif et la matrice 24h. Utilisez le filtre pour séparer tétées et sommeil.",
         ms6Title: "6. Courbes de Croissance OMS", ms6Desc: "Observez les graphiques de poids, taille et périmètre crânien par rapport aux normes OMS.",
-        ms7Title: "7. Synchronisation", ms7Desc: "Pour transférer des données : Appuyez sur 'Sync' et envoyez le fichier.",
+        ms7Title: "7. Synchronisation", ms7Desc: "Pour transférer des données : Appuyez sur 'Sync' et envoyez le fichier via WhatsApp.",
         ms8Title: "8. Sauvegarde et Paramètres", ms8Desc: "Depuis le menu latéral, changez la langue (Espagnol, Français, Anglais), activez le Mode Sombre ou exportez/importez des fichiers JSON.",
         opt4w: "Dernières 4 semaines", opt6m: "Derniers 6 mois", legFeed: "Lait", legSleep: "Sommeil", legDiaper: "Couche",
-        babySelect: "Bébé Actif", addBaby: "+ Ajouter un bébé", newBabyTitle: "Ajouter un nouveau bébé", createBabyBtn: "Ajouter", deleteBabyBtn: "Supprimer le bébé", menuAlarms: "Alarmes", alarmTitle: "Alarmes et Avis", newAlarmTitle: "Créer une alarme", alarmType: "Type", alarmTime: "Avis dans...", alarmSound: "Son", alarmSaveBtn: "Ajouter l'alarme",
-        btnWa: "Envoyer via WhatsApp", btnShare: "Partager JSON", btnImport: "Charger le fichier reçu", syncImportTitle: "Avez-vous reçu le fichier ?"
+        babySelect: "Bébé Actif", addBaby: "+ Ajouter un bébé", newBabyTitle: "Ajouter un nouveau bébé", createBabyBtn: "Ajouter", deleteBabyBtn: "Supprimer le bébé", menuAlarms: "Alarmes", alarmTitle: "Alarmes et Avis", newAlarmTitle: "Créer une alarme", alarmType: "Type", alarmTime: "Heure de l'alarme", alarmSound: "Son", alarmSaveBtn: "Ajouter l'alarme",
+        btnWa: "Envoyer via WhatsApp", btnShare: "Partager JSON", btnImport: "Charger le fichier reçu", syncImportTitle: "Avez-vous reçu le fichier ?",
+        filterAll: "Tout", filterFeed: "Lait", filterDiaper: "Couches", filterSleep: "Sommeil", filterBath: "Bains"
       },
       en: {
-        menuTitle: "BabyCare Menu", menuProfile: "Baby Profile", menuQR: "Share Data", menuScan: "Sync", menuManual: "User Manual", menuExport: "Export JSON", menuImport: "Import JSON", langLabel: "Language", themeLabel: "Appearance", themeBtn: "Light/Dark Mode", quickActions: "Log Event", actFeed: "Feeding", actDiaper: "Diaper", actSleep: "Sleep", actGrowth: "Growth", actHealth: "Health / Temp", actBath: "Bath / Shower", tabLogs: "Logs", tabCal: "Calendar", tabCharts: "WHO Growth", tabVac: "Vaccines", recentLogs: "Recent Activity", today: "Today", barChartTitle: "Daily Events Frequency (Comparison)", weightChart: "1. Weight Progress (kg) vs WHO", heightChart: "2. Height Progress (cm) vs WHO", headChart: "3. Head Circumference (cm) vs WHO", weeklyMatrixTitle: "24-Hour Weekly Routine Matrix", whoRoutines: "4. Daily Feedings & Diapers Control", whoRoutinesDesc: "Recommended WHO daily frequencies:", vaccineTitle: "Recommended Immunization Schedule", bnavHome: "Home", bnavAdd: "Add", bnavShare: "Sync", saveEntry: "Save Entry", saveProfile: "Update Profile", lblTimestamp: "Date & Time", lblNotes: "Notes / Details", qrTitle: "Share Synchronization Data", qrDesc: "Share data directly via WhatsApp/Email.", scanTitle: "Sync Data", scanDesc: "Share updated baby data.", alertFeed: "⚠️ Warning: Over 3.5h since last feeding session.", daysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        menuTitle: "BabyCare Menu", menuProfile: "Baby Profile", menuScan: "Sync", menuManual: "User Manual", menuExport: "Export JSON", menuImport: "Import JSON", langLabel: "Language", themeLabel: "Appearance", themeBtn: "Light/Dark Mode", quickActions: "Log Event", actFeed: "Feeding", actDiaper: "Diaper", actSleep: "Sleep", actGrowth: "Growth", actHealth: "Health / Temp", actBath: "Bath / Shower", tabLogs: "Logs", tabCal: "Calendar", tabCharts: "WHO Growth", tabVac: "Vaccines", recentLogs: "Recent Activity", today: "Today", barChartTitle: "Daily Events Frequency (Comparison)", weightChart: "1. Weight Progress (kg) vs WHO", heightChart: "2. Height Progress (cm) vs WHO", headChart: "3. Head Circumference (cm) vs WHO", weeklyMatrixTitle: "24-Hour Weekly Routine Matrix", whoRoutines: "4. Daily Feedings & Diapers Control", whoRoutinesDesc: "Recommended WHO daily frequencies:", vaccineTitle: "Recommended Immunization Schedule", bnavHome: "Home", bnavAdd: "Add", bnavShare: "Sync", saveEntry: "Save Entry", saveProfile: "Update Profile", lblTimestamp: "Date & Time", lblNotes: "Notes / Details", scanTitle: "Sync Data", scanDesc: "Share updated baby data instantly.", alertFeed: "⚠️ Warning: Over 3.5h since last feeding session.", daysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         lblBabyName: "Baby Name", lblBabyDob: "Date of Birth", lblBabyGender: "Gender", optMale: "Boy 👦", optFemale: "Girl 👧",
         sumFeed: "🍼 Total Milk", sumSleep: "💤 Total Sleep", sumDiaper: "💦 Diapers",
         mHeader: "Complete Step-by-Step User Manual",
@@ -617,30 +618,44 @@
         ms2Title: "2. Quickly Log Events", ms2Desc: "Click any button in the top grid. Expressed Milk (110 ml) is set by default.",
         ms3Title: "3. Sleep Duration Tracking", ms3Desc: "Enter 'Start Time' and 'End Time' to automatically calculate nap duration.",
         ms4Title: "4. Daily Timeline & Totals", ms4Desc: "Check total milk intake, total sleep, and diaper counts at a glance.",
-        ms5Title: "5. Calendar, Bar Chart & 24h Matrix", ms5Desc: "Examine monthly calendar, 4-week / 6-month comparative bar chart, and 24h matrix grid.",
+        ms5Title: "5. Calendar, Bar Chart & 24h Matrix", ms5Desc: "Examine monthly calendar, comparative bar chart, and 24h matrix grid. Use the filter to isolate specific events.",
         ms6Title: "6. WHO Growth Percentile Charts", ms6Desc: "Under 'WHO Growth', view weight, height, and head circumference charts.",
         ms7Title: "7. Sync Between Phones", ms7Desc: "Tap 'Sync' and send the file via WhatsApp. On the other phone, tap 'Load Received File'.",
         ms8Title: "8. Backup & Language Settings", ms8Desc: "From the side menu change language (Spanish, French, English), toggle Dark Mode, or export/import JSON files.",
         opt4w: "Last 4 weeks", opt6m: "Last 6 months", legFeed: "Feed", legSleep: "Sleep", legDiaper: "Diaper",
-        babySelect: "Active Baby", addBaby: "+ Add Baby", newBabyTitle: "Add New Baby", createBabyBtn: "Add Baby", deleteBabyBtn: "Delete Baby", menuAlarms: "Alarms & Alerts", alarmTitle: "Alarms & Alerts", newAlarmTitle: "Create New Alarm", alarmType: "Alert Type", alarmTime: "Alert in...", alarmSound: "Sound", alarmSaveBtn: "Add Alarm",
-        btnWa: "Send via WhatsApp", btnShare: "Share JSON File", btnImport: "Load Received File", syncImportTitle: "Received partner's file?"
+        babySelect: "Active Baby", addBaby: "+ Add Baby", newBabyTitle: "Add New Baby", createBabyBtn: "Add Baby", deleteBabyBtn: "Delete Baby", menuAlarms: "Alarms & Alerts", alarmTitle: "Alarms & Alerts", newAlarmTitle: "Create New Alarm", alarmType: "Alert Type", alarmTime: "Alarm Time", alarmSound: "Sound", alarmSaveBtn: "Add Alarm",
+        btnWa: "Send via WhatsApp", btnShare: "Share JSON File", btnImport: "Load Received File", syncImportTitle: "Received partner's file?",
+        filterAll: "Show All", filterFeed: "Feeds", filterDiaper: "Diapers", filterSleep: "Sleep", filterBath: "Baths"
       }
     };
 
-    const standardVaccines = [{ id: 'v1', age: '2 meses', name: 'Hexavalente (DTPa-VPI-Hib-HB) + Neumococo + Rotavirus' }, { id: 'v2', age: '4 meses', name: 'Hexavalente + Neumococo + Rotavirus + Meningococo B' }, { id: 'v3', age: '6 meses', name: 'Hexavalente + Rotavirus' }, { id: 'v4', age: '12 meses', name: 'Triple Vírica (SRP) + Neumococo + Meningococo C/ACWY' }];
-
     function getLocalDateStr(dInput) {
+      if(!dInput) return '';
       const d = new Date(dInput);
+      if(isNaN(d.getTime())) return '';
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, '0');
       const day = String(d.getDate()).padStart(2, '0');
       return `${y}-${m}-${day}`;
     }
 
-    window.addEventListener('DOMContentLoaded', () => { loadLocalStorageWithMigration(); setLanguage(appData.lang); applyTheme(appData.theme); renderBabyProfile(); renderLogs(); renderCalendar(); renderVaccines(); initChart(); initBarChart(); renderWeeklyMatrix24h(); checkAlerts(); lucide.createIcons(); });
+    window.addEventListener('DOMContentLoaded', () => { 
+      loadLocalStorageWithMigration(); 
+      setLanguage(appData.lang); 
+      applyTheme(appData.theme); 
+      renderBabyProfile(); 
+      renderLogs(); 
+      renderCalendar(); 
+      renderVaccines(); 
+      initChart(); 
+      initBarChart(); 
+      renderWeeklyMatrix24h(); 
+      checkAlerts(); 
+      lucide.createIcons(); 
+    });
 
     function loadLocalStorageWithMigration() {
-      const keys = ['babycare_data_v1_2_2', 'babycare_data_v40_1_0', 'babycare_data_v40', 'babycare_data_v37', 'babycare_data_v36', 'babycare_data_v35', 'babycare_data'];
+      const keys = ['babycare_data_v1_3_0', 'babycare_data_v1_2_2', 'babycare_data_v40_1_0', 'babycare_data_v40', 'babycare_data_v37'];
       let loaded = false;
       for (let key of keys) {
         const saved = localStorage.getItem(key);
@@ -670,10 +685,20 @@
         }
       }
       populateBabySelector();
-      saveState();
     }
     
-    function saveState() { localStorage.setItem('babycare_data_v1_2_2', JSON.stringify(appData)); populateBabySelector(); renderBabyProfile(); renderLogs(); renderCalendar(); checkAlerts(); updateChart(); updateBarChart(); renderWeeklyMatrix24h(); renderAlarms(); }
+    function saveState() { 
+      localStorage.setItem('babycare_data_v1_3_0', JSON.stringify(appData)); 
+      populateBabySelector(); 
+      renderBabyProfile(); 
+      renderLogs(); 
+      renderCalendar(); 
+      checkAlerts(); 
+      updateChart(); 
+      updateBarChart(); 
+      renderWeeklyMatrix24h(); 
+      renderAlarms(); 
+    }
 
     function populateBabySelector() {
       const sel = document.getElementById('babySelector');
@@ -821,6 +846,17 @@
       if(document.getElementById('txt-btn-import')) document.getElementById('txt-btn-import').innerText = t.btnImport;
       if(document.getElementById('txt-sync-import-title')) document.getElementById('txt-sync-import-title').innerText = t.syncImportTitle;
 
+      // Filtro de matriz
+      const filterSelect = document.getElementById('matrixFilterSelect');
+      if (filterSelect) {
+        filterSelect.options[0].text = t.filterAll;
+        filterSelect.options[1].text = t.filterFeed;
+        filterSelect.options[2].text = t.filterDiaper;
+        filterSelect.options[3].text = t.filterSleep;
+        filterSelect.options[4].text = t.filterBath;
+      }
+
+      // Manual Translations
       if (document.getElementById('txt-manual-header')) {
         document.getElementById('txt-manual-header').innerHTML = `<i data-lucide="book-open" style="color:var(--primary);"></i> ${t.mHeader}`;
         if (document.getElementById('mstep1-title')) { document.getElementById('mstep1-title').innerText = t.ms1Title; document.getElementById('mstep1-desc').innerText = t.ms1Desc; }
@@ -982,121 +1018,129 @@
     }
 
     function renderWeeklyMatrix24h() {
-      const grid = document.getElementById('routine24hGrid');
-      if (!grid) return;
-      grid.innerHTML = '';
+      try {
+        const grid = document.getElementById('routine24hGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
 
-      const curr = new Date(selectedMatrixWeekDate);
-      const dayOfWeek = curr.getDay();
-      const distanceToMon = (dayOfWeek === 0 ? -6 : 1 - dayOfWeek);
-      
-      const mon = new Date(curr);
-      mon.setDate(curr.getDate() + distanceToMon);
-      const sun = new Date(mon);
-      sun.setDate(mon.getDate() + 6);
+        const filterVal = document.getElementById('matrixFilterSelect') ? document.getElementById('matrixFilterSelect').value : 'all';
 
-      const t = i18n[appData.lang] || i18n['es'];
-      document.getElementById('matrixWeekLabel').innerText = `Semana del ${mon.getDate()} ${mon.toLocaleDateString('es-ES',{month:'short'})} al ${sun.getDate()} ${sun.toLocaleDateString('es-ES',{month:'short', year:'numeric'})}`;
+        const curr = new Date(selectedMatrixWeekDate);
+        const dayOfWeek = curr.getDay();
+        const distanceToMon = (dayOfWeek === 0 ? -6 : 1 - dayOfWeek);
+        
+        const mon = new Date(curr);
+        mon.setDate(curr.getDate() + distanceToMon);
+        const sun = new Date(mon);
+        sun.setDate(mon.getDate() + 6);
 
-      grid.innerHTML += `<div class="grid-header-cell"></div>`;
-      const daysShort = t.daysShort || ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-      const weekDates = [];
-      const todayStr = getLocalDateStr(new Date());
+        const t = i18n[appData.lang] || i18n['es'];
+        document.getElementById('matrixWeekLabel').innerText = `Semana del ${mon.getDate()} ${mon.toLocaleDateString('es-ES',{month:'short'})} al ${sun.getDate()} ${sun.toLocaleDateString('es-ES',{month:'short', year:'numeric'})}`;
 
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(mon);
-        d.setDate(mon.getDate() + i);
-        const dateStr = getLocalDateStr(d);
-        weekDates.push(dateStr);
-        const isToday = dateStr === todayStr;
+        grid.innerHTML += `<div class="grid-header-cell"></div>`;
+        const daysShort = t.daysShort || ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+        const weekDates = [];
+        const todayStr = getLocalDateStr(new Date());
 
-        grid.innerHTML += `
-          <div class="grid-header-cell ${isToday ? 'active-day' : ''}">
-            <div>${daysShort[i]}</div>
-            <div style="font-size:0.85rem; font-weight:900;">${d.getDate()}</div>
-          </div>
-        `;
-      }
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(mon);
+          d.setDate(mon.getDate() + i);
+          const dateStr = getLocalDateStr(d);
+          weekDates.push(dateStr);
+          const isToday = dateStr === todayStr;
 
-      let hoursColHtml = '<div style="display:flex; flex-direction:column; height:576px; justify-content:space-between;">';
-      for (let h = 0; h <= 24; h += 3) {
-        hoursColHtml += `<div class="grid-time-label">${h < 10 ? '0' + h : h}</div>`;
-      }
-      hoursColHtml += '</div>';
-      grid.innerHTML += hoursColHtml;
-
-      weekDates.forEach((dateStr) => {
-        let colContent = `<div class="grid-day-col" style="height:576px;">`;
-        let dayBlocks = [];
-
-        getActiveBaby().logs.forEach(log => {
-          let logDateStr = getLocalDateStr(log.timestamp);
-
-          if (log.type === 'sleep' && log.startTimestamp && log.endTimestamp) {
-            const startD = new Date(log.startTimestamp);
-            const endD = new Date(log.endTimestamp);
-            const startStr = getLocalDateStr(startD);
-            const endStr = getLocalDateStr(endD);
-
-            if (startStr !== endStr) {
-              if (dateStr === startStr) {
-                const startMins = startD.getHours() * 60 + startD.getMinutes();
-                const dur1 = 1440 - startMins;
-                dayBlocks.push({ log, startMins, durationMins: dur1 });
-              } else if (dateStr === endStr) {
-                const endMins = endD.getHours() * 60 + endD.getMinutes();
-                dayBlocks.push({ log, startMins: 0, durationMins: endMins });
-              }
-            } else if (dateStr === startStr) {
-              const startMins = startD.getHours() * 60 + startD.getMinutes();
-              const dur = Math.max(15, (endD - startD) / 60000);
-              dayBlocks.push({ log, startMins, durationMins: dur });
-            }
-          } else if (logDateStr === dateStr) {
-            const d = new Date(log.timestamp);
-            const startMins = d.getHours() * 60 + d.getMinutes();
-            dayBlocks.push({ log, startMins, durationMins: 20 });
-          }
-        });
-
-        dayBlocks.sort((a,b) => a.startMins - b.startMins);
-
-        dayBlocks.forEach((blockItem, idx) => {
-          const log = blockItem.log;
-          const topPx = (blockItem.startMins / 1440) * 576;
-          let heightPx = (blockItem.durationMins / 1440) * 576;
-
-          if (topPx + heightPx > 576) {
-            heightPx = Math.max(8, 576 - topPx);
-          }
-
-          let className = 'feed';
-          if (log.type === 'sleep') className = 'sleep';
-          else if (log.type === 'diaper') className = 'diaper';
-          else if (log.type === 'bath') className = 'bath';
-
-          let lane = 0;
-          const concurrent = dayBlocks.filter((other, oIdx) => {
-            if (oIdx >= idx) return false;
-            return Math.abs(other.startMins - blockItem.startMins) < 45;
-          });
-          lane = concurrent.length % 3;
-
-          const widthPercent = 30;
-          const leftPercent = lane * 33;
-
-          colContent += `
-            <div class="routine-block ${className}" 
-                 style="top:${topPx}px; height:${heightPx}px; left:${leftPercent}%; width:${widthPercent}%; cursor:pointer;"
-                 onclick="showMatrixBlockDetail('${log.id}')"
-                 title="${log.detail || ''}">
+          grid.innerHTML += `
+            <div class="grid-header-cell ${isToday ? 'active-day' : ''}">
+              <div>${daysShort[i]}</div>
+              <div style="font-size:0.85rem; font-weight:900;">${d.getDate()}</div>
             </div>
           `;
-        });
+        }
 
-        colContent += `</div>`;
-        grid.innerHTML += colContent;
-      });
+        let hoursColHtml = '<div style="display:flex; flex-direction:column; height:576px; justify-content:space-between;">';
+        for (let h = 0; h <= 24; h += 3) {
+          hoursColHtml += `<div class="grid-time-label">${h < 10 ? '0' + h : h}</div>`;
+        }
+        hoursColHtml += '</div>';
+        grid.innerHTML += hoursColHtml;
+
+        weekDates.forEach((dateStr) => {
+          let colContent = `<div class="grid-day-col" style="height:576px;">`;
+          let dayBlocks = [];
+
+          getActiveBaby().logs.forEach(log => {
+            if (filterVal !== 'all' && log.type !== filterVal) return;
+
+            let logDateStr = getLocalDateStr(log.timestamp);
+
+            if (log.type === 'sleep' && log.startTimestamp && log.endTimestamp) {
+              const startD = new Date(log.startTimestamp);
+              const endD = new Date(log.endTimestamp);
+              const startStr = getLocalDateStr(startD);
+              const endStr = getLocalDateStr(endD);
+
+              if (startStr !== endStr) {
+                if (dateStr === startStr) {
+                  const startMins = startD.getHours() * 60 + startD.getMinutes();
+                  const dur1 = 1440 - startMins;
+                  dayBlocks.push({ log, startMins, durationMins: dur1 });
+                } else if (dateStr === endStr) {
+                  const endMins = endD.getHours() * 60 + endD.getMinutes();
+                  dayBlocks.push({ log, startMins: 0, durationMins: endMins });
+                }
+              } else if (dateStr === startStr) {
+                const startMins = startD.getHours() * 60 + startD.getMinutes();
+                const dur = Math.max(15, (endD - startD) / 60000);
+                dayBlocks.push({ log, startMins, durationMins: dur });
+              }
+            } else if (logDateStr === dateStr) {
+              const d = new Date(log.timestamp);
+              const startMins = d.getHours() * 60 + d.getMinutes();
+              dayBlocks.push({ log, startMins, durationMins: 20 });
+            }
+          });
+
+          dayBlocks.sort((a,b) => a.startMins - b.startMins);
+
+          dayBlocks.forEach((blockItem, idx) => {
+            const log = blockItem.log;
+            const topPx = (blockItem.startMins / 1440) * 576;
+            let heightPx = (blockItem.durationMins / 1440) * 576;
+
+            if (topPx + heightPx > 576) {
+              heightPx = Math.max(8, 576 - topPx);
+            }
+
+            let className = 'feed';
+            if (log.type === 'sleep') className = 'sleep';
+            else if (log.type === 'diaper') className = 'diaper';
+            else if (log.type === 'bath') className = 'bath';
+
+            let lane = 0;
+            const concurrent = dayBlocks.filter((other, oIdx) => {
+              if (oIdx >= idx) return false;
+              return Math.abs(other.startMins - blockItem.startMins) < 45;
+            });
+            lane = concurrent.length % 3;
+
+            const widthPercent = 30;
+            const leftPercent = lane * 33;
+
+            colContent += `
+              <div class="routine-block ${className}" 
+                   style="top:${topPx}px; height:${heightPx}px; left:${leftPercent}%; width:${widthPercent}%; cursor:pointer;"
+                   onclick="showMatrixBlockDetail('${log.id}')"
+                   title="${log.detail || ''}">
+              </div>
+            `;
+          });
+
+          colContent += `</div>`;
+          grid.innerHTML += colContent;
+        });
+      } catch(err) {
+        console.error("Error al renderizar Matriz 24h", err);
+      }
     }
 
     function showMatrixBlockDetail(logId) {
@@ -1265,7 +1309,13 @@
 
     function openModal(id) { 
       document.getElementById(`${id}Modal`).classList.add('open'); 
-      if (id === 'alarms') renderAlarms();
+      if (id === 'alarms') {
+        renderAlarms();
+        const nowLocal = new Date();
+        nowLocal.setMinutes(nowLocal.getMinutes() + 30);
+        const localIsoStr = new Date(nowLocal.getTime() - (nowLocal.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+        if(document.getElementById('newAlarmTime')) document.getElementById('newAlarmTime').value = localIsoStr;
+      }
     }
     function closeModal(id) { document.getElementById(`${id}Modal`).classList.remove('open'); }
 
@@ -1360,29 +1410,32 @@
     }
 
     function initBarChart() {
-      const ctxBar = document.getElementById('barRoutinesChart');
-      if (!ctxBar) return;
-      const realData = getBarChartRealData('4weeks');
+      try {
+        if (typeof Chart === 'undefined') return;
+        const ctxBar = document.getElementById('barRoutinesChart');
+        if (!ctxBar) return;
+        const realData = getBarChartRealData('4weeks');
 
-      barRoutinesChartInstance = new Chart(ctxBar.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: realData.labels,
-          datasets: [
-            { label: 'Tomas 🍼', data: realData.feedData, backgroundColor: '#FFE599', borderRadius: 6 },
-            { label: 'Pañales 💩', data: realData.diaperData, backgroundColor: '#C5E1A5', borderRadius: 6 },
-            { label: 'Sueño (h) 💤', data: realData.sleepData, backgroundColor: '#D7BCE8', borderRadius: 6 }
-          ]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { position: 'bottom' },
-            tooltip: { enabled: true, mode: 'index', intersect: false }
+        barRoutinesChartInstance = new Chart(ctxBar.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: realData.labels,
+            datasets: [
+              { label: 'Tomas 🍼', data: realData.feedData, backgroundColor: '#FFE599', borderRadius: 6 },
+              { label: 'Pañales 💩', data: realData.diaperData, backgroundColor: '#C5E1A5', borderRadius: 6 },
+              { label: 'Sueño (h) 💤', data: realData.sleepData, backgroundColor: '#D7BCE8', borderRadius: 6 }
+            ]
           },
-          interaction: { mode: 'nearest', axis: 'x', intersect: false }
-        }
-      });
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: { enabled: true, mode: 'index', intersect: false }
+            },
+            interaction: { mode: 'nearest', axis: 'x', intersect: false }
+          }
+        });
+      } catch(err) { console.error("Error initBarChart", err); }
     }
 
     function updateBarChartRange(range) {
@@ -1403,17 +1456,19 @@
     }
 
     function updateChart() {
-      if (!weightChartInstance) return;
-      const growthLogs = getActiveBaby().logs.filter(l => l.type === 'growth').sort((a,b) => new Date(a.timestamp) - new Date(a.timestamp));
-      if (growthLogs.length > 0) {
-        const weights = growthLogs.map(l => l.weight).filter(w => w);
-        const heights = growthLogs.map(l => l.height).filter(h => h);
-        const heads = growthLogs.map(l => l.head).filter(h => h);
+      try {
+        if (!weightChartInstance) return;
+        const growthLogs = getActiveBaby().logs.filter(l => l.type === 'growth').sort((a,b) => new Date(a.timestamp) - new Date(a.timestamp));
+        if (growthLogs.length > 0) {
+          const weights = growthLogs.map(l => l.weight).filter(w => w);
+          const heights = growthLogs.map(l => l.height).filter(h => h);
+          const heads = growthLogs.map(l => l.head).filter(h => h);
 
-        if (weights.length > 0) { weightChartInstance.data.datasets[0].data = weights; weightChartInstance.update(); }
-        if (heights.length > 0) { heightChartInstance.data.datasets[0].data = heights; heightChartInstance.update(); }
-        if (heads.length > 0) { headChartInstance.data.datasets[0].data = heads; headChartInstance.update(); }
-      }
+          if (weights.length > 0) { weightChartInstance.data.datasets[0].data = weights; weightChartInstance.update(); }
+          if (heights.length > 0) { heightChartInstance.data.datasets[0].data = heights; heightChartInstance.update(); }
+          if (heads.length > 0) { headChartInstance.data.datasets[0].data = heads; headChartInstance.update(); }
+        }
+      } catch(err) { console.error("Error updateChart", err); }
     }
 
     function renderVaccines() {
@@ -1530,20 +1585,26 @@
 
     function addAlarm() {
       const type = document.getElementById('newAlarmType').value;
-      const offsetMins = parseInt(document.getElementById('newAlarmOffset').value);
+      const timeStr = document.getElementById('newAlarmTime').value;
       const sound = document.getElementById('newAlarmSound').value;
       
-      const targetTime = Date.now() + (offsetMins * 60000);
+      if (!timeStr) {
+        alert("Selecciona una fecha y hora");
+        return;
+      }
+      const targetTime = new Date(timeStr).getTime();
+      
       const newAlarm = { id: Date.now(), title: type, time: targetTime, sound: sound, triggered: false };
       
       getActiveBaby().alarms.push(newAlarm);
       saveState();
-      alert(`Alarma añadida. Te avisaremos en ${offsetMins} minutos.`);
+      renderAlarms();
     }
 
     function deleteAlarm(id) {
       getActiveBaby().alarms = getActiveBaby().alarms.filter(a => a.id !== id);
       saveState();
+      renderAlarms();
     }
 
     function renderAlarms() {
@@ -1558,12 +1619,14 @@
       }
       
       activeAlarms.forEach(al => {
-        const timeStr = new Date(al.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const timeObj = new Date(al.time);
+        const dateStr = timeObj.toLocaleDateString([], { day: 'numeric', month: 'short' });
+        const timeStr = timeObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         container.innerHTML += `
           <div class="alarm-item">
             <div>
               <strong style="font-size:0.85rem;">${al.title}</strong>
-              <div style="font-size:0.75rem; color:var(--text-muted);">A las ${timeStr}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${dateStr}, a las ${timeStr}</div>
             </div>
             <button onclick="deleteAlarm(${al.id})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button>
           </div>
