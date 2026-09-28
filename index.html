@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BabyCare v1.5.1 - Control Completo del Bebé</title>
+  <title>BabyCare v1.6.0 - Control Completo del Bebé</title>
   
   <link rel="icon" type="image/png" sizes="192x192" href="https://img.icons8.com/emoji/192/baby-emoji.png">
   <link rel="apple-touch-icon" href="https://img.icons8.com/emoji/192/baby-emoji.png">
@@ -188,7 +188,7 @@
   <header>
     <div class="brand">
       <div class="brand-icon">👶</div>
-      <div class="brand-title">BabyCare <small style="font-size:0.75rem; color:#555; font-weight:800;">v1.5.1</small></div>
+      <div class="brand-title">BabyCare <small style="font-size:0.75rem; color:#555; font-weight:800;">v1.6.0</small></div>
     </div>
     <button class="burger-btn" onclick="openDrawer()"><i data-lucide="menu"></i></button>
   </header>
@@ -266,7 +266,7 @@
           <button class="date-nav-btn" onclick="changeSelectedDate(1)"><i data-lucide="chevron-right"></i></button>
         </div>
 
-        <!-- Resumen diario acumulado (Actualizado a Litros) -->
+        <!-- Resumen diario acumulado -->
         <div class="daily-summary-grid">
           <div class="summary-card">
             <h5 id="lbl-sum-feed">🍼 Leche (L)</h5>
@@ -299,7 +299,7 @@
         <div class="calendar-grid" id="calendarGrid"></div>
       </div>
 
-      <!-- Gráfico de Barras (Escalado en Litros) -->
+      <!-- Gráfico de Barras (Escalado Automático Dual) -->
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; flex-wrap:wrap; gap:8px;">
           <h3 style="font-size:1rem; font-weight:800;" id="txt-bar-chart-title">Análisis de Frecuencias y Hábitos</h3>
@@ -345,17 +345,14 @@
         <h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-weight-chart">1. Evolución de Peso (kg) vs Percentil 50 OMS</h3>
         <canvas id="weightChart" height="180"></canvas>
       </div>
-
       <div class="card">
         <h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-height-chart">2. Evolución de Talla / Longitud (cm) vs OMS</h3>
         <canvas id="heightChart" height="180"></canvas>
       </div>
-
       <div class="card">
         <h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-head-chart">3. Perímetro Cefálico (cm) vs OMS</h3>
         <canvas id="headChart" height="180"></canvas>
       </div>
-
       <div class="card">
         <h3 style="font-size:1rem; font-weight:800; margin-bottom:0.5rem;" id="txt-who-routines">4. Control Diario de Tomas y Pañales</h3>
         <p style="font-size:0.83rem; color:var(--text-muted);" id="txt-who-routines-desc">Frecuencias normales recomendadas según etapa OMS:</p>
@@ -410,9 +407,7 @@
             <button type="button" class="close-btn" onclick="closeFormModal()"><i data-lucide="x"></i></button>
           </div>
         </div>
-        
         <input type="hidden" id="editingLogId"><input type="hidden" id="entryType">
-        
         <div class="modal-body" id="formModalBody">
           <div id="dynamicFormFields"></div>
           <div class="form-group" id="groupTimestampMain">
@@ -424,7 +419,6 @@
             <input type="text" class="form-control" id="entryNotes" placeholder="Ej: Agitado al inicio...">
           </div>
         </div>
-
         <div class="modal-footer">
           <button type="submit" class="btn-submit" id="btn-save-entry">✓ Guardar Registro</button>
         </div>
@@ -477,7 +471,7 @@
     </div>
   </div>
 
-  <!-- Modal Alarmas y Avisos (Con Selección de Hora Exacta Simplificada) -->
+  <!-- Modal Alarmas y Avisos -->
   <div class="modal-overlay" id="alarmsModal">
     <div class="modal">
       <div class="modal-header">
@@ -518,7 +512,7 @@
     </div>
   </div>
 
-  <!-- Modal Único de Sincronización Directa por WhatsApp / Archivo -->
+  <!-- Modal Sincronización -->
   <div class="modal-overlay" id="syncModal">
     <div class="modal">
       <div class="modal-header">
@@ -682,7 +676,7 @@
     });
 
     function loadLocalStorageWithMigration() {
-      const keys = ['babycare_data_v1_5_0', 'babycare_data_v1_4_0', 'babycare_data_v1_3_1', 'babycare_data_v1_3_0', 'babycare_data_v1_2_2', 'babycare_data_v40_1_0', 'babycare_data_v40', 'babycare_data_v37'];
+      const keys = ['babycare_data_v1_6_0', 'babycare_data_v1_5_1', 'babycare_data_v1_5_0', 'babycare_data_v1_4_0', 'babycare_data_v1_3_1', 'babycare_data_v1_3_0', 'babycare_data_v1_2_2', 'babycare_data_v40_1_0', 'babycare_data_v40', 'babycare_data_v37'];
       let loaded = false;
       for (let key of keys) {
         const saved = localStorage.getItem(key);
@@ -721,7 +715,7 @@
     }
     
     function saveState() { 
-      localStorage.setItem('babycare_data_v1_5_0', JSON.stringify(appData)); 
+      localStorage.setItem('babycare_data_v1_6_0', JSON.stringify(appData)); 
       populateBabySelector(); 
       renderBabyProfile(); 
       renderLogs(); 
@@ -858,7 +852,7 @@
       
       setElText('opt-4weeks', t.opt4w);
       setElText('opt-6months', t.opt6m);
-      setElText('leg-feed', `${t.legFeed} (L) 🍼`);
+      setElText('leg-feed', `${t.legFeed} 🍼`);
       setElText('leg-sleep', `${t.legSleep} 💤`);
       setElText('leg-diaper', `${t.legDiaper} 💩`);
       
@@ -901,7 +895,6 @@
         setElText('mstep8-title', t.ms8Title); setElText('mstep8-desc', t.ms8Desc);
       }
 
-      // Actualizar dataset labels en la gráfica de barras al cambiar idioma
       if (typeof barRoutinesChartInstance !== 'undefined' && barRoutinesChartInstance) {
         barRoutinesChartInstance.data.datasets[0].label = `${t.legFeed} (L) 🍼`;
         barRoutinesChartInstance.data.datasets[1].label = `${t.legDiaper} 💩`;
@@ -921,14 +914,17 @@
 
     function renderBabyProfile() {
       const baby = getActiveBaby();
-      document.getElementById('babyNameDisplay').innerText = baby.name || 'Léo';
+      setElText('babyNameDisplay', baby.name || 'Léo');
       const diffDays = calculateAgeInDays(baby.dob);
       const months = Math.floor(diffDays / 30.4);
       const days = Math.floor(diffDays % 30.4);
-      document.getElementById('babyAgeDisplay').innerText = `${months}m ${days}d (${diffDays} días de vida)`;
+      setElText('babyAgeDisplay', `${months}m ${days}d (${diffDays} días de vida)`);
       
       const avatarDiv = document.getElementById('babyAvatarDisplay');
-      if (baby.photo) { avatarDiv.innerHTML = `<img src="${baby.photo}" alt="Bebé">`; } else { avatarDiv.innerHTML = baby.gender === 'female' ? '👧' : '👦'; }
+      if (avatarDiv) {
+        if (baby.photo) { avatarDiv.innerHTML = `<img src="${baby.photo}" alt="Bebé">`; } 
+        else { avatarDiv.innerHTML = baby.gender === 'female' ? '👧' : '👦'; }
+      }
       
       if(document.getElementById('profName')) document.getElementById('profName').value = baby.name;
       if(document.getElementById('profDob')) document.getElementById('profDob').value = baby.dob;
@@ -975,8 +971,8 @@
       const todayKey = getLocalDateStr(new Date());
       const t = i18n[appData.lang] || i18n['es'];
 
-      if(document.getElementById('currentDateText')) document.getElementById('currentDateText').innerText = selectedDate.toLocaleDateString(appData.lang === 'en' ? 'en-US' : (appData.lang === 'fr' ? 'fr-FR' : 'es-ES'), { day: 'numeric', month: 'short', year: 'numeric' });
-      if(document.getElementById('todayTag')) document.getElementById('todayTag').innerText = (targetKey === todayKey) ? t.today : (appData.lang === 'en' ? 'Go to Today' : 'Ir a Hoy');
+      setElText('currentDateText', selectedDate.toLocaleDateString(appData.lang === 'en' ? 'en-US' : (appData.lang === 'fr' ? 'fr-FR' : 'es-ES'), { day: 'numeric', month: 'short', year: 'numeric' }));
+      setElText('todayTag', (targetKey === todayKey) ? t.today : (appData.lang === 'en' ? 'Go to Today' : 'Ir a Hoy'));
 
       const filtered = getActiveBaby().logs.filter(l => getLocalDateStr(l.timestamp) === targetKey).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
 
@@ -1010,9 +1006,14 @@
       const sleepMinsRem = totalSleepMins % 60;
       const milkLiters = (totalMilkMl / 1000).toFixed(2);
 
-      if(document.getElementById('val-sum-feed')) document.getElementById('val-sum-feed').innerText = `${milkLiters} L`;
-      if(document.getElementById('val-sum-sleep')) document.getElementById('val-sum-sleep').innerText = `${sleepHours}h ${sleepMinsRem}m`;
-      if(document.getElementById('val-sum-diaper')) document.getElementById('val-sum-diaper').innerText = `${totalDiapersCount} t`;
+      setElText('val-sum-feed', `${milkLiters} L`);
+      setElText('val-sum-sleep', `${sleepHours}h ${sleepMinsRem}m`);
+      setElText('val-sum-diaper', `${totalDiapersCount} t`);
+
+      const todayFeedings = getActiveBaby().logs.filter(l => getLocalDateStr(l.timestamp) === todayKey && l.type === 'feeding').length;
+      const todayDiapers = getActiveBaby().logs.filter(l => getLocalDateStr(l.timestamp) === todayKey && l.type === 'diaper').length;
+      setElText('val-feed-count', `${todayFeedings} hoy`);
+      setElText('val-diaper-count', `${todayDiapers} hoy`);
 
       if (filtered.length === 0) {
         container.innerHTML = `<p style="text-align:center; padding:2rem; color:var(--text-muted);">Sin registros para este día.</p>`;
@@ -1051,6 +1052,48 @@
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
+    function renderCalendar() {
+      try {
+        const grid = document.getElementById('calendarGrid'); 
+        if(!grid) return;
+        grid.innerHTML = '';
+        
+        const year = calDate.getFullYear(); const month = calDate.getMonth();
+        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        setElText('calMonthTitle', `${monthNames[month]} ${year}`);
+        
+        const t = i18n[appData.lang] || i18n['es'];
+        const dayHeaders = t.daysShort || ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+        dayHeaders.forEach(d => { grid.innerHTML += `<div class="cal-day-name">${d}</div>`; });
+        const firstDay = new Date(year, month, 1).getDay();
+        const startingPos = (firstDay === 0 ? 6 : firstDay - 1);
+        const totalDays = new Date(year, month + 1, 0).getDate();
+
+        for (let i = 0; i < startingPos; i++) grid.innerHTML += `<div></div>`;
+        const today = new Date();
+
+        for (let day = 1; day <= totalDays; day++) {
+          const dateKey = getLocalDateStr(new Date(year, month, day));
+          const dayLogs = getActiveBaby().logs.filter(l => getLocalDateStr(l.timestamp) === dateKey);
+          const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+          let dotsHtml = '';
+          if (dayLogs.length > 0) {
+            dotsHtml = '<div class="cal-dots">';
+            if (dayLogs.some(l => l.type === 'feeding')) dotsHtml += '<div class="cal-dot" style="background:#FFE599"></div>';
+            if (dayLogs.some(l => l.type === 'diaper')) dotsHtml += '<div class="cal-dot" style="background:#C5E1A5"></div>';
+            if (dayLogs.some(l => l.type === 'sleep')) dotsHtml += '<div class="cal-dot" style="background:#D7BCE8"></div>';
+            dotsHtml += '</div>';
+          }
+          grid.innerHTML += `<div class="cal-cell ${isToday ? 'today' : ''}" onclick="selectCalendarDate(${year}, ${month}, ${day})"><span>${day}</span>${dotsHtml}</div>`;
+        }
+      } catch(e) { console.error("Error renderCalendar", e); }
+    }
+
+    function selectCalendarDate(y, m, d) { selectedDate = new Date(y, m, d); switchTab('logs'); renderLogs(); }
+    function prevMonth() { calDate.setMonth(calDate.getMonth() - 1); renderCalendar(); }
+    function nextMonth() { calDate.setMonth(calDate.getMonth() + 1); renderCalendar(); }
+
     function changeMatrixWeek(weeksOffset) {
       selectedMatrixWeekDate.setDate(selectedMatrixWeekDate.getDate() + (weeksOffset * 7));
       renderWeeklyMatrix24h();
@@ -1075,7 +1118,7 @@
         sun.setDate(mon.getDate() + 6);
 
         const t = i18n[appData.lang] || i18n['es'];
-        if(document.getElementById('matrixWeekLabel')) document.getElementById('matrixWeekLabel').innerText = `Semana del ${mon.getDate()} ${mon.toLocaleDateString('es-ES',{month:'short'})} al ${sun.getDate()} ${sun.toLocaleDateString('es-ES',{month:'short', year:'numeric'})}`;
+        setElText('matrixWeekLabel', `Semana del ${mon.getDate()} ${mon.toLocaleDateString('es-ES',{month:'short'})} al ${sun.getDate()} ${sun.toLocaleDateString('es-ES',{month:'short', year:'numeric'})}`);
 
         grid.innerHTML += `<div class="grid-header-cell"></div>`;
         const daysShort = t.daysShort || ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
@@ -1197,6 +1240,233 @@
 
       alert(`${typeTitle}\n• Hora: ${timeStr} (${dateStr})\n• Detalle: ${log.detail || '-'}\n• Notas: ${log.notes || 'Sin observaciones'}`);
     }
+
+    let weightChartInstance = null; let heightChartInstance = null; let headChartInstance = null; let barRoutinesChartInstance = null;
+
+    function getBarChartRealData(range) {
+      const today = new Date();
+      let labels = [];
+      let feedData = [];
+      let diaperData = [];
+      let sleepData = [];
+
+      if (range === '6months') {
+        const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+        for (let i = 5; i >= 0; i--) {
+          const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+          const y = d.getFullYear();
+          const m = d.getMonth();
+          labels.push(monthNames[m]);
+
+          const monthLogs = getActiveBaby().logs.filter(l => {
+            const ld = new Date(l.timestamp);
+            return ld.getFullYear() === y && ld.getMonth() === m;
+          });
+
+          let feedsMl = 0;
+          monthLogs.filter(l => l.type === 'feeding').forEach(l => {
+            if (l.amount) feedsMl += parseFloat(l.amount);
+            else if (l.detail) {
+              const match = l.detail.match(/(\d+)\s*ml/i);
+              if (match) feedsMl += parseInt(match[1]);
+            }
+          });
+
+          let diapers = monthLogs.filter(l => l.type === 'diaper').length;
+          let sleepMins = 0;
+          monthLogs.filter(l => l.type === 'sleep').forEach(l => {
+            if (l.durationMins) sleepMins += parseInt(l.durationMins);
+            else if (l.detail) {
+              const matchH = l.detail.match(/(\d+)\s*h/i);
+              const matchM = l.detail.match(/(\d+)\s*m/i);
+              if (matchH) sleepMins += parseInt(matchH[1]) * 60;
+              if (matchM) sleepMins += parseInt(matchM[1]);
+            }
+          });
+
+          feedData.push(parseFloat((feedsMl / 1000).toFixed(2)));
+          diaperData.push(diapers);
+          sleepData.push(parseFloat((sleepMins / 60).toFixed(1)));
+        }
+      } else {
+        const currentDay = today.getDay();
+        const distToMon = (currentDay === 0 ? -6 : 1 - currentDay);
+        const thisMon = new Date(today);
+        thisMon.setDate(today.getDate() + distToMon);
+
+        for (let i = 3; i >= 0; i--) {
+          const mon = new Date(thisMon);
+          mon.setDate(thisMon.getDate() - (i * 7));
+          const sun = new Date(mon);
+          sun.setDate(mon.getDate() + 6);
+
+          const labelStr = `${mon.getDate()} ${mon.toLocaleDateString('es-ES',{month:'short'})} - ${sun.getDate()} ${sun.toLocaleDateString('es-ES',{month:'short'})}`;
+          labels.push(labelStr);
+
+          const monStr = getLocalDateStr(mon);
+          const sunStr = getLocalDateStr(sun);
+
+          const weekLogs = getActiveBaby().logs.filter(l => {
+            const dateStr = getLocalDateStr(l.timestamp);
+            return dateStr >= monStr && dateStr <= sunStr;
+          });
+
+          let feedsMl = 0;
+          weekLogs.filter(l => l.type === 'feeding').forEach(l => {
+            if (l.amount) feedsMl += parseFloat(l.amount);
+            else if (l.detail) {
+              const match = l.detail.match(/(\d+)\s*ml/i);
+              if (match) feedsMl += parseInt(match[1]);
+            }
+          });
+
+          let diapers = weekLogs.filter(l => l.type === 'diaper').length;
+          let sleepMins = 0;
+          weekLogs.filter(l => l.type === 'sleep').forEach(l => {
+            if (l.durationMins) sleepMins += parseInt(l.durationMins);
+            else if (l.detail) {
+              const matchH = l.detail.match(/(\d+)\s*h/i);
+              const matchM = l.detail.match(/(\d+)\s*m/i);
+              if (matchH) sleepMins += parseInt(matchH[1]) * 60;
+              if (matchM) sleepMins += parseInt(matchM[1]);
+            }
+          });
+
+          feedData.push(parseFloat((feedsMl / 1000).toFixed(2)));
+          diaperData.push(diapers);
+          sleepData.push(parseFloat((sleepMins / 60).toFixed(1)));
+        }
+      }
+
+      return { labels, feedData, diaperData, sleepData };
+    }
+
+    function initBarChart() {
+      try {
+        if (typeof Chart === 'undefined') return;
+        const ctxBar = document.getElementById('barRoutinesChart');
+        if (!ctxBar) return;
+        const realData = getBarChartRealData('4weeks');
+        const t = i18n[appData.lang] || i18n['es'];
+
+        barRoutinesChartInstance = new Chart(ctxBar.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: realData.labels,
+            datasets: [
+              { label: `${t.legFeed} (L) 🍼`, data: realData.feedData, backgroundColor: '#FFE599', borderRadius: 6, yAxisID: 'y1' },
+              { label: `${t.legDiaper} 💩`, data: realData.diaperData, backgroundColor: '#C5E1A5', borderRadius: 6, yAxisID: 'y' },
+              { label: `${t.legSleep} (h) 💤`, data: realData.sleepData, backgroundColor: '#D7BCE8', borderRadius: 6, yAxisID: 'y' }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: { enabled: true, mode: 'index', intersect: false }
+            },
+            interaction: { mode: 'nearest', axis: 'x', intersect: false },
+            scales: {
+              y: { type: 'linear', display: true, position: 'left', beginAtZero: true },
+              y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, beginAtZero: true }
+            }
+          }
+        });
+      } catch(err) { console.error("Error initBarChart", err); }
+    }
+
+    function updateBarChartRange(range) {
+      if (!barRoutinesChartInstance) return;
+      const realData = getBarChartRealData(range);
+      barRoutinesChartInstance.data.labels = realData.labels;
+      barRoutinesChartInstance.data.datasets[0].data = realData.feedData;
+      barRoutinesChartInstance.data.datasets[1].data = realData.diaperData;
+      barRoutinesChartInstance.data.datasets[2].data = realData.sleepData;
+      barRoutinesChartInstance.update();
+    }
+
+    function updateBarChart() {
+      if (barRoutinesChartInstance) {
+        const selectVal = document.getElementById('barRangeSelect') ? document.getElementById('barRangeSelect').value : '4weeks';
+        updateBarChartRange(selectVal);
+      }
+    }
+
+    function initChart() {
+      try {
+        if (typeof Chart === 'undefined') return;
+        const ctxWeight = document.getElementById('weightChart');
+        if (ctxWeight) {
+          weightChartInstance = new Chart(ctxWeight.getContext('2d'), {
+            type: 'line',
+            data: {
+              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'],
+              datasets: [
+                { label: 'Léo (Kg)', data: [3.3, 4.2, 5.4, null, null, null], borderColor: '#FF8B94', backgroundColor: 'rgba(255,139,148,0.2)', borderWidth: 3, tension: 0.3 },
+                { label: 'OMS Mediana (P50)', data: [3.3, 4.5, 5.6, 6.4, 7.0, 7.5, 7.9], borderColor: '#AEC6CF', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+              ]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+          });
+        }
+
+        const ctxHeight = document.getElementById('heightChart');
+        if (ctxHeight) {
+          heightChartInstance = new Chart(ctxHeight.getContext('2d'), {
+            type: 'line',
+            data: {
+              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'],
+              datasets: [
+                { label: 'Léo (cm)', data: [50, 54.5, 58, null, null, null], borderColor: '#779ECB', backgroundColor: 'rgba(119,158,203,0.2)', borderWidth: 3, tension: 0.3 },
+                { label: 'OMS Mediana (P50)', data: [49.9, 54.7, 58.4, 61.4, 63.9, 65.9, 67.6], borderColor: '#B2AC88', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+              ]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+          });
+        }
+
+        const ctxHead = document.getElementById('headChart');
+        if (ctxHead) {
+          headChartInstance = new Chart(ctxHead.getContext('2d'), {
+            type: 'line',
+            data: {
+              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'],
+              datasets: [
+                { label: 'Léo (cm)', data: [34.5, 36.8, 38, null, null, null], borderColor: '#B2AC88', backgroundColor: 'rgba(178,172,136,0.2)', borderWidth: 3, tension: 0.3 },
+                { label: 'OMS Mediana (P50)', data: [34.5, 36.9, 38.3, 39.5, 40.5, 41.3, 42.0], borderColor: '#AEC6CF', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+              ]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+          });
+        }
+      } catch(e) { console.error("Error initChart", e); }
+    }
+
+    function updateChart() {
+      try {
+        if (!weightChartInstance) return;
+        const growthLogs = getActiveBaby().logs.filter(l => l.type === 'growth').sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
+        if (growthLogs.length > 0) {
+          const weights = growthLogs.map(l => l.weight).filter(w => w);
+          const heights = growthLogs.map(l => l.height).filter(h => h);
+          const heads = growthLogs.map(l => l.head).filter(h => h);
+
+          if (weights.length > 0 && weightChartInstance.data.datasets[0]) { weightChartInstance.data.datasets[0].data = weights; weightChartInstance.update(); }
+          if (heights.length > 0 && heightChartInstance.data.datasets[0]) { heightChartInstance.data.datasets[0].data = heights; heightChartInstance.update(); }
+          if (heads.length > 0 && headChartInstance.data.datasets[0]) { headChartInstance.data.datasets[0].data = heads; headChartInstance.update(); }
+        }
+      } catch(err) { console.error("Error updateChart", err); }
+    }
+
+    function renderVaccines() {
+      const container = document.getElementById('vaccinesListContainer'); container.innerHTML = '';
+      standardVaccines.forEach(v => {
+        const isDone = getActiveBaby().vaccines[v.id] || false;
+        container.innerHTML += `<div class="vaccine-item ${isDone ? 'done' : ''}"><div><strong>${v.age}</strong>: ${v.name}</div><div class="checkbox-custom" onclick="toggleVaccine('${v.id}')">${isDone ? '✓' : ''}</div></div>`;
+      });
+    }
+
+    function toggleVaccine(id) { getActiveBaby().vaccines[id] = !getActiveBaby().vaccines[id]; saveState(); renderVaccines(); }
 
     function deleteLog(id) { if (confirm("¿Estás seguro de eliminar este registro?")) { getActiveBaby().logs = getActiveBaby().logs.filter(l => l.id !== id); saveState(); } }
     function editLog(id) { const log = getActiveBaby().logs.find(l => l.id === id); if (log) openFormModal(log.type, log); }
@@ -1347,243 +1617,6 @@
       saveState(); closeFormModal();
     }
 
-    function openModal(id) { 
-      document.getElementById(`${id}Modal`).classList.add('open'); 
-      if (id === 'alarms') {
-        renderAlarms();
-      }
-    }
-    function closeModal(id) { document.getElementById(`${id}Modal`).classList.remove('open'); }
-
-    function saveProfile(e) {
-      e.preventDefault();
-      getActiveBaby().name = document.getElementById('profName').value;
-      getActiveBaby().dob = document.getElementById('profDob').value;
-      getActiveBaby().gender = document.getElementById('profGender').value;
-      saveState(); closeModal('profile');
-    }
-
-    function getBarChartRealData(range) {
-      const today = new Date();
-      let labels = [];
-      let feedData = [];
-      let diaperData = [];
-      let sleepData = [];
-
-      if (range === '6months') {
-        const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-        for (let i = 5; i >= 0; i--) {
-          const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
-          const y = d.getFullYear();
-          const m = d.getMonth();
-          labels.push(monthNames[m]);
-
-          const monthLogs = getActiveBaby().logs.filter(l => {
-            const ld = new Date(l.timestamp);
-            return ld.getFullYear() === y && ld.getMonth() === m;
-          });
-
-          let feedsMl = 0;
-          monthLogs.filter(l => l.type === 'feeding').forEach(l => {
-            if (l.amount) feedsMl += parseFloat(l.amount);
-            else if (l.detail) {
-              const match = l.detail.match(/(\d+)\s*ml/i);
-              if (match) feedsMl += parseInt(match[1]);
-            }
-          });
-
-          let diapers = monthLogs.filter(l => l.type === 'diaper').length;
-          let sleepMins = 0;
-          monthLogs.filter(l => l.type === 'sleep').forEach(l => {
-            if (l.durationMins) sleepMins += parseInt(l.durationMins);
-            else if (l.detail) {
-              const matchH = l.detail.match(/(\d+)\s*h/i);
-              const matchM = l.detail.match(/(\d+)\s*m/i);
-              if (matchH) sleepMins += parseInt(matchH[1]) * 60;
-              if (matchM) sleepMins += parseInt(matchM[1]);
-            }
-          });
-
-          feedData.push(parseFloat((feedsMl / 1000).toFixed(2)));
-          diaperData.push(diapers);
-          sleepData.push(parseFloat((sleepMins / 60).toFixed(1)));
-        }
-      } else {
-        const currentDay = today.getDay();
-        const distToMon = (currentDay === 0 ? -6 : 1 - currentDay);
-        const thisMon = new Date(today);
-        thisMon.setDate(today.getDate() + distToMon);
-
-        for (let i = 3; i >= 0; i--) {
-          const mon = new Date(thisMon);
-          mon.setDate(thisMon.getDate() - (i * 7));
-          const sun = new Date(mon);
-          sun.setDate(mon.getDate() + 6);
-
-          const labelStr = `${mon.getDate()} ${mon.toLocaleDateString('es-ES',{month:'short'})} - ${sun.getDate()} ${sun.toLocaleDateString('es-ES',{month:'short'})}`;
-          labels.push(labelStr);
-
-          const monStr = getLocalDateStr(mon);
-          const sunStr = getLocalDateStr(sun);
-
-          const weekLogs = getActiveBaby().logs.filter(l => {
-            const dateStr = getLocalDateStr(l.timestamp);
-            return dateStr >= monStr && dateStr <= sunStr;
-          });
-
-          let feedsMl = 0;
-          weekLogs.filter(l => l.type === 'feeding').forEach(l => {
-            if (l.amount) feedsMl += parseFloat(l.amount);
-            else if (l.detail) {
-              const match = l.detail.match(/(\d+)\s*ml/i);
-              if (match) feedsMl += parseInt(match[1]);
-            }
-          });
-
-          let diapers = weekLogs.filter(l => l.type === 'diaper').length;
-          let sleepMins = 0;
-          weekLogs.filter(l => l.type === 'sleep').forEach(l => {
-            if (l.durationMins) sleepMins += parseInt(l.durationMins);
-            else if (l.detail) {
-              const matchH = l.detail.match(/(\d+)\s*h/i);
-              const matchM = l.detail.match(/(\d+)\s*m/i);
-              if (matchH) sleepMins += parseInt(matchH[1]) * 60;
-              if (matchM) sleepMins += parseInt(matchM[1]);
-            }
-          });
-
-          feedData.push(parseFloat((feedsMl / 1000).toFixed(2)));
-          diaperData.push(diapers);
-          sleepData.push(parseFloat((sleepMins / 60).toFixed(1)));
-        }
-      }
-
-      return { labels, feedData, diaperData, sleepData };
-    }
-
-    function initBarChart() {
-      try {
-        if (typeof Chart === 'undefined') return;
-        const ctxBar = document.getElementById('barRoutinesChart');
-        if (!ctxBar) return;
-        const realData = getBarChartRealData('4weeks');
-        const t = i18n[appData.lang] || i18n['es'];
-
-        barRoutinesChartInstance = new Chart(ctxBar.getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: realData.labels,
-            datasets: [
-              { label: `${t.legFeed} (L) 🍼`, data: realData.feedData, backgroundColor: '#FFE599', borderRadius: 6 },
-              { label: `${t.legDiaper} 💩`, data: realData.diaperData, backgroundColor: '#C5E1A5', borderRadius: 6 },
-              { label: `${t.legSleep} (h) 💤`, data: realData.sleepData, backgroundColor: '#D7BCE8', borderRadius: 6 }
-            ]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { position: 'bottom' },
-              tooltip: { enabled: true, mode: 'index', intersect: false }
-            },
-            interaction: { mode: 'nearest', axis: 'x', intersect: false }
-          }
-        });
-      } catch(err) { console.error("Error initBarChart", err); }
-    }
-
-    function updateBarChartRange(range) {
-      if (!barRoutinesChartInstance) return;
-      const realData = getBarChartRealData(range);
-      barRoutinesChartInstance.data.labels = realData.labels;
-      barRoutinesChartInstance.data.datasets[0].data = realData.feedData;
-      barRoutinesChartInstance.data.datasets[1].data = realData.diaperData;
-      barRoutinesChartInstance.data.datasets[2].data = realData.sleepData;
-      barRoutinesChartInstance.update();
-    }
-
-    function updateBarChart() {
-      if (barRoutinesChartInstance) {
-        const selectVal = document.getElementById('barRangeSelect') ? document.getElementById('barRangeSelect').value : '4weeks';
-        updateBarChartRange(selectVal);
-      }
-    }
-
-    function initChart() {
-      try {
-        if (typeof Chart === 'undefined') return;
-        const ctxWeight = document.getElementById('weightChart');
-        if (ctxWeight) {
-          weightChartInstance = new Chart(ctxWeight.getContext('2d'), {
-            type: 'line',
-            data: {
-              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'],
-              datasets: [
-                { label: 'Léo (Kg)', data: [3.3, 4.2, 5.4, null, null, null], borderColor: '#FF8B94', backgroundColor: 'rgba(255,139,148,0.2)', borderWidth: 3, tension: 0.3 },
-                { label: 'OMS Mediana (P50)', data: [3.3, 4.5, 5.6, 6.4, 7.0, 7.5, 7.9], borderColor: '#AEC6CF', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-              ]
-            },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-          });
-        }
-
-        const ctxHeight = document.getElementById('heightChart');
-        if (ctxHeight) {
-          heightChartInstance = new Chart(ctxHeight.getContext('2d'), {
-            type: 'line',
-            data: {
-              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'],
-              datasets: [
-                { label: 'Léo (cm)', data: [50, 54.5, 58, null, null, null], borderColor: '#779ECB', backgroundColor: 'rgba(119,158,203,0.2)', borderWidth: 3, tension: 0.3 },
-                { label: 'OMS Mediana (P50)', data: [49.9, 54.7, 58.4, 61.4, 63.9, 65.9, 67.6], borderColor: '#B2AC88', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-              ]
-            },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-          });
-        }
-
-        const ctxHead = document.getElementById('headChart');
-        if (ctxHead) {
-          headChartInstance = new Chart(ctxHead.getContext('2d'), {
-            type: 'line',
-            data: {
-              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'],
-              datasets: [
-                { label: 'Léo (cm)', data: [34.5, 36.8, 38, null, null, null], borderColor: '#B2AC88', backgroundColor: 'rgba(178,172,136,0.2)', borderWidth: 3, tension: 0.3 },
-                { label: 'OMS Mediana (P50)', data: [34.5, 36.9, 38.3, 39.5, 40.5, 41.3, 42.0], borderColor: '#AEC6CF', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-              ]
-            },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-          });
-        }
-      } catch(e) { console.error("Error initChart", e); }
-    }
-
-    function updateChart() {
-      try {
-        if (!weightChartInstance) return;
-        const growthLogs = getActiveBaby().logs.filter(l => l.type === 'growth').sort((a,b) => new Date(a.timestamp) - new Date(a.timestamp));
-        if (growthLogs.length > 0) {
-          const weights = growthLogs.map(l => l.weight).filter(w => w);
-          const heights = growthLogs.map(l => l.height).filter(h => h);
-          const heads = growthLogs.map(l => l.head).filter(h => h);
-
-          if (weights.length > 0 && weightChartInstance.data.datasets[0]) { weightChartInstance.data.datasets[0].data = weights; weightChartInstance.update(); }
-          if (heights.length > 0 && heightChartInstance.data.datasets[0]) { heightChartInstance.data.datasets[0].data = heights; heightChartInstance.update(); }
-          if (heads.length > 0 && headChartInstance.data.datasets[0]) { headChartInstance.data.datasets[0].data = heads; headChartInstance.update(); }
-        }
-      } catch(err) { console.error("Error updateChart", err); }
-    }
-
-    function renderVaccines() {
-      const container = document.getElementById('vaccinesListContainer'); container.innerHTML = '';
-      standardVaccines.forEach(v => {
-        const isDone = getActiveBaby().vaccines[v.id] || false;
-        container.innerHTML += `<div class="vaccine-item ${isDone ? 'done' : ''}"><div><strong>${v.age}</strong>: ${v.name}</div><div class="checkbox-custom" onclick="toggleVaccine('${v.id}')">${isDone ? '✓' : ''}</div></div>`;
-      });
-    }
-
-    function toggleVaccine(id) { getActiveBaby().vaccines[id] = !getActiveBaby().vaccines[id]; saveState(); renderVaccines(); }
-
     function shareViaWhatsApp() {
       try {
         const dataStr = JSON.stringify(appData, null, 2);
@@ -1599,7 +1632,6 @@
           return;
         }
       } catch(e) {}
-      
       fallbackWhatsApp();
     }
 
@@ -1626,7 +1658,6 @@
           return;
         }
       } catch(e) {}
-
       exportJSON();
     }
 
@@ -1685,7 +1716,7 @@
       };
       reader.readAsText(file);
     }
-
+    
     function addAlarm() {
       const type = document.getElementById('newAlarmType').value;
       const timeStr = document.getElementById('newAlarmTime').value;
