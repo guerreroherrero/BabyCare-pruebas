@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BabyCare 1.8.0 - Control Completo del Bebé</title>
+  <title>BabyCare 1.8.1 - Control Completo del Bebé</title>
+  
+  <!-- Forzamos el color azul pastel en la barra de estado del móvil -->
+  <meta name="theme-color" content="#7AA2F7">
   
   <link rel="icon" type="image/png" sizes="192x192" href="https://img.icons8.com/emoji/192/baby-emoji.png">
   <link rel="apple-touch-icon" href="https://img.icons8.com/emoji/192/baby-emoji.png">
@@ -188,7 +191,7 @@
   <header>
     <div class="brand">
       <div class="brand-icon">👶</div>
-      <div class="brand-title">BabyCare <small style="font-size:0.75rem; color:#555; font-weight:800;">v1.8.0</small></div>
+      <div class="brand-title">BabyCare <small style="font-size:0.75rem; color:#555; font-weight:800;">v1.8.1</small></div>
     </div>
     <button class="burger-btn" onclick="openDrawer()"><i data-lucide="menu"></i></button>
   </header>
@@ -299,7 +302,7 @@
         <div class="calendar-grid" id="calendarGrid"></div>
       </div>
 
-      <!-- Gráfico de Barras -->
+      <!-- Gráfico de Barras (Escalado Automático Dual) -->
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; flex-wrap:wrap; gap:8px;">
           <h3 style="font-size:1rem; font-weight:800;" id="txt-bar-chart-title">Análisis de Frecuencias y Hábitos</h3>
@@ -384,7 +387,7 @@
         <div class="manual-step"><div class="step-number">1</div><div class="step-content"><h4 id="mstep1-title">Personalizar Perfil y Foto del Bebé</h4><p id="mstep1-desc">Pulsa sobre la foto o avatar circular para subir la foto real de tu bebé. Toca el icono del lápiz ✏️ para editar su nombre.</p></div></div>
         <div class="manual-step"><div class="step-number">2</div><div class="step-content"><h4 id="mstep2-title">Registro Rápido de Eventos</h4><p id="mstep2-desc">Pulsa sobre cualquier botón de la cuadrícula superior (Alimentación, Pañal, Sueño...). La hora actual se selecciona por defecto.</p></div></div>
         <div class="manual-step"><div class="step-number">3</div><div class="step-content"><h4 id="mstep3-title">Registro y Cálculo de Sueño</h4><p id="mstep3-desc">Al registrar el sueño, indica la 'Hora Inicio' y 'Hora Fin'. La app calculará automatiquement la duración.</p></div></div>
-        <div class="manual-step"><div class="step-number">4</div><div class="step-content"><h4 id="mstep4-title">Diario, Timeline y Totales Acumulados</h4><p id="mstep4-desc">Navega con las flechas día a día para consultar la secuencia cronológica de eventos.</p></div></div>
+        <div class="manual-step"><div class="step-number">4</div><div class="step-content"><h4 id="mstep4-title">Diario, Timeline y Totales Acumulados</h4><p id="mstep4-desc">Navega con les flechas día a día para consultar la secuencia cronológica de eventos.</p></div></div>
         <div class="manual-step"><div class="step-number">5</div><div class="step-content"><h4 id="mstep5-title">Calendario, Gráfico y Matriz 24h</h4><p id="mstep5-desc">En la pestaña 'Calendario', consulta el calendario mensual, la gráfica comparativa y la matriz visual de 24 horas.</p></div></div>
         <div class="manual-step"><div class="step-number">6</div><div class="step-content"><h4 id="mstep6-title">Gráficas de Crecimiento y Percentiles OMS</h4><p id="mstep6-desc">En la pestaña 'Curvas OMS', examina las 3 gráficas independientes de Peso, Talla y Perímetro Cefálico comparadas con la OMS.</p></div></div>
         <div class="manual-step"><div class="step-number">7</div><div class="step-content"><h4 id="mstep7-title">Sincronización Directa por WhatsApp</h4><p id="mstep7-desc">Pulsa 'Sincronizar' en el menú inferior y envía el archivo JSON por WhatsApp. Tu pareja solo debe abrir el archivo descargado.</p></div></div>
@@ -518,7 +521,7 @@
     </div>
   </div>
 
-  <!-- Modal Único de Sincronización Directa por WhatsApp / Archivo -->
+  <!-- Modal Sincronización -->
   <div class="modal-overlay" id="syncModal">
     <div class="modal">
       <div class="modal-header">
@@ -610,7 +613,7 @@
         lblBabyName: "Nombre del Bebé", lblBabyDob: "Fecha de Nacimiento", lblBabyGender: "Género", optMale: "Niño 👦", optFemale: "Niña 👧",
         sumFeed: "🍼 Leche (L)", sumSleep: "💤 Sueño total", sumDiaper: "💦 Pañales",
         mHeader: "Manual de Uso Paso a Paso Completo",
-        ms1Title: "1. Personalizar Perfil y Foto del Bebé", ms1Desc: "Pulsa sobre la foto o avatar circular para subir la foto real de tu bebé. Toca el icono del lápiz ✏️ para editar su nombre.",
+        ms1Title: "1. Personalizar Perfil y Foto del Bebé", ms1Desc: "Pulsa sobre la foto o avatar circular para subir la foto real de tu bebé. Toca el icono del lápiz ✏️ para editar su nombre, fecha de nacimiento y género.",
         ms2Title: "2. Registro Rápido de Eventos", ms2Desc: "Pulsa sobre cualquier botón de la cuadrícula superior (Alimentación, Pañal, Sueño, Crecimiento, Salud, Baño). La hora actual y 'Leche Extraída' se seleccionan por defecto.",
         ms3Title: "3. Registro y Cálculo de Sueño", ms3Desc: "Al registrar el sueño, indica la 'Hora Inicio' y 'Hora Fin'. La app calculará automáticamente la duración de la siesta en horas y minutos.",
         ms4Title: "4. Diario, Timeline y Totales Acumulados", ms4Desc: "Navega con las flechas día a día para consultar la secuencia cronológica de eventos. En la parte superior verás el resumen acumulado de L de leche, horas de sueño y pañales.",
@@ -618,7 +621,7 @@
         ms6Title: "6. Gráficas de Crecimiento y Percentiles OMS", ms6Desc: "En la pestaña 'Curvas OMS', examina las 3 gráficas independientes de Peso, Talla y Perímetro Cefálico comparadas con la mediana P50 de la OMS.",
         ms7Title: "7. Sincronización Directa por WhatsApp", ms7Desc: "Pulsa 'Sincronizar' en el menú inferior y envía el archivo JSON por WhatsApp. La pareja solo debe pulsar en 'Cargar Archivo Recibido'.",
         ms8Title: "8. Alarmas y Copias de Seguridad", ms8Desc: "Desde el menú lateral puedes crear alarmas que sonarán incluso en segundo plano, cambiar de idioma, activar el Modo Oscuro o exportar archivos de respaldo JSON.",
-        opt4w: "Últimas 4 semanas", opt6m: "Últimos 6 meses", legFeed: "Leche", legSleep: "Sueño", legDiaper: "Pañal",
+        opt4w: "Últimas 4 semanas", opt6m: "Últimos 6 meses", legFeed: "Toma", legSleep: "Sueño", legDiaper: "Pañal",
         babySelect: "Bebé Activo", addBaby: "+ Añadir Bebé", newBabyTitle: "Añadir Nuevo Bebé", createBabyBtn: "Añadir Bebé", deleteBabyBtn: "Eliminar Bebé", menuAlarms: "Alarmas y Avisos", alarmTitle: "Alarmas y Avisos", newAlarmTitle: "Crear Nueva Alarma", alarmType: "Tipo de Aviso", alarmTime: "Hora Exacta", alarmSound: "Sonido", alarmSaveBtn: "Añadir Alarma",
         btnWa: "Enviar datos por WhatsApp", btnShare: "Compartir Archivo JSON", btnImport: "Cargar Archivo Recibido", syncImportTitle: "¿Recibiste el archivo de la pareja?",
         filterAll: "Mostrar Todos", filterFeed: "Solo Tomas", filterDiaper: "Solo Pañales", filterSleep: "Solo Sueño", filterBath: "Solo Baños"
@@ -682,7 +685,7 @@
     });
 
     function loadLocalStorageWithMigration() {
-      const keys = ['babycare_data_v1_8_0', 'babycare_data_v1_7_0', 'babycare_data_v1_6_0', 'babycare_data_v1_5_1', 'babycare_data_v1_5_0', 'babycare_data_v1_4_0', 'babycare_data_v1_3_1', 'babycare_data_v1_3_0', 'babycare_data_v1_2_2', 'babycare_data_v40_1_0', 'babycare_data_v40', 'babycare_data_v37'];
+      const keys = ['babycare_data_v1_8_1', 'babycare_data_v1_8_0', 'babycare_data_v1_7_0', 'babycare_data_v1_6_0', 'babycare_data_v1_5_1', 'babycare_data_v1_5_0', 'babycare_data_v1_4_0', 'babycare_data_v1_3_1', 'babycare_data_v1_3_0', 'babycare_data_v1_2_2', 'babycare_data_v40_1_0', 'babycare_data_v40', 'babycare_data_v37'];
       let loaded = false;
       for (let key of keys) {
         const saved = localStorage.getItem(key);
@@ -721,7 +724,7 @@
     }
     
     function saveState() { 
-      localStorage.setItem('babycare_data_v1_8_0', JSON.stringify(appData)); 
+      localStorage.setItem('babycare_data_v1_8_1', JSON.stringify(appData)); 
       populateBabySelector(); 
       renderBabyProfile(); 
       renderLogs(); 
@@ -1249,6 +1252,8 @@
       alert(`${typeTitle}\n• Hora: ${timeStr} (${dateStr})\n• Detalle: ${log.detail || '-'}\n• Notas: ${log.notes || 'Sin observaciones'}`);
     }
 
+    let weightChartInstance = null; let heightChartInstance = null; let headChartInstance = null; let barRoutinesChartInstance = null;
+
     function getBarChartRealData(range) {
       const today = new Date();
       let labels = [];
@@ -1714,7 +1719,7 @@
         const url = URL.createObjectURL(blob);
         const anchor = document.createElement('a');
         anchor.setAttribute("href", url);
-        anchor.setAttribute("download", `babycare_v1.8.0_${getActiveBaby().name}.json`);
+        anchor.setAttribute("download", `babycare_v1.8.1_${getActiveBaby().name}.json`);
         document.body.appendChild(anchor);
         anchor.click();
         anchor.remove();
