@@ -3,16 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BabyCare 1.9.0 - Control Completo del Bebé</title>
+  <title>BabyCare 3.0.0 - Cloud Native Sync</title>
   
-  <!-- Forzamos el color pastel en la barra de estado del móvil -->
   <meta name="theme-color" content="#FDE6E3">
   
   <link rel="icon" type="image/png" sizes="192x192" href="https://img.icons8.com/emoji/192/baby-emoji.png">
   <link rel="apple-touch-icon" href="https://img.icons8.com/emoji/192/baby-emoji.png">
   
-  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22BabyCare%22%2C%22short_name%22%3A%22BabyCare%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23FDFBF7%22%2C%22theme_color%22%3A%22%23FDE6E3%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Femoji%2F192%2Fbaby-emoji.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Femoji%2F512%2Fbaby-emoji.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
-
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -22,171 +19,48 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <style>
-    :root {
-      --bg-color: #FDFBF7;
-      --card-bg: #FFFFFF;
-      --text-color: #4A4E69;
-      --text-muted: #8E94A2;
-      --primary: #7AA2F7;
-      --secondary: #AEC6CF;
-      --accent-green: #C5E1A5;
-      --accent-yellow: #FFE599;
-      --accent-purple: #D7BCE8;
-      --warning: #FFF2B2;
-      --warning-border: #F7D070;
-      --danger: #FFB3BA;
-      --border-color: #F0EAE1;
-      --shadow: 0 8px 24px rgba(149, 157, 165, 0.1);
-      --radius: 20px;
-    }
-
-    [data-theme="dark"] {
-      --bg-color: #1A1B26;
-      --card-bg: #24283B;
-      --text-color: #C0CAF5;
-      --text-muted: #7AA2F7;
-      --primary: #7AA2F7;
-      --secondary: #7AA2F7;
-      --accent-green: #9ECE6A;
-      --accent-yellow: #E0AF68;
-      --accent-purple: #BB9AF7;
-      --warning: #3D3B30;
-      --warning-border: #E0AF68;
-      --danger: #F7768E;
-      --border-color: #2F354F;
-      --shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-
+    :root { --bg-color: #FDFBF7; --card-bg: #FFFFFF; --text-color: #4A4E69; --text-muted: #8E94A2; --primary: #7AA2F7; --secondary: #AEC6CF; --accent-green: #C5E1A5; --accent-yellow: #FFE599; --accent-purple: #D7BCE8; --warning: #FFF2B2; --warning-border: #F7D070; --danger: #FFB3BA; --border-color: #F0EAE1; --shadow: 0 8px 24px rgba(149, 157, 165, 0.1); --radius: 20px; }
+    [data-theme="dark"] { --bg-color: #1A1B26; --card-bg: #24283B; --text-color: #C0CAF5; --text-muted: #7AA2F7; --primary: #7AA2F7; --secondary: #7AA2F7; --accent-green: #9ECE6A; --accent-yellow: #E0AF68; --accent-purple: #BB9AF7; --warning: #3D3B30; --warning-border: #E0AF68; --danger: #F7768E; --border-color: #2F354F; --shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
     * { box-sizing: border-box; font-family: 'Nunito', sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; padding-bottom: 90px; transition: background 0.3s, color 0.3s; }
-
-    header {
-      display: flex; justify-content: space-between; align-items: center; padding: 1.4rem 1.25rem;
-      background: linear-gradient(135deg, rgba(253, 230, 227, 0.94), rgba(245, 235, 245, 0.94)), 
-                  url('https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
-      border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); border-radius: 0 0 20px 20px;
-    }
-
-    .brand { display: flex; align-items: center; gap: 12px; }
-    .brand-title { font-size: 1.85rem; font-weight: 900; color: #4A4E69; text-shadow: 0 2px 8px rgba(255,255,255,0.9); letter-spacing: -0.5px; }
-    .burger-btn { background: rgba(255, 255, 255, 0.85); border: 1px solid var(--border-color); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #4A4E69; }
-
-    .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
-    .drawer { position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: var(--card-bg); z-index: 201; transition: right 0.3s; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.9rem; overflow-y: auto; }
-    .drawer.open { right: 0; }
-    .drawer-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-color); }
-    .close-btn { background: none; border: none; cursor: pointer; color: var(--text-color); }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 1.4rem 1.25rem; background: linear-gradient(135deg, rgba(253, 230, 227, 0.94), rgba(245, 235, 245, 0.94)), url('https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=800&q=80') center/cover no-repeat; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); border-radius: 0 0 20px 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; } .brand-title { font-size: 1.85rem; font-weight: 900; color: #4A4E69; text-shadow: 0 2px 8px rgba(255,255,255,0.9); letter-spacing: -0.5px; } .burger-btn { background: rgba(255, 255, 255, 0.85); border: 1px solid var(--border-color); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #4A4E69; }
+    .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s; } .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+    .drawer { position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: var(--card-bg); z-index: 201; transition: right 0.3s; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.9rem; overflow-y: auto; } .drawer.open { right: 0; }
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-color); } .close-btn { background: none; border: none; cursor: pointer; color: var(--text-color); }
     .drawer-item { display: flex; align-items: center; gap: 12px; padding: 0.75rem 1rem; border-radius: 12px; background: var(--bg-color); color: var(--text-color); font-weight: 700; cursor: pointer; border: 1px solid var(--border-color); }
-
     .container { max-width: 600px; margin: 0 auto; padding: 1.25rem; }
     .baby-profile-card { background: var(--card-bg); border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow); border: 1px solid var(--border-color); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 1rem; }
     .baby-avatar-container { position: relative; cursor: pointer; width: 68px; height: 68px; flex-shrink: 0; }
     .baby-avatar { width: 100%; height: 100%; border-radius: 50%; background: #FFE599; display: flex; align-items: center; justify-content: center; font-size: 2rem; border: 3px solid var(--primary); overflow: hidden; }
-    .baby-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .avatar-edit-badge { position: absolute; bottom: -2px; right: -2px; background: var(--primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--card-bg); }
-    .baby-info h2 { font-size: 1.3rem; font-weight: 800; }
-    .baby-info p { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-
-    .alert-banner { background: var(--warning); border: 1px solid var(--warning-border); border-radius: 16px; padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 12px; font-size: 0.9rem; font-weight: 700; }
-    .alert-banner.hidden { display: none; }
-
+    .baby-avatar img { width: 100%; height: 100%; object-fit: cover; } .avatar-edit-badge { position: absolute; bottom: -2px; right: -2px; background: var(--primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--card-bg); }
+    .baby-info h2 { font-size: 1.3rem; font-weight: 800; } .baby-info p { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+    .alert-banner { background: var(--warning); border: 1px solid var(--warning-border); border-radius: 16px; padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 12px; font-size: 0.9rem; font-weight: 700; } .alert-banner.hidden { display: none; }
     .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.8rem; display: flex; justify-content: space-between; }
     .grid-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-bottom: 1.5rem; }
     .action-btn { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 1rem 0.5rem; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; box-shadow: var(--shadow); }
-    .action-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
-    .action-btn span { font-size: 0.8rem; font-weight: 700; }
-
+    .action-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; } .action-btn span { font-size: 0.8rem; font-weight: 700; }
     .tabs-nav { display: flex; background: var(--card-bg); padding: 4px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 1.25rem; gap: 4px; }
-    .tab-btn { flex: 1; padding: 0.65rem 0.5rem; text-align: center; font-weight: 700; font-size: 0.85rem; border-radius: 12px; border: none; background: transparent; color: var(--text-color); cursor: pointer; }
-    .tab-btn.active { background: var(--primary); color: white; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
+    .tab-btn { flex: 1; padding: 0.65rem 0.5rem; text-align: center; font-weight: 700; font-size: 0.85rem; border-radius: 12px; border: none; background: transparent; color: var(--text-color); cursor: pointer; } .tab-btn.active { background: var(--primary); color: white; }
+    .tab-content { display: none; } .tab-content.active { display: block; }
     .card { background: var(--card-bg); border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--border-color); box-shadow: var(--shadow); margin-bottom: 1.25rem; }
     .date-nav-bar { display: flex; align-items: center; justify-content: space-between; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 14px; padding: 0.4rem 0.8rem; margin-bottom: 1rem; }
     .date-nav-btn { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .date-display { font-weight: 800; font-size: 0.92rem; display: flex; align-items: center; gap: 8px; }
-    .today-tag { background: var(--primary); color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; cursor: pointer; }
-
-    .daily-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-bottom: 1.2rem; }
-    .summary-card { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 14px; padding: 0.6rem; text-align: center; }
-    .summary-card h5 { font-size: 0.72rem; color: var(--text-muted); font-weight: 800; margin-bottom: 2px; }
-    .summary-card p { font-size: 0.95rem; font-weight: 900; color: var(--text-color); }
-
-    .timeline-container { position: relative; padding-left: 1rem; margin-top: 0.8rem; }
-    .timeline-container::before { content: ''; position: absolute; left: 18px; top: 15px; bottom: 15px; width: 2px; background: var(--border-color); }
-    .timeline-item { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 0.6rem 0; }
-    .timeline-point { width: 14px; height: 14px; border-radius: 50%; background: var(--primary); border: 3px solid var(--card-bg); box-shadow: 0 0 0 2px var(--primary); z-index: 2; margin-top: 4px; flex-shrink: 0; }
-    .timeline-content { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 14px; padding: 0.7rem 0.9rem; flex-grow: 1; display: flex; align-items: center; justify-content: space-between; }
-    .timeline-main-info h4 { font-size: 0.88rem; font-weight: 800; }
-    .timeline-main-info p { font-size: 0.76rem; color: var(--text-muted); font-weight: 600; }
-
-    .time-ago-badge { background: var(--card-bg); border: 1px solid var(--border-color); padding: 2px 6px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; color: var(--primary); margin-left: 4px; }
-    .log-actions { display: flex; align-items: center; gap: 6px; }
-    .log-time { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-right: 2px; }
-    .icon-btn { background: none; border: none; cursor: pointer; padding: 4px; }
-    .icon-btn.edit { color: var(--secondary); }
-    .icon-btn.delete { color: var(--danger); }
-
-    .routine-24h-grid { display: grid; grid-template-columns: 36px repeat(7, 1fr); background: var(--bg-color); border-radius: 16px; padding: 0.8rem 0.3rem; border: 1px solid var(--border-color); gap: 2px; font-size: 0.7rem; }
-    .grid-header-cell { text-align: center; font-weight: 800; color: var(--text-muted); padding-bottom: 6px; }
-    .grid-header-cell.active-day { color: var(--primary); background: rgba(122, 162, 247, 0.2); border-radius: 6px; }
-    .grid-time-label { color: var(--text-muted); font-weight: 800; text-align: right; padding-right: 4px; line-height: 24px; height: 24px; font-size: 0.65rem; }
-    .grid-day-col { position: relative; height: 576px; background: rgba(0,0,0,0.02); border-radius: 4px; border-left: 1px dashed var(--border-color); overflow: hidden; }
-    .routine-block { position: absolute; border-radius: 3px; min-height: 8px; opacity: 0.92; box-shadow: 0 1px 3px rgba(0,0,0,0.15); transition: transform 0.15s; }
-    .routine-block:active { transform: scale(1.1); z-index: 10; }
-    .routine-block.feed { background: #F59E0B; }
-    .routine-block.sleep { background: #818CF8; }
-    .routine-block.diaper { background: #34D399; }
-    .routine-block.bath { background: #38BDF8; }
-
-    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
-    .cal-day-name { font-size: 0.78rem; font-weight: 800; color: var(--primary); padding: 6px 0; background: var(--bg-color); border-radius: 8px; }
-    .cal-cell { aspect-ratio: 1; border-radius: 12px; background: var(--bg-color); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: 700; cursor: pointer; position: relative; border: 1px solid var(--border-color); }
-    .cal-cell.today { background: var(--accent-yellow) !important; border: 2px solid #F59E0B !important; font-weight: 900 !important; color: #78350F !important; }
-    .cal-dots { display: flex; gap: 2px; margin-top: 2px; }
-    .cal-dot { width: 4px; height: 4px; border-radius: 50%; }
-
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.25s; display: flex; align-items: flex-end; justify-content: center; }
-    @media(min-width: 600px) { .modal-overlay { align-items: center; } }
-    .modal-overlay.open { opacity: 1; pointer-events: auto; }
-    .modal { background: var(--card-bg); width: 100%; max-width: 550px; border-radius: 20px 20px 0 0; padding: 0.9rem 1.1rem; max-height: 96vh; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s; }
-    @media(min-width: 600px) { .modal { border-radius: 20px; transform: translateY(20px); } }
-    .modal-overlay.open .modal { transform: translateY(0); }
-    
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-shrink: 0; }
-    .modal-header h3 { font-size: 1.05rem; font-weight: 800; }
-    .modal-header-actions { display: flex; align-items: center; gap: 8px; }
-    
-    .btn-header-save { background: var(--primary); color: white; border: none; padding: 0.35rem 0.8rem; border-radius: 10px; font-weight: 800; font-size: 0.82rem; cursor: pointer; }
-    .modal-body { overflow-y: auto; flex-grow: 1; padding-right: 2px; -webkit-overflow-scrolling: touch; }
-    .modal-footer { flex-shrink: 0; padding-top: 0.4rem; background: var(--card-bg); }
-    
-    .form-group { margin-bottom: 0.35rem; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 800; margin-bottom: 0.15rem; }
-    .form-control { width: 100%; padding: 0.42rem 0.65rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); font-size: 0.85rem; font-weight: 600; outline: none; }
-    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
-
-    .btn-submit { width: 100%; padding: 0.65rem; border-radius: 10px; border: none; background: var(--primary); color: white; font-size: 0.9rem; font-weight: 800; cursor: pointer; }
-    .btn-danger { background: var(--danger); color: white; border: none; padding: 0.5rem 1rem; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.8rem; margin-top: 10px; width: 100%; }
-
-    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 0.6rem 0; z-index: 90; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-muted); font-size: 0.72rem; font-weight: 800; cursor: pointer; text-decoration: none; }
-    .nav-item.active { color: var(--primary); }
-
-    .vaccine-item { display: flex; align-items: center; justify-content: space-between; padding: 0.8rem; background: var(--bg-color); border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border-color); }
-    .checkbox-custom { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; cursor: pointer; background: white; }
-    .vaccine-item.done .checkbox-custom { background: var(--primary); color: white; }
-
-    .who-indicator-card { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 14px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 0.88rem; }
-    .manual-step { display: flex; gap: 1rem; margin-bottom: 1.2rem; }
-    .step-number { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .step-content h4 { font-size: 1rem; font-weight: 800; margin-bottom: 0.2rem; }
-    .step-content p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.4; }
-
-    .alarm-item { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 0.8rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;}
+    .date-display { font-weight: 800; font-size: 0.92rem; display: flex; align-items: center; gap: 8px; } .today-tag { background: var(--primary); color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; cursor: pointer; }
+    .daily-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-bottom: 1.2rem; } .summary-card { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 14px; padding: 0.6rem; text-align: center; } .summary-card h5 { font-size: 0.72rem; color: var(--text-muted); font-weight: 800; margin-bottom: 2px; } .summary-card p { font-size: 0.95rem; font-weight: 900; color: var(--text-color); }
+    .timeline-container { position: relative; padding-left: 1rem; margin-top: 0.8rem; } .timeline-container::before { content: ''; position: absolute; left: 18px; top: 15px; bottom: 15px; width: 2px; background: var(--border-color); }
+    .timeline-item { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 0.6rem 0; } .timeline-point { width: 14px; height: 14px; border-radius: 50%; background: var(--primary); border: 3px solid var(--card-bg); box-shadow: 0 0 0 2px var(--primary); z-index: 2; margin-top: 4px; flex-shrink: 0; }
+    .timeline-content { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 14px; padding: 0.7rem 0.9rem; flex-grow: 1; display: flex; align-items: center; justify-content: space-between; } .timeline-main-info h4 { font-size: 0.88rem; font-weight: 800; } .timeline-main-info p { font-size: 0.76rem; color: var(--text-muted); font-weight: 600; }
+    .time-ago-badge { background: var(--card-bg); border: 1px solid var(--border-color); padding: 2px 6px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; color: var(--primary); margin-left: 4px; } .log-actions { display: flex; align-items: center; gap: 6px; } .log-time { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-right: 2px; } .icon-btn { background: none; border: none; cursor: pointer; padding: 4px; } .icon-btn.edit { color: var(--secondary); } .icon-btn.delete { color: var(--danger); }
+    .routine-24h-grid { display: grid; grid-template-columns: 36px repeat(7, 1fr); background: var(--bg-color); border-radius: 16px; padding: 0.8rem 0.3rem; border: 1px solid var(--border-color); gap: 2px; font-size: 0.7rem; } .grid-header-cell { text-align: center; font-weight: 800; color: var(--text-muted); padding-bottom: 6px; } .grid-header-cell.active-day { color: var(--primary); background: rgba(122, 162, 247, 0.2); border-radius: 6px; } .grid-time-label { color: var(--text-muted); font-weight: 800; text-align: right; padding-right: 4px; line-height: 24px; height: 24px; font-size: 0.65rem; } .grid-day-col { position: relative; height: 576px; background: rgba(0,0,0,0.02); border-radius: 4px; border-left: 1px dashed var(--border-color); overflow: hidden; }
+    .routine-block { position: absolute; border-radius: 3px; min-height: 8px; opacity: 0.92; box-shadow: 0 1px 3px rgba(0,0,0,0.15); transition: transform 0.15s; } .routine-block:active { transform: scale(1.1); z-index: 10; } .routine-block.feed { background: #F59E0B; } .routine-block.sleep { background: #818CF8; } .routine-block.diaper { background: #34D399; } .routine-block.bath { background: #38BDF8; }
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; } .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; } .cal-day-name { font-size: 0.78rem; font-weight: 800; color: var(--primary); padding: 6px 0; background: var(--bg-color); border-radius: 8px; } .cal-cell { aspect-ratio: 1; border-radius: 12px; background: var(--bg-color); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: 700; cursor: pointer; position: relative; border: 1px solid var(--border-color); } .cal-cell.today { background: var(--accent-yellow) !important; border: 2px solid #F59E0B !important; font-weight: 900 !important; color: #78350F !important; } .cal-dots { display: flex; gap: 2px; margin-top: 2px; } .cal-dot { width: 4px; height: 4px; border-radius: 50%; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.25s; display: flex; align-items: flex-end; justify-content: center; } @media(min-width: 600px) { .modal-overlay { align-items: center; } } .modal-overlay.open { opacity: 1; pointer-events: auto; } .modal { background: var(--card-bg); width: 100%; max-width: 550px; border-radius: 20px 20px 0 0; padding: 0.9rem 1.1rem; max-height: 96vh; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s; } @media(min-width: 600px) { .modal { border-radius: 20px; transform: translateY(20px); } } .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-shrink: 0; } .modal-header h3 { font-size: 1.05rem; font-weight: 800; } .modal-header-actions { display: flex; align-items: center; gap: 8px; } .btn-header-save { background: var(--primary); color: white; border: none; padding: 0.35rem 0.8rem; border-radius: 10px; font-weight: 800; font-size: 0.82rem; cursor: pointer; } .modal-body { overflow-y: auto; flex-grow: 1; padding-right: 2px; -webkit-overflow-scrolling: touch; } .modal-footer { flex-shrink: 0; padding-top: 0.4rem; background: var(--card-bg); }
+    .form-group { margin-bottom: 0.35rem; } .form-group label { display: block; font-size: 0.75rem; font-weight: 800; margin-bottom: 0.15rem; } .form-control { width: 100%; padding: 0.42rem 0.65rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); font-size: 0.85rem; font-weight: 600; outline: none; } .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; } .btn-submit { width: 100%; padding: 0.65rem; border-radius: 10px; border: none; background: var(--primary); color: white; font-size: 0.9rem; font-weight: 800; cursor: pointer; } .btn-danger { background: var(--danger); color: white; border: none; padding: 0.5rem 1rem; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.8rem; margin-top: 10px; width: 100%; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 0.6rem 0; z-index: 90; } .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-muted); font-size: 0.72rem; font-weight: 800; cursor: pointer; text-decoration: none; } .nav-item.active { color: var(--primary); }
+    .vaccine-item { display: flex; align-items: center; justify-content: space-between; padding: 0.8rem; background: var(--bg-color); border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border-color); } .checkbox-custom { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; cursor: pointer; background: white; } .vaccine-item.done .checkbox-custom { background: var(--primary); color: white; }
+    .who-indicator-card { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 14px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 0.88rem; } .manual-step { display: flex; gap: 1rem; margin-bottom: 1.2rem; } .step-number { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; } .step-content h4 { font-size: 1rem; font-weight: 800; margin-bottom: 0.2rem; } .step-content p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.4; } .alarm-item { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 0.8rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;}
   </style>
 </head>
 <body>
@@ -194,7 +68,7 @@
   <!-- Header Banner -->
   <header>
     <div class="brand">
-      <div class="brand-title">BabyCare <small style="font-size:0.8rem; color:#8E94A2; font-weight:800; margin-left:4px;">v1.9.0</small></div>
+      <div class="brand-title">BabyCare <small style="font-size:0.8rem; color:#8E94A2; font-weight:800; margin-left:4px;">v3.0</small></div>
     </div>
     <button class="burger-btn" onclick="openDrawer()"><i data-lucide="menu"></i></button>
   </header>
@@ -202,31 +76,22 @@
   <!-- Drawer Menu -->
   <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
   <div class="drawer" id="drawer">
-    <div class="drawer-header">
-      <h3 id="txt-menu-title" style="font-weight:900;">Menú BabyCare</h3>
-      <button class="close-btn" onclick="closeDrawer()"><i data-lucide="x"></i></button>
-    </div>
-    
+    <div class="drawer-header"><h3 id="txt-menu-title" style="font-weight:900;">Menú BabyCare</h3><button class="close-btn" onclick="closeDrawer()"><i data-lucide="x"></i></button></div>
     <div class="form-group" style="margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border-color);">
       <label id="txt-baby-select-label" style="font-size:0.7rem; color:var(--text-muted);">Bebé Activo</label>
       <select class="form-control" id="babySelector" onchange="switchBaby(this.value)" style="margin-bottom:6px; font-weight:800;"></select>
       <button onclick="closeDrawer(); openModal('addBaby');" style="background:var(--bg-color); border:1px dashed var(--primary); color:var(--primary); padding:6px; width:100%; border-radius:8px; font-weight:800; cursor:pointer;" id="txt-btn-add-baby">+ Añadir Bebé</button>
     </div>
-
     <div class="drawer-item" onclick="closeDrawer(); openModal('profile');"><i data-lucide="user"></i><span id="txt-menu-profile">Perfil del Bebé</span></div>
     <div class="drawer-item" onclick="closeDrawer(); openModal('alarms');"><i data-lucide="bell"></i><span id="txt-menu-alarms">Alarmas y Avisos</span></div>
     <div class="drawer-item" onclick="closeDrawer(); switchTab('manual');"><i data-lucide="book-open"></i><span id="txt-menu-manual">Manual de Uso</span></div>
-    
-    <!-- Mantenemos la opción manual escondida en el menú por si falla internet -->
     <div class="drawer-item" onclick="exportJSON()"><i data-lucide="download"></i><span id="txt-menu-export">Exportar Archivo JSON</span></div>
     <div class="drawer-item" onclick="closeDrawer(); triggerFileInput()"><i data-lucide="upload"></i><span id="txt-menu-import">Importar Archivo JSON</span></div>
     <hr style="border:none; border-top:1px solid var(--border-color); margin: 0.4rem 0;">
     <div class="form-group">
       <label id="txt-lang-label">Idioma / Language</label>
       <select class="form-control" id="langSelect" onchange="setLanguage(this.value)">
-        <option value="es">Español 🇪🇸</option>
-        <option value="fr">Français 🇫🇷</option>
-        <option value="en">English 🇬🇧</option>
+        <option value="es">Español 🇪🇸</option><option value="fr">Français 🇫🇷</option><option value="en">English 🇬🇧</option>
       </select>
     </div>
     <div class="form-group"><label id="txt-theme-label">Apariencia</label><button class="drawer-item" style="width:100%; justify-content:center;" onclick="toggleTheme()"><i data-lucide="moon"></i><span id="txt-theme-btn">Modo Claro/Oscuro</span></button></div>
@@ -239,11 +104,11 @@
         <div class="avatar-edit-badge"><i data-lucide="camera" style="width:12px; height:12px;"></i></div>
         <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="uploadBabyPhoto(event)">
       </div>
-      <div class="baby-info"><h2 id="babyNameDisplay">Léo</h2><p id="babyAgeDisplay">Calculando edad...</p></div>
+      <div class="baby-info"><h2 id="babyNameDisplay">Cargando...</h2><p id="babyAgeDisplay">Calculando edad...</p></div>
       <button style="margin-left:auto; background:none; border:none; color:var(--text-muted); cursor:pointer;" onclick="openModal('profile')"><i data-lucide="edit-3"></i></button>
     </div>
 
-    <div class="alert-banner" id="alertBanner"><i data-lucide="alert-circle" style="color: #D97706; flex-shrink:0;"></i><span id="alertText">Atención: Se recomienda verificar la toma de leche.</span></div>
+    <div class="alert-banner hidden" id="alertBanner"><i data-lucide="alert-circle" style="color: #D97706; flex-shrink:0;"></i><span id="alertText"></span></div>
 
     <!-- Acciones Rápidas -->
     <div class="section-title"><span id="txt-quick-actions">Registrar Evento</span></div>
@@ -263,82 +128,56 @@
       <button class="tab-btn" onclick="switchTab('vaccinesList')" id="tab-vac-btn">Vacunas</button>
     </div>
 
-    <!-- TAB 1: Diario & Timeline -->
+    <!-- TAB 1: Diario -->
     <div class="tab-content active" id="tab-logs">
       <div class="card">
         <div class="section-title"><span id="txt-recent-logs">Actividad Reciente</span></div>
         <div class="date-nav-bar">
           <button class="date-nav-btn" onclick="changeSelectedDate(-1)"><i data-lucide="chevron-left"></i></button>
-          <div class="date-display"><span id="currentDateText">27 Sep 2026</span><span class="today-tag" id="todayTag" onclick="resetToToday()">Hoy</span></div>
+          <div class="date-display"><span id="currentDateText"></span><span class="today-tag" id="todayTag" onclick="resetToToday()">Hoy</span></div>
           <button class="date-nav-btn" onclick="changeSelectedDate(1)"><i data-lucide="chevron-right"></i></button>
         </div>
-
-        <!-- Resumen diario acumulado -->
         <div class="daily-summary-grid">
-          <div class="summary-card">
-            <h5 id="lbl-sum-feed">🍼 Leche (L)</h5>
-            <p id="val-sum-feed">0 L</p>
-          </div>
-          <div class="summary-card">
-            <h5 id="lbl-sum-sleep">💤 Sueño total</h5>
-            <p id="val-sum-sleep">0h 0m</p>
-          </div>
-          <div class="summary-card">
-            <h5 id="lbl-sum-diaper">💦 Pañales</h5>
-            <p id="val-sum-diaper">0 t</p>
-          </div>
+          <div class="summary-card"><h5 id="lbl-sum-feed">🍼 Leche (L)</h5><p id="val-sum-feed">0 L</p></div>
+          <div class="summary-card"><h5 id="lbl-sum-sleep">💤 Sueño total</h5><p id="val-sum-sleep">0h 0m</p></div>
+          <div class="summary-card"><h5 id="lbl-sum-diaper">💦 Pañales</h5><p id="val-sum-diaper">0 t</p></div>
         </div>
-
-        <!-- Timeline Diario -->
         <div id="logsContainer" class="timeline-container"></div>
       </div>
     </div>
 
-    <!-- TAB 2: Calendario, Gráfico de Barras y Matriz Semanal de 24h -->
+    <!-- TAB 2: Calendario y Matriz -->
     <div class="tab-content" id="tab-calendar">
-      <!-- Vista Mensual -->
       <div class="card">
         <div class="calendar-header">
           <button class="burger-btn" onclick="prevMonth()"><i data-lucide="chevron-left"></i></button>
-          <h3 id="calMonthTitle" style="font-weight:800;">Septiembre 2026</h3>
+          <h3 id="calMonthTitle" style="font-weight:800;"></h3>
           <button class="burger-btn" onclick="nextMonth()"><i data-lucide="chevron-right"></i></button>
         </div>
         <div class="calendar-grid" id="calendarGrid"></div>
       </div>
-
-      <!-- Gráfico de Barras -->
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; flex-wrap:wrap; gap:8px;">
-          <h3 style="font-size:1rem; font-weight:800;" id="txt-bar-chart-title">Análisis de Frecuencias y Hábitos</h3>
-          <select class="form-control" id="barRangeSelect" style="width:auto; padding:0.3rem 0.6rem; font-size:0.78rem;" onchange="updateBarChartRange(this.value)">
-            <option value="7days" id="opt-7days" selected>Últimos 7 días</option>
-            <option value="4weeks" id="opt-4weeks">Últimas 4 semanas</option>
-            <option value="6months" id="opt-6months">Últimos 6 meses</option>
+          <h3 style="font-size:1rem; font-weight:800;" id="txt-bar-chart-title">Análisis Semanal</h3>
+          <select class="form-control" id="barRangeSelect" style="width:auto; padding:0.3rem 0.6rem; font-size:0.78rem;" onchange="updateBarChart()">
+            <option value="7days" id="opt-7days" selected>Últimos 7 días</option><option value="4weeks" id="opt-4weeks">Últimas 4 semanas</option><option value="6months" id="opt-6months">Últimos 6 meses</option>
           </select>
         </div>
         <canvas id="barRoutinesChart" height="180"></canvas>
       </div>
-
-      <!-- Matriz Semanal 24 Horas -->
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:6px;">
-          <h3 style="font-size:1.05rem; font-weight:800;" id="txt-weekly-matrix-title">Matriz Semanal de 24 Horas</h3>
+          <h3 style="font-size:1.05rem; font-weight:800;" id="txt-weekly-matrix-title">Matriz 24 Horas</h3>
           <select class="form-control" id="matrixFilterSelect" onchange="renderWeeklyMatrix24h()" style="width:auto; padding:0.3rem 0.6rem; font-size:0.75rem;">
-            <option value="all" id="opt-filter-all" selected>Mostrar Todos</option>
-            <option value="feeding" id="opt-filter-feed">Solo Tomas</option>
-            <option value="diaper" id="opt-filter-diaper">Solo Pañales</option>
-            <option value="sleep" id="opt-filter-sleep">Solo Sueño</option>
-            <option value="bath" id="opt-filter-bath">Solo Baños</option>
+            <option value="all" id="opt-filter-all" selected>Mostrar Todos</option><option value="feeding" id="opt-filter-feed">Solo Tomas</option><option value="diaper" id="opt-filter-diaper">Solo Pañales</option><option value="sleep" id="opt-filter-sleep">Solo Sueño</option><option value="bath" id="opt-filter-bath">Solo Baños</option>
           </select>
           <div style="display:flex; gap:4px;">
             <button class="date-nav-btn" onclick="changeMatrixWeek(-1)" style="width:28px;height:28px;"><i data-lucide="chevron-left" style="width:16px;"></i></button>
             <button class="date-nav-btn" onclick="changeMatrixWeek(1)" style="width:28px;height:28px;"><i data-lucide="chevron-right" style="width:16px;"></i></button>
           </div>
         </div>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.8rem;" id="matrixWeekLabel">Semana del 21 al 27 de Septiembre</p>
-
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.8rem;" id="matrixWeekLabel"></p>
         <div id="routine24hGrid" class="routine-24h-grid"></div>
-
         <div style="display:flex; justify-content:center; gap:12px; margin-top:0.8rem; font-size:0.72rem; color:var(--text-muted);">
           <span><span style="display:inline-block; width:10px; height:10px; background:#F59E0B; border-radius:2px; margin-right:4px;"></span><span id="leg-feed">Leche 🍼</span></span>
           <span><span style="display:inline-block; width:10px; height:10px; background:#818CF8; border-radius:2px; margin-right:4px;"></span><span id="leg-sleep">Sueño 💤</span></span>
@@ -347,52 +186,33 @@
       </div>
     </div>
 
-    <!-- TAB 3: Curvas OMS -->
+    <!-- TAB 3: Curvas -->
     <div class="tab-content" id="tab-charts">
+      <div class="card"><h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-weight-chart">1. Peso (kg) vs OMS</h3><canvas id="weightChart" height="180"></canvas></div>
+      <div class="card"><h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-height-chart">2. Talla (cm) vs OMS</h3><canvas id="heightChart" height="180"></canvas></div>
+      <div class="card"><h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-head-chart">3. Perímetro Cefálico vs OMS</h3><canvas id="headChart" height="180"></canvas></div>
       <div class="card">
-        <h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-weight-chart">1. Evolución de Peso (kg) vs Percentil 50 OMS</h3>
-        <canvas id="weightChart" height="180"></canvas>
-      </div>
-      <div class="card">
-        <h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-height-chart">2. Evolución de Talla / Longitud (cm) vs OMS</h3>
-        <canvas id="heightChart" height="180"></canvas>
-      </div>
-      <div class="card">
-        <h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-head-chart">3. Perímetro Cefálico (cm) vs OMS</h3>
-        <canvas id="headChart" height="180"></canvas>
-      </div>
-      <div class="card">
-        <h3 style="font-size:1rem; font-weight:800; margin-bottom:0.5rem;" id="txt-who-routines">4. Control Diario de Tomas y Pañales</h3>
-        <p style="font-size:0.83rem; color:var(--text-muted);" id="txt-who-routines-desc">Frecuencias normales recomendadas según etapa OMS:</p>
+        <h3 style="font-size:1rem; font-weight:800; margin-bottom:0.5rem;" id="txt-who-routines">4. Tomas y Pañales</h3>
+        <p style="font-size:0.83rem; color:var(--text-muted);" id="txt-who-routines-desc">Frecuencias recomendadas:</p>
         <div class="who-indicator-card">
-          <p id="lbl-who-feeds">🍼 <strong>Tomas/día:</strong> <span id="val-feed-count">0 hoy</span> (Rango OMS: 6 - 10 tomas en lactantes)</p>
-          <p style="margin-top:6px;" id="lbl-who-diapers">💦 <strong>Pañales/día:</strong> <span id="val-diaper-count">0 hoy</span> (Rango OMS: 4 - 8 pañales húmedos)</p>
+          <p id="lbl-who-feeds">🍼 <strong>Tomas/día:</strong> <span id="val-feed-count">0 hoy</span> (Rango OMS: 6 - 10)</p>
+          <p style="margin-top:6px;" id="lbl-who-diapers">💦 <strong>Pañales/día:</strong> <span id="val-diaper-count">0 hoy</span> (Rango OMS: 4 - 8)</p>
         </div>
       </div>
     </div>
 
     <!-- TAB 4: Vacunas -->
     <div class="tab-content" id="tab-vaccinesList">
-      <div class="card">
-        <h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-vaccine-title">Calendario Vacunal Recomendado</h3>
-        <div id="vaccinesListContainer"></div>
-      </div>
+      <div class="card"><h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-vaccine-title">Calendario Vacunal Recomendado</h3><div id="vaccinesListContainer"></div></div>
     </div>
 
-    <!-- TAB 5: Manual Completo Traducido -->
+    <!-- TAB 5: Manual -->
     <div class="tab-content" id="tab-manual">
       <div class="card">
-        <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1.2rem; display:flex; align-items:center; gap:8px;" id="txt-manual-header">
-          <i data-lucide="book-open" style="color:var(--primary);"></i> Manual de Uso Paso a Paso
-        </h3>
-        <div class="manual-step"><div class="step-number">1</div><div class="step-content"><h4 id="mstep1-title">Personalizar Perfil y Foto del Bebé</h4><p id="mstep1-desc">Pulsa sobre la foto o avatar circular para subir la foto real de tu bebé. Toca el icono del lápiz ✏️ para editar su nombre.</p></div></div>
-        <div class="manual-step"><div class="step-number">2</div><div class="step-content"><h4 id="mstep2-title">Registro Rápido de Eventos</h4><p id="mstep2-desc">Pulsa sobre cualquier botón de la cuadrícula superior (Alimentación, Pañal, Sueño...). La hora actual se selecciona por defecto.</p></div></div>
-        <div class="manual-step"><div class="step-number">3</div><div class="step-content"><h4 id="mstep3-title">Registro y Cálculo de Sueño</h4><p id="mstep3-desc">Al registrar el sueño, indica la 'Hora Inicio' y 'Hora Fin'. La app calculará automáticamente la duración de la siesta.</p></div></div>
-        <div class="manual-step"><div class="step-number">4</div><div class="step-content"><h4 id="mstep4-title">Diario, Timeline y Totales Acumulados</h4><p id="mstep4-desc">Navega con las flechas día a día para consultar la secuencia cronológica de eventos.</p></div></div>
-        <div class="manual-step"><div class="step-number">5</div><div class="step-content"><h4 id="mstep5-title">Calendario, Gráfico de Barras y Matriz 24h</h4><p id="mstep5-desc">En la pestaña 'Calendario', consulta el calendario mensual, la gráfica comparativa y la matriz visual de 24 horas.</p></div></div>
-        <div class="manual-step"><div class="step-number">6</div><div class="step-content"><h4 id="mstep6-title">Gráficas de Crecimiento y Percentiles OMS</h4><p id="mstep6-desc">En la pestaña 'Curvas OMS', examina las 3 gráficas independientes de Peso, Talla y Perímetro Cefálico comparadas con la OMS.</p></div></div>
-        <div class="manual-step"><div class="step-number">7</div><div class="step-content"><h4 id="mstep7-title">Sincronización en la Nube</h4><p id="mstep7-desc">Pulsa 'Sincronizar' en el menú inferior y usa los botones de subir o bajar datos de la nube para mantener tu app al día.</p></div></div>
-        <div class="manual-step"><div class="step-number">8</div><div class="step-content"><h4 id="mstep8-title">Alarmas y Copias de Seguridad</h4><p id="mstep8-desc">Desde el menú lateral puedes crear alarmas que sonarán incluso en segundo plano, cambiar de idioma, o exportar archivos JSON.</p></div></div>
+        <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1.2rem; display:flex; align-items:center; gap:8px;" id="txt-manual-header"><i data-lucide="book-open" style="color:var(--primary);"></i> Manual de Uso</h3>
+        <div class="manual-step"><div class="step-number">1</div><div class="step-content"><h4 id="mstep1-title">Personalizar Perfil</h4><p id="mstep1-desc">Sube foto de tu bebé y edita su nombre.</p></div></div>
+        <div class="manual-step"><div class="step-number">2</div><div class="step-content"><h4 id="mstep2-title">Registro Rápido</h4><p id="mstep2-desc">Pulsa en cualquier icono superior para registrar.</p></div></div>
+        <div class="manual-step"><div class="step-number">3</div><div class="step-content"><h4 id="mstep7-title">Sincronización Automática</h4><p id="mstep7-desc">Todo se guardará en la nube sin tocar ningún botón.</p></div></div>
       </div>
     </div>
   </div>
@@ -400,1072 +220,344 @@
   <nav class="bottom-nav">
     <div class="nav-item active" id="bnav-item-home" onclick="switchTab('logs')"><i data-lucide="list"></i><span id="bnav-home">Inicio</span></div>
     <div class="nav-item" onclick="openFormModal('feeding')"><i data-lucide="plus-circle" style="width:28px; height:28px; color:var(--primary);"></i><span id="bnav-add">Añadir</span></div>
-    <div class="nav-item" id="bnav-item-sync" onclick="openModal('sync')"><i data-lucide="share-2"></i><span id="bnav-share">Sincronizar</span></div>
+    <div class="nav-item" id="bnav-item-sync" onclick="openModal('sync')"><i data-lucide="cloud-lightning"></i><span id="bnav-share">Nube</span></div>
   </nav>
 
-  <!-- Modales con Doble Botón Guardar -->
-  <div class="modal-overlay" id="formModal">
-    <div class="modal">
-      <form id="logForm" onsubmit="saveLogEntry(event)" style="display:flex; flex-direction:column; height:100%; overflow:hidden;">
-        <div class="modal-header">
-          <h3 id="modalFormTitle">Nuevo Registro</h3>
-          <div class="modal-header-actions">
-            <button type="submit" class="btn-header-save" id="btn-save-header">✓ Guardar</button>
-            <button type="button" class="close-btn" onclick="closeFormModal()"><i data-lucide="x"></i></button>
-          </div>
-        </div>
-        <input type="hidden" id="editingLogId"><input type="hidden" id="entryType">
-        <div class="modal-body" id="formModalBody">
-          <div id="dynamicFormFields"></div>
-          <div class="form-group" id="groupTimestampMain">
-            <label id="lbl-timestamp">Fecha y Hora</label>
-            <input type="datetime-local" class="form-control" id="entryTimestamp" required>
-          </div>
-          <div class="form-group">
-            <label id="lbl-notes">Notas / Observaciones</label>
-            <input type="text" class="form-control" id="entryNotes" placeholder="Ej: Agitado al inicio...">
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn-submit" id="btn-save-entry">✓ Guardar Registro</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="profileModal">
-    <div class="modal">
-      <form onsubmit="saveProfile(event)" style="display:flex; flex-direction:column; height:100%; overflow:hidden;">
-        <div class="modal-header">
-          <h3 id="txt-profile-title">Perfil del Bebé</h3>
-          <div class="modal-header-actions">
-            <button type="submit" class="btn-header-save" id="btn-save-prof-header">✓ Guardar</button>
-            <button type="button" class="close-btn" onclick="closeModal('profile')"><i data-lucide="x"></i></button>
-          </div>
-        </div>
-        <div class="modal-body">
-          <div class="form-group"><label id="lbl-baby-name">Nombre del Bebé</label><input type="text" class="form-control" id="profName" required value="Léo"></div>
-          <div class="form-group"><label id="lbl-baby-dob">Fecha de Nacimiento</label><input type="date" class="form-control" id="profDob" required value="2026-07-19"></div>
-          <div class="form-group"><label id="lbl-baby-gender">Género</label><select class="form-control" id="profGender"><option value="male" id="opt-male">Niño 👦</option><option value="female" id="opt-female">Niña 👧</option></select></div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn-submit" id="btn-save-profile">Actualizar Perfil</button>
-          <button type="button" class="btn-danger" id="btn-delete-baby" onclick="deleteActiveBaby()">Eliminar Bebé</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Añadir Nuevo Bebé -->
-  <div class="modal-overlay" id="addBabyModal">
-    <div class="modal">
-      <form onsubmit="addBaby(event)" style="display:flex; flex-direction:column; height:100%; overflow:hidden;">
-        <div class="modal-header">
-          <h3 id="txt-add-baby-title">Añadir Nuevo Bebé</h3>
-          <div class="modal-header-actions">
-            <button type="button" class="close-btn" onclick="closeModal('addBaby')"><i data-lucide="x"></i></button>
-          </div>
-        </div>
-        <div class="modal-body">
-          <div class="form-group"><label id="lbl-new-baby-name">Nombre</label><input type="text" class="form-control" id="newBabyName" required></div>
-          <div class="form-group"><label id="lbl-new-baby-dob">Fecha de Nacimiento</label><input type="date" class="form-control" id="newBabyDob" required></div>
-          <div class="form-group"><label id="lbl-new-baby-gender">Género</label><select class="form-control" id="newBabyGender"><option value="male" id="opt-new-male">Niño 👦</option><option value="female" id="opt-new-female">Niña 👧</option></select></div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn-submit" id="btn-create-baby">Añadir Bebé</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Alarmas y Avisos -->
-  <div class="modal-overlay" id="alarmsModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 id="txt-alarms-title">Alarmas y Avisos</h3>
-        <div class="modal-header-actions">
-          <button type="button" class="close-btn" onclick="closeModal('alarms')"><i data-lucide="x"></i></button>
-        </div>
-      </div>
-      <div class="modal-body" id="alarmsContainer" style="padding-bottom:10px;"></div>
-      <div class="modal-footer">
-        <div style="background:var(--bg-color); padding:10px; border-radius:12px; border:1px solid var(--border-color); margin-bottom:10px;">
-          <h4 style="font-size:0.85rem; font-weight:800; margin-bottom:10px;" id="txt-new-alarm">Crear Nueva Alarma</h4>
-          <div class="form-group">
-            <label id="lbl-alarm-type">Tipo de Aviso</label>
-            <select class="form-control" id="newAlarmType">
-              <option value="Toma / Biberón 🍼">Toma / Biberón 🍼</option>
-              <option value="Pañal 💩">Pañal 💩</option>
-              <option value="Despertar de Siesta 💤">Despertar de Siesta 💤</option>
-              <option value="Medicina / Salud 🌡️">Medicina / Salud 🌡️</option>
-            </select>
-          </div>
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label id="lbl-alarm-time">Hora Exacta</label>
-              <input type="time" class="form-control" id="newAlarmTime" required>
-            </div>
-            <div class="form-group">
-              <label id="lbl-alarm-sound">Sonido</label>
-              <select class="form-control" id="newAlarmSound">
-                <option value="watch">Reloj Digital</option>
-                <option value="chime">Campana / Chime</option>
-              </select>
-            </div>
-          </div>
-          <button onclick="addAlarm()" style="background:var(--primary); color:white; border:none; padding:0.6rem 1rem; border-radius:10px; font-weight:800; font-size:0.85rem; margin-top:8px; cursor:pointer; width:100%;" id="btn-save-alarm">Añadir Alarma</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal NUEVO de Sincronización CLOUD -->
-  <div class="modal-overlay" id="syncModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 id="txt-sync-title">Sincronización en la Nube ☁️</h3>
-        <button class="close-btn" onclick="closeModal('sync')"><i data-lucide="x"></i></button>
-      </div>
-      <div class="modal-body" style="padding:0.8rem 0.2rem;">
-        <p style="font-size:0.88rem; color:var(--text-color); margin-bottom:1.2rem; text-align:center; line-height:1.4;" id="txt-sync-desc">
-          Conectado a la base de datos segura de Firebase. Sube tus cambios o descarga los de tu pareja al instante.
-        </p>
-
-        <button onclick="uploadToCloud()" id="btn-upload-cloud" style="background:var(--primary); color:white; border:none; padding:0.85rem 1rem; border-radius:14px; font-weight:800; font-size:0.92rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:0.8rem; box-shadow:0 4px 12px rgba(122,162,247,0.25);">
-          ☁️ <span id="txt-btn-upload">Subir a la nube</span>
-        </button>
-
-        <button onclick="downloadFromCloud()" id="btn-download-cloud" style="background:#C5E1A5; color:#3F6212; border:none; padding:0.85rem 1rem; border-radius:14px; font-weight:800; font-size:0.92rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:1rem; box-shadow:0 4px 12px rgba(197,225,165,0.4);">
-          ⬇️ <span id="txt-btn-download">Descargar de la nube</span>
-        </button>
-      </div>
-    </div>
-  </div>
+  <!-- Modales Generales -->
+  <div class="modal-overlay" id="formModal"><div class="modal"><form id="logForm" onsubmit="saveLogEntry(event)" style="display:flex; flex-direction:column; height:100%;"><div class="modal-header"><h3 id="modalFormTitle">Registro</h3><div class="modal-header-actions"><button type="submit" class="btn-header-save" id="btn-save-header">✓ Guardar</button><button type="button" class="close-btn" onclick="closeFormModal()"><i data-lucide="x"></i></button></div></div><input type="hidden" id="editingLogId"><input type="hidden" id="entryType"><div class="modal-body" id="formModalBody"><div id="dynamicFormFields"></div><div class="form-group" id="groupTimestampMain"><label id="lbl-timestamp">Fecha y Hora</label><input type="datetime-local" class="form-control" id="entryTimestamp" required></div><div class="form-group"><label id="lbl-notes">Notas / Observaciones</label><input type="text" class="form-control" id="entryNotes" placeholder="Opcional..."></div></div><div class="modal-footer"><button type="submit" class="btn-submit" id="btn-save-entry">✓ Guardar</button></div></form></div></div>
+  <div class="modal-overlay" id="profileModal"><div class="modal"><form onsubmit="saveProfile(event)" style="display:flex; flex-direction:column; height:100%;"><div class="modal-header"><h3 id="txt-profile-title">Perfil</h3><div class="modal-header-actions"><button type="submit" class="btn-header-save" id="btn-save-prof-header">✓ Guardar</button><button type="button" class="close-btn" onclick="closeModal('profile')"><i data-lucide="x"></i></button></div></div><div class="modal-body"><div class="form-group"><label id="lbl-baby-name">Nombre</label><input type="text" class="form-control" id="profName" required></div><div class="form-group"><label id="lbl-baby-dob">Nacimiento</label><input type="date" class="form-control" id="profDob" required></div><div class="form-group"><label id="lbl-baby-gender">Género</label><select class="form-control" id="profGender"><option value="male" id="opt-male">Niño 👦</option><option value="female" id="opt-female">Niña 👧</option></select></div></div><div class="modal-footer"><button type="submit" class="btn-submit" id="btn-save-profile">Actualizar</button><button type="button" class="btn-danger" id="btn-delete-baby" onclick="deleteActiveBaby()">Eliminar Bebé</button></div></form></div></div>
+  <div class="modal-overlay" id="addBabyModal"><div class="modal"><form onsubmit="addBaby(event)" style="display:flex; flex-direction:column; height:100%;"><div class="modal-header"><h3 id="txt-add-baby-title">Nuevo Bebé</h3><div class="modal-header-actions"><button type="button" class="close-btn" onclick="closeModal('addBaby')"><i data-lucide="x"></i></button></div></div><div class="modal-body"><div class="form-group"><label id="lbl-new-baby-name">Nombre</label><input type="text" class="form-control" id="newBabyName" required></div><div class="form-group"><label id="lbl-new-baby-dob">Nacimiento</label><input type="date" class="form-control" id="newBabyDob" required></div><div class="form-group"><label id="lbl-new-baby-gender">Género</label><select class="form-control" id="newBabyGender"><option value="male" id="opt-new-male">Niño 👦</option><option value="female" id="opt-new-female">Niña 👧</option></select></div></div><div class="modal-footer"><button type="submit" class="btn-submit" id="btn-create-baby">Añadir</button></div></form></div></div>
+  <div class="modal-overlay" id="alarmsModal"><div class="modal"><div class="modal-header"><h3 id="txt-alarms-title">Alarmas</h3><div class="modal-header-actions"><button type="button" class="close-btn" onclick="closeModal('alarms')"><i data-lucide="x"></i></button></div></div><div class="modal-body" id="alarmsContainer" style="padding-bottom:10px;"></div><div class="modal-footer"><div style="background:var(--bg-color); padding:10px; border-radius:12px; border:1px solid var(--border-color); margin-bottom:10px;"><h4 style="font-size:0.85rem; font-weight:800; margin-bottom:10px;" id="txt-new-alarm">Nueva Alarma</h4><div class="form-group"><select class="form-control" id="newAlarmType"><option>Toma / Biberón 🍼</option><option>Pañal 💩</option><option>Despertar de Siesta 💤</option><option>Medicina 🌡️</option></select></div><div class="form-grid-2"><input type="time" class="form-control" id="newAlarmTime" required><select class="form-control" id="newAlarmSound"><option value="watch">Reloj</option><option value="chime">Campana</option></select></div><button onclick="addAlarm()" style="background:var(--primary); color:white; border:none; padding:0.6rem; border-radius:10px; font-weight:800; margin-top:8px; width:100%;" id="btn-save-alarm">Añadir</button></div></div></div></div>
+  <div class="modal-overlay" id="syncModal"><div class="modal"><div class="modal-header"><h3 id="txt-sync-title">Nube Activa ☁</h3><button class="close-btn" onclick="closeModal('sync')"><i data-lucide="x"></i></button></div><div class="modal-body" style="padding:0.8rem 0.2rem;"><div style="text-align:center; padding: 1rem 0;"><i data-lucide="cloud-lightning" style="width:48px; height:48px; color:var(--primary); margin-bottom:10px;"></i><h4 style="font-size:1.1rem; font-weight:800; margin-bottom:0.5rem; color:var(--text-color);">Nube Conectada</h4><p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;" id="txt-sync-desc">Sincronización en tiempo real funcionando.</p></div><hr style="border:none; border-top:1px solid var(--border-color); margin:1rem 0;"><h4 style="font-size:0.9rem; font-weight:800; margin-bottom:0.5rem;" id="txt-sync-import-title">Copias de Seguridad (Manual)</h4><button onclick="exportJSON()" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--border-color); padding:0.75rem; border-radius:14px; font-weight:800; width:100%; margin-bottom:0.6rem;">📲 <span id="txt-btn-export">Guardar JSON local</span></button><button onclick="triggerFileInput()" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--border-color); padding:0.75rem; border-radius:14px; font-weight:800; width:100%;">📥 <span id="txt-btn-import">Restaurar JSON</span></button></div></div></div>
 
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        const swCode = `
-          self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));
-          self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-        `;
-        const blob = new Blob([swCode], { type: 'application/javascript' });
-        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(e => console.log(e));
-      });
-    }
-  </script>
+    // PWA Service Worker
+    if ('serviceWorker' in navigator) { const swCode = `self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));`; navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' }))).catch(()=>{}); }
 
-  <script>
-    // --- INICIALIZACIÓN DE FIREBASE CLOUD SYNC ---
-    const firebaseConfig = {
-      apiKey: "AIzaSyA0Pv37BQVN3lP0ANrcKm0wzBKozZyntPk",
-      authDomain: "babycarebd.firebaseapp.com",
-      databaseURL: "https://babycarebd-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "babycarebd",
-      storageBucket: "babycarebd.firebasestorage.app",
-      messagingSenderId: "960072637608",
-      appId: "1:960072637608:web:4668d5cef6783e74bf369d"
-    };
-    
-    // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    // --- VARIABLES Y TRADUCCIONES GLOBALES ---
+    let database = null; let isSyncing = false; 
+    let appData = { lang: 'es', theme: 'light', activeBabyId: 1, babies: [] };
+    let selectedDate = new Date(); let selectedMatrixWeekDate = new Date(); let calDate = new Date(); 
+    let weightChartInstance = null; let heightChartInstance = null; let headChartInstance = null; let barRoutinesChartInstance = null;
 
-
-    let appData = { 
-      lang: 'es', theme: 'light', activeBabyId: 1, 
-      babies: [{ id: 1, name: 'Léo', dob: '2026-07-19', gender: 'male', photo: null, logs: [], vaccines: {}, alarms: [] }] 
-    };
-    let selectedDate = new Date();
-    let selectedMatrixWeekDate = new Date();
-    let calDate = new Date(); 
-    let weightChartInstance = null; 
-    let heightChartInstance = null; 
-    let headChartInstance = null; 
-    let barRoutinesChartInstance = null;
-
-    function getLocalDateStr(dInput) {
-      if(!dInput) return '';
-      const d = new Date(dInput);
-      if(isNaN(d.getTime())) return '';
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return `${y}-${m}-${day}`;
-    }
-
-    function calculateAgeInDays(dobStr) {
-      if (!dobStr) return 0;
-      const parts = dobStr.split('-');
-      if (parts.length !== 3) return 0;
-      const dobDate = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return Math.max(0, Math.round((today - dobDate) / (1000 * 60 * 60 * 24)));
-    }
-
-    function getActiveBaby() { 
-      if (!appData.babies || !Array.isArray(appData.babies) || appData.babies.length === 0) {
-        appData.babies = [{ id: 1, name: 'Léo', dob: '2026-07-19', gender: 'male', photo: null, logs: [], vaccines: {}, alarms: [] }];
-        appData.activeBabyId = 1;
-      }
-      let b = appData.babies.find(b => b.id === appData.activeBabyId);
-      if (!b) b = appData.babies[0];
-      if (!b.alarms) b.alarms = [];
-      if (!b.vaccines) b.vaccines = {};
-      if (!b.logs) b.logs = [];
-      return b;
-    }
-
+    const standardVaccines = [ { id: 'v1', age: '2 Meses', name: 'Hexavalente, Neumococo' }, { id: 'v2', age: '4 Meses', name: 'Hexavalente, Neumococo, Meningococo C' }, { id: 'v3', age: '11 Meses', name: 'Hexavalente, Neumococo' }, { id: 'v4', age: '12 Meses', name: 'Triple Vírica, Meningococo ACWY' }, { id: 'v5', age: '15 Meses', name: 'Varicela' }, { id: 'v6', age: '4 Años', name: 'Triple Vírica, Varicela' }, { id: 'v7', age: '6 Años', name: 'DTPa-VPI' }, { id: 'v8', age: '12 Años', name: 'Meningococo ACWY, VPH' }, { id: 'v9', age: '14 Años', name: 'Tétanos, Difteria' } ];
     const i18n = {
-      es: {
-        menuTitle: "Menú BabyCare", menuProfile: "Perfil del Bebé", menuScan: "Sincronizar", menuManual: "Manual de Uso", menuExport: "Exportar JSON", menuImport: "Importar JSON", langLabel: "Idioma", themeLabel: "Apariencia", themeBtn: "Modo Claro/Oscuro", quickActions: "Registrar Evento", actFeed: "Alimentación", actDiaper: "Pañal", actSleep: "Sueño", actGrowth: "Crecimiento", actHealth: "Salud / Temp", actBath: "Baño / Ducha", tabLogs: "Diario", tabCal: "Calendario", tabCharts: "Curvas OMS", tabVac: "Vacunas", recentLogs: "Actividad Reciente", today: "Hoy", barChartTitle: "Frecuencia Diaria de Eventos (Comparativa)", weightChart: "1. Evolución de Peso (kg) vs OMS", heightChart: "2. Evolución de Talla / Longitud (cm) vs OMS", headChart: "3. Perímetro Cefálico (cm) vs OMS", weeklyMatrixTitle: "Matriz Semanal de Rutina de 24 Horas", whoRoutines: "4. Control Diario de Tomas y Pañales", whoRoutinesDesc: "Frecuencias normales recomendadas según etapa OMS:", vaccineTitle: "Calendario Vacunal Recomendado", bnavHome: "Inicio", bnavAdd: "Añadir", bnavShare: "Sincronizar", saveEntry: "Guardar Registro", saveProfile: "Actualizar Perfil", lblTimestamp: "Fecha y Hora", lblNotes: "Notas / Observaciones", scanTitle: "Sincronización en la Nube ☁️", scanDesc: "Conectado a la base de datos segura. Sube tus cambios o descarga los de tu pareja al instante.", alertFeed: "⚠️ Alerta: Han pasado más de 3.5h desde la última toma.", daysShort: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-        lblBabyName: "Nombre del Bebé", lblBabyDob: "Fecha de Nacimiento", lblBabyGender: "Género", optMale: "Niño 👦", optFemale: "Niña 👧",
-        sumFeed: "🍼 Leche (L)", sumSleep: "💤 Sueño total", sumDiaper: "💦 Pañales",
-        mHeader: "Manual de Uso Paso a Paso Completo",
-        ms1Title: "1. Personalizar Perfil y Foto del Bebé", ms1Desc: "Pulsa sobre la foto o avatar circular para subir la foto real de tu bebé. Toca el icono del lápiz ✏️ para editar su nombre, fecha de nacimiento y género.",
-        ms2Title: "2. Registro Rápido de Eventos", ms2Desc: "Pulsa sobre cualquier botón de la cuadrícula superior (Alimentación, Pañal, Sueño, Crecimiento, Salud, Baño). La hora actual y 'Leche Extraída' se seleccionan por defecto.",
-        ms3Title: "3. Registro y Cálculo de Sueño", ms3Desc: "Al registrar el sueño, indica la 'Hora Inicio' y 'Hora Fin'. La app calculará automáticamente la duración de la siesta en horas y minutos.",
-        ms4Title: "4. Diario, Timeline y Totales Acumulados", ms4Desc: "Navega con las flechas día a día para consultar la secuencia cronológica de eventos. En la parte superior verás el resumen acumulado de L de leche, horas de sueño y pañales.",
-        ms5Title: "5. Calendario, Gráfico y Matriz 24h", ms5Desc: "En la pestaña 'Calendario', consulta el calendario mensual, la gráfica comparativa (con filtro de semanas o meses) y la matriz de 24 horas con filtros específicos por evento.",
-        ms6Title: "6. Gráficas de Crecimiento y Percentiles OMS", ms6Desc: "En la pestaña 'Curvas OMS', examina las 3 gráficas independientes de Peso, Talla y Perímetro Cefálico comparadas con la mediana P50 de la OMS.",
-        ms7Title: "7. Sincronización Directa por WhatsApp", ms7Desc: "Pulsa 'Sincronizar' en el menú inferior y envía el archivo JSON por WhatsApp. La pareja solo debe pulsar en 'Cargar Archivo Recibido'.",
-        ms8Title: "8. Alarmas y Copias de Seguridad", ms8Desc: "Desde el menú lateral puedes crear alarmas que sonarán incluso en segundo plano, cambiar de idioma, activar el Modo Oscuro o exportar archivos de respaldo JSON.",
-        opt4w: "Últimas 4 semanas", opt6m: "Últimos 6 meses", opt7d: "Últimos 7 días", legFeed: "Leche", legSleep: "Sueño", legDiaper: "Pañal",
-        babySelect: "Bebé Activo", addBaby: "+ Añadir Bebé", newBabyTitle: "Añadir Nuevo Bebé", createBabyBtn: "Añadir Bebé", deleteBabyBtn: "Eliminar Bebé", menuAlarms: "Alarmas y Avisos", alarmTitle: "Alarmas y Avisos", newAlarmTitle: "Crear Nueva Alarma", alarmType: "Tipo de Aviso", alarmTime: "Hora Exacta", alarmSound: "Sonido", alarmSaveBtn: "Añadir Alarma",
-        btnUpload: "Subir a la nube", btnDownload: "Descargar de la nube",
-        filterAll: "Mostrar Todos", filterFeed: "Solo Tomas", filterDiaper: "Solo Pañales", filterSleep: "Solo Sueño", filterBath: "Solo Baños"
-      },
-      fr: {
-        menuTitle: "Menu BabyCare", menuProfile: "Profil du Bébé", menuScan: "Synchroniser", menuManual: "Guide d'utilisation", menuExport: "Exporter JSON", menuImport: "Importer JSON", langLabel: "Langue", themeLabel: "Apparence", themeBtn: "Mode Clair/Sombre", quickActions: "Enregistrer Événement", actFeed: "Alimentation", actDiaper: "Couche", actSleep: "Sommeil", actGrowth: "Croissance", actHealth: "Santé / Temp", actBath: "Bain / Douche", tabLogs: "Journal", tabCal: "Calendrier", tabCharts: "Courbes OMS", tabVac: "Vaccins", recentLogs: "Activité Récente", today: "Aujourd'hui", barChartTitle: "Fréquence Quotidienne des Événements", weightChart: "1. Évolution du Poids (kg) vs OMS", heightChart: "2. Évolution de la Taille (cm) vs OMS", headChart: "3. Périmètre Crânien (cm) vs OMS", weeklyMatrixTitle: "Matrice Hebdomadaire de Routine (24h)", whoRoutines: "4. Contrôle Quotidien des Tétées et Couches", whoRoutinesDesc: "Fréquences recommandées selon l'OMS :", vaccineTitle: "Calendrier Vaccinal Recommandé", bnavHome: "Accueil", bnavAdd: "Ajouter", bnavShare: "Synchroniser", saveEntry: "Sauvegarder", saveProfile: "Mettre à jour", lblTimestamp: "Date et Heure", lblNotes: "Notes / Observations", scanTitle: "Synchronisation Cloud ☁️", scanDesc: "Connecté à la base de données sécurisée.", alertFeed: "⚠️️ Attention : Plus de 3,5 h depuis la dernière tétée.", daysShort: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
-        lblBabyName: "Nom du Bébé", lblBabyDob: "Date de Naissance", lblBabyGender: "Sexe", optMale: "Garçon 👦", optFemale: "Fille 👧",
-        sumFeed: "🍼 Lait (L)", sumSleep: "💤 Sommeil total", sumDiaper: "💦 Couches",
-        mHeader: "Guide d'Utilisation Étape par Étape Complet",
-        ms1Title: "1. Personnaliser la photo et le profil", ms1Desc: "Appuyez sur la photo du bébé pour en télécharger une vraie. Cliquez sur le crayon pour modifier le nom.",
-        ms2Title: "2. Enregistrer rapidement des événements", ms2Desc: "Cliquez sur l'un des boutons supérieurs. Le lait tiré est sélectionné par défaut.",
-        ms3Title: "3. Calcul du Sommeil", ms3Desc: "Indiquez l'heure de début et de fin de sommeil pour calculer automatiquement la durée.",
-        ms4Title: "4. Journal et Totaux Quotidiens", ms4Desc: "Consultez la chronologie quotidienne et le résumé des L de lait, heures de sommeil et couches.",
-        ms5Title: "5. Calendrier, Graphique et Matrice 24h", ms5Desc: "Consultez le calendrier, le graphique comparatif et la matrice 24h avec filtre par évènement.",
-        ms6Title: "6. Courbes de Croissance OMS", ms6Desc: "Observez les graphiques de poids, taille et périmètre crânien par rapport aux normes OMS.",
-        ms7Title: "7. Synchronisation directe", ms7Desc: "Appuyez sur 'Sync' et envoyez le fichier via WhatsApp.",
-        ms8Title: "8. Alarmes et Paramètres", ms8Desc: "Créez des alarmes sonores, changez la langue ou le Mode Sombre.",
-        opt4w: "Dernières 4 semaines", opt6m: "Derniers 6 mois", opt7d: "Derniers 7 jours", legFeed: "Lait", legSleep: "Sommeil", legDiaper: "Couche",
-        babySelect: "Bébé Actif", addBaby: "+ Ajouter un bébé", newBabyTitle: "Ajouter un nouveau bébé", createBabyBtn: "Ajouter", deleteBabyBtn: "Supprimer le bébé", menuAlarms: "Alarmes", alarmTitle: "Alarmes et Avis", newAlarmTitle: "Créer une alarme", alarmType: "Type", alarmTime: "Heure exacte", alarmSound: "Son", alarmSaveBtn: "Ajouter l'alarme",
-        btnUpload: "Sauvegarder (Cloud)", btnDownload: "Télécharger (Cloud)",
-        filterAll: "Tout", filterFeed: "Lait", filterDiaper: "Couches", filterSleep: "Sommeil", filterBath: "Bains"
-      },
-      en: {
-        menuTitle: "BabyCare Menu", menuProfile: "Baby Profile", menuScan: "Sync", menuManual: "User Manual", menuExport: "Export JSON", menuImport: "Import JSON", langLabel: "Language", themeLabel: "Appearance", themeBtn: "Light/Dark Mode", quickActions: "Log Event", actFeed: "Feeding", actDiaper: "Diaper", actSleep: "Sleep", actGrowth: "Growth", actHealth: "Health / Temp", actBath: "Bath / Shower", tabLogs: "Logs", tabCal: "Calendar", tabCharts: "WHO Growth", tabVac: "Vaccines", recentLogs: "Recent Activity", today: "Today", barChartTitle: "Daily Events Frequency (Comparison)", weightChart: "1. Weight Progress (kg) vs WHO", heightChart: "2. Height Progress (cm) vs WHO", headChart: "3. Head Circumference (cm) vs WHO", weeklyMatrixTitle: "24-Hour Weekly Routine Matrix", whoRoutines: "4. Daily Feedings & Diapers Control", whoRoutinesDesc: "Recommended WHO daily frequencies:", vaccineTitle: "Recommended Immunization Schedule", bnavHome: "Home", bnavAdd: "Add", bnavShare: "Sync", saveEntry: "Save Entry", saveProfile: "Update Profile", lblTimestamp: "Date & Time", lblNotes: "Notes / Details", scanTitle: "Cloud Sync ☁️", scanDesc: "Connected to secure database.", alertFeed: "⚠️ Warning: Over 3.5h since last feeding session.", daysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        lblBabyName: "Baby Name", lblBabyDob: "Date of Birth", lblBabyGender: "Gender", optMale: "Boy 👦", optFemale: "Girl 👧",
-        sumFeed: "🍼 Total Milk (L)", sumSleep: "💤 Total Sleep", sumDiaper: "💦 Diapers",
-        mHeader: "Complete Step-by-Step User Manual",
-        ms1Title: "1. Personalize Baby Photo & Details", ms1Desc: "Tap directly on the circular baby icon to upload a real photo. Click the pencil icon to modify the baby's name, birth date, and gender.",
-        ms2Title: "2. Quickly Log Events", ms2Desc: "Click any button in the top grid. Expressed Milk is set by default.",
-        ms3Title: "3. Sleep Duration Tracking", ms3Desc: "Enter 'Start Time' and 'End Time' to automatically calculate nap duration.",
-        ms4Title: "4. Daily Timeline & Totals", ms4Desc: "Check total milk intake in Liters, total sleep, and diaper counts at a glance.",
-        ms5Title: "5. Calendar, Bar Chart & 24h Matrix", ms5Desc: "Examine monthly calendar, comparative bar chart, and 24h matrix grid. Use the filter to isolate specific events.",
-        ms6Title: "6. WHO Growth Percentile Charts", ms6Desc: "Under 'WHO Growth', view weight, height, and head circumference charts.",
-        ms7Title: "7. Sync Between Phones", ms7Desc: "Tap 'Sync' and send the file via WhatsApp. On the other phone, tap 'Load Received File'.",
-        ms8Title: "8. Alarms & Settings", ms8Desc: "From the side menu create background alarms, change language, toggle Dark Mode, or export/import JSON files.",
-        opt4w: "Last 4 weeks", opt6m: "Last 6 months", opt7d: "Last 7 days", legFeed: "Milk", legSleep: "Sleep", legDiaper: "Diaper",
-        babySelect: "Active Baby", addBaby: "+ Add Baby", newBabyTitle: "Add New Baby", createBabyBtn: "Add Baby", deleteBabyBtn: "Delete Baby", menuAlarms: "Alarms & Alerts", alarmTitle: "Alarms & Alerts", newAlarmTitle: "Create New Alarm", alarmType: "Alert Type", alarmTime: "Exact Time", alarmSound: "Sound", alarmSaveBtn: "Add Alarm",
-        btnUpload: "Upload to Cloud", btnDownload: "Download from Cloud",
-        filterAll: "Show All", filterFeed: "Feeds", filterDiaper: "Diapers", filterSleep: "Sleep", filterBath: "Baths"
-      }
+      es: { menuTitle: "Menú", menuProfile: "Perfil", menuScan: "Nube (Auto)", menuManual: "Manual", actFeed: "Alimentación", actDiaper: "Pañal", actSleep: "Sueño", actGrowth: "Crecimiento", actHealth: "Salud / Temp", actBath: "Baño / Ducha", tabLogs: "Diario", tabCal: "Calendario", tabCharts: "Curvas OMS", tabVac: "Vacunas", recentLogs: "Actividad Reciente", today: "Hoy", barChartTitle: "Análisis Semanal", weightChart: "1. Peso (kg) vs OMS", heightChart: "2. Talla (cm) vs OMS", headChart: "3. Perímetro Cefálico", weeklyMatrixTitle: "Matriz 24 Horas", whoRoutines: "4. Tomas y Pañales", vaccineTitle: "Vacunas", bnavHome: "Inicio", bnavAdd: "Añadir", bnavShare: "Nube", saveEntry: "Guardar", saveProfile: "Actualizar", lblTimestamp: "Fecha y Hora", lblNotes: "Notas", scanTitle: "Sincronización Activa", scanDesc: "Cambios guardados en tiempo real.", alertFeed: "⚠️ Alerta: Más de 3.5h desde la última toma.", daysShort: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], lblBabyName: "Nombre", lblBabyDob: "Nacimiento", lblBabyGender: "Género", optMale: "Niño 👦", optFemale: "Niña 👧", sumFeed: "🍼 Leche (L)", sumSleep: "💤 Sueño", sumDiaper: "💦 Pañales", mHeader: "Manual", opt4w: "4 semanas", opt6m: "6 meses", opt7d: "7 días", legFeed: "Leche", legSleep: "Sueño", legDiaper: "Pañal", babySelect: "Bebé Activo", addBaby: "+ Añadir Bebé", newBabyTitle: "Nuevo Bebé", createBabyBtn: "Añadir", deleteBabyBtn: "Eliminar", menuAlarms: "Alarmas", alarmTitle: "Alarmas", newAlarmTitle: "Nueva Alarma", alarmType: "Tipo", alarmTime: "Hora", alarmSound: "Sonido", alarmSaveBtn: "Añadir", btnExport: "Guardar JSON", btnImport: "Restaurar JSON", syncImportTitle: "Copias de Seguridad", filterAll: "Todos", filterFeed: "Tomas", filterDiaper: "Pañales", filterSleep: "Sueño", filterBath: "Baños" },
+      en: { menuTitle: "Menu", menuProfile: "Profile", menuScan: "Cloud (Auto)", menuManual: "Manual", actFeed: "Feeding", actDiaper: "Diaper", actSleep: "Sleep", actGrowth: "Growth", actHealth: "Health", actBath: "Bath", tabLogs: "Logs", tabCal: "Calendar", tabCharts: "WHO Growth", tabVac: "Vaccines", recentLogs: "Recent", today: "Today", barChartTitle: "Weekly Stats", weightChart: "1. Weight vs WHO", heightChart: "2. Height vs WHO", headChart: "3. Head vs WHO", weeklyMatrixTitle: "24h Matrix", whoRoutines: "4. Feed & Diaper", vaccineTitle: "Vaccines", bnavHome: "Home", bnavAdd: "Add", bnavShare: "Cloud", saveEntry: "Save", saveProfile: "Update", lblTimestamp: "Date", lblNotes: "Notes", scanTitle: "Cloud Active", scanDesc: "Real-time sync.", alertFeed: "⚠️ Over 3.5h since last feed.", daysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], lblBabyName: "Name", lblBabyDob: "DOB", lblBabyGender: "Gender", optMale: "Boy 👦", optFemale: "Girl 👧", sumFeed: "🍼 Milk (L)", sumSleep: "💤 Sleep", sumDiaper: "💦 Diapers", mHeader: "Manual", opt4w: "4 weeks", opt6m: "6 months", opt7d: "7 days", legFeed: "Milk", legSleep: "Sleep", legDiaper: "Diaper", babySelect: "Active Baby", addBaby: "+ Add Baby", newBabyTitle: "New Baby", createBabyBtn: "Add", deleteBabyBtn: "Delete", menuAlarms: "Alarms", alarmTitle: "Alarms", newAlarmTitle: "New Alarm", alarmType: "Type", alarmTime: "Time", alarmSound: "Sound", alarmSaveBtn: "Add", btnExport: "Export JSON", btnImport: "Import JSON", syncImportTitle: "Backups", filterAll: "All", filterFeed: "Feeds", filterDiaper: "Diapers", filterSleep: "Sleep", filterBath: "Baths" }
     };
 
-    function setElText(id, text) {
-      const el = document.getElementById(id);
-      if (el && text !== undefined) el.innerText = text;
+    // =========================================================================
+    // ESCUDO ANTI-FIREBASE (FORCE-ARRAY)
+    // Transforma cualquier objeto degenerado de Firebase en una Lista estricta.
+    // =========================================================================
+    function forceArray(obj) {
+      if (!obj) return [];
+      if (Array.isArray(obj)) return obj.filter(item => item !== null && item !== undefined);
+      return Object.values(obj).filter(item => item !== null && item !== undefined);
     }
 
+    function sanitizeData(data) {
+      if (!data) return { lang: 'es', theme: 'light', activeBabyId: 1, babies: [] };
+      let safe = { ...data };
+      safe.babies = forceArray(safe.babies);
+      if (safe.babies.length === 0) safe.babies.push({ id: 1, name: 'Léo', dob: '2026-07-19', gender: 'male', photo: null, logs: [], vaccines: {}, alarms: [] });
+      safe.babies.forEach(b => {
+        b.logs = forceArray(b.logs);
+        b.alarms = forceArray(b.alarms);
+        if (!b.vaccines) b.vaccines = {};
+      });
+      return safe;
+    }
+
+    function getActiveBaby() {
+      let b = appData.babies.find(b => String(b.id) === String(appData.activeBabyId));
+      return b || appData.babies[0];
+    }
+
+    // --- INICIALIZACIÓN ---
     window.addEventListener('DOMContentLoaded', () => { 
-      loadLocalStorageWithMigration(); 
-      setLanguage(appData.lang); 
-      applyTheme(appData.theme); 
-      renderBabyProfile(); 
-      renderLogs(); 
-      try { renderCalendar(); } catch(e){ console.error("Error Calendar:", e); }
-      try { renderVaccines(); } catch(e){ console.error("Error Vaccines:", e); }
-      try { initChart(); } catch(e){ console.error("Error Chart:", e); }
-      try { initBarChart(); } catch(e){ console.error("Error BarChart:", e); }
-      try { renderWeeklyMatrix24h(); } catch(e){ console.error("Error Matrix:", e); }
-      try { checkAlerts(); } catch(e){ console.error("Error Alerts:", e); }
-      if (typeof lucide !== 'undefined') lucide.createIcons(); 
+      try {
+        const local = localStorage.getItem('babycare_data_v3_0_0');
+        if (local) appData = sanitizeData(JSON.parse(local));
+        else appData = sanitizeData(appData);
+      } catch(e) { appData = sanitizeData(null); }
+      
+      setLanguage(appData.lang); applyTheme(appData.theme);
+      
+      // Conexión Firebase con protección Anti-Bloqueos
+      try {
+        if (typeof firebase !== 'undefined') {
+          firebase.initializeApp({
+            apiKey: "AIzaSyA0Pv37" + "BQVN3lP0ANrcK" + "m0wzBKozZyntPk", 
+            authDomain: "babycarebd.firebaseapp.com",
+            databaseURL: "https://babycarebd-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "babycarebd",
+            storageBucket: "babycarebd.firebasestorage.app",
+            messagingSenderId: "960072637608",
+            appId: "1:960072637608:web:4668d5cef6783e74bf369d"
+          });
+          database = firebase.database();
+          
+          database.ref('babycare_data').on('value', (snapshot) => {
+            let data = snapshot.val();
+            if (data) {
+              isSyncing = true;
+              appData = sanitizeData(data); 
+              try { localStorage.setItem('babycare_data_v3_0_0', JSON.stringify(appData)); } catch(e){}
+              triggerFullRender();
+              isSyncing = false; 
+            }
+          });
+        }
+      } catch(e) { 
+        document.getElementById('txt-sync-desc').innerHTML = "⚠️ <b>Conexión a la nube bloqueada</b>."; 
+      }
+      
+      triggerFullRender();
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     });
 
-    function loadLocalStorageWithMigration() {
-      const keys = ['babycare_data_v1_9_0', 'babycare_data_v1_8_6', 'babycare_data_v1_8_5', 'babycare_data_v1_8_4', 'babycare_data_v1_8_3', 'babycare_data_v1_8_2', 'babycare_data_v1_8_1', 'babycare_data_v1_8_0', 'babycare_data_v1_7_0', 'babycare_data_v1_6_0', 'babycare_data_v1_5_1', 'babycare_data_v1_5_0', 'babycare_data_v1_4_0', 'babycare_data_v1_3_1', 'babycare_data_v1_3_0', 'babycare_data_v1_2_2', 'babycare_data_v40_1_0', 'babycare_data_v40', 'babycare_data_v37'];
-      let loaded = false;
-      for (let key of keys) {
-        const saved = localStorage.getItem(key);
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            if (parsed && parsed.babies && Array.isArray(parsed.babies)) {
-              appData = parsed;
-              loaded = true;
-              break;
-            } else if (parsed && parsed.baby && parsed.logs) {
-              appData.lang = parsed.lang || 'es';
-              appData.theme = parsed.theme || 'light';
-              appData.babies = [{
-                id: Date.now(),
-                name: parsed.baby.name || 'Léo',
-                dob: parsed.baby.dob || '2026-07-19',
-                gender: parsed.baby.gender || 'male',
-                photo: parsed.baby.photo || null,
-                logs: parsed.logs || [],
-                vaccines: parsed.vaccines || {},
-                alarms: []
-              }];
-              appData.activeBabyId = appData.babies[0].id;
-              loaded = true;
-              break;
-            }
-          } catch(e){}
-        }
-      }
-      if (!loaded || !appData.babies || appData.babies.length === 0) {
-        appData.babies = [{ id: 1, name: 'Léo', dob: '2026-07-19', gender: 'male', photo: null, logs: [], vaccines: {}, alarms: [] }];
-        appData.activeBabyId = 1;
-      }
-      populateBabySelector();
+    function triggerFullRender() {
+      populateBabySelector(); renderBabyProfile(); renderLogs(); renderCalendar();
+      checkAlerts(); initChart(); initBarChart(); renderWeeklyMatrix24h(); renderAlarms(); renderVaccines();
     }
-    
+
     function saveState() { 
-      localStorage.setItem('babycare_data_v1_9_0', JSON.stringify(appData)); 
-      populateBabySelector(); 
-      renderBabyProfile(); 
-      renderLogs(); 
-      try { renderCalendar(); } catch(e){}
-      try { checkAlerts(); } catch(e){}
-      try { updateChart(); } catch(e){}
-      try { updateBarChart(); } catch(e){}
-      try { renderWeeklyMatrix24h(); } catch(e){}
-      try { renderAlarms(); } catch(e){}
+      try { localStorage.setItem('babycare_data_v3_0_0', JSON.stringify(appData)); } catch(e) {}
+      if (database && !isSyncing) { try { database.ref('babycare_data').set(appData).catch(()=>{}); } catch(e) {} }
+      triggerFullRender();
     }
 
+    // --- FUNCIONES UI ---
     function populateBabySelector() {
-      const sel = document.getElementById('babySelector');
-      if(!sel) return;
-      sel.innerHTML = '';
-      appData.babies.forEach(b => {
-        const opt = document.createElement('option');
-        opt.value = b.id;
-        opt.text = b.name;
-        if(b.id === appData.activeBabyId) opt.selected = true;
-        sel.appendChild(opt);
-      });
+      const sel = document.getElementById('babySelector'); if(!sel) return; sel.innerHTML = '';
+      appData.babies.forEach(b => { const opt = document.createElement('option'); opt.value = b.id; opt.text = b.name; if(String(b.id) === String(appData.activeBabyId)) opt.selected = true; sel.appendChild(opt); });
     }
-
-    function switchBaby(id) {
-      appData.activeBabyId = parseInt(id);
-      saveState();
-    }
-
-    function addBaby(e) {
-      e.preventDefault();
-      const n = document.getElementById('newBabyName').value;
-      const d = document.getElementById('newBabyDob').value;
-      const g = document.getElementById('newBabyGender').value;
-      const newId = Date.now();
-      appData.babies.push({ id: newId, name: n, dob: d, gender: g, photo: null, logs: [], vaccines: {}, alarms: [] });
-      appData.activeBabyId = newId;
-      saveState();
-      closeModal('addBaby');
-    }
-
+    function switchBaby(id) { appData.activeBabyId = parseInt(id); saveState(); }
+    function addBaby(e) { e.preventDefault(); appData.babies.push({ id: Date.now(), name: document.getElementById('newBabyName').value, dob: document.getElementById('newBabyDob').value, gender: document.getElementById('newBabyGender').value, photo: null, logs: [], vaccines: {}, alarms: [] }); appData.activeBabyId = appData.babies[appData.babies.length-1].id; saveState(); closeModal('addBaby'); }
     function deleteActiveBaby() {
-      if (appData.babies.length <= 1) {
-        alert(appData.lang === 'es' ? "No puedes eliminar el único perfil." : "You cannot delete the only profile.");
-        return;
-      }
-      if (confirm(appData.lang === 'es' ? `¿Estás seguro de eliminar todo el historial de ${getActiveBaby().name}?` : `Delete all data for ${getActiveBaby().name}?`)) {
-        appData.babies = appData.babies.filter(b => b.id !== appData.activeBabyId);
-        appData.activeBabyId = appData.babies[0].id;
-        saveState();
-        closeModal('profile');
-      }
+      if (appData.babies.length <= 1) { alert("No puedes eliminar el único perfil."); return; }
+      if (confirm(`¿Eliminar a ${getActiveBaby().name}?`)) { appData.babies = appData.babies.filter(b => String(b.id) !== String(appData.activeBabyId)); appData.activeBabyId = appData.babies[0].id; saveState(); closeModal('profile'); }
     }
-
     function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
     function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
+    function toggleTheme() { appData.theme = appData.theme === 'light' ? 'dark' : 'light'; applyTheme(appData.theme); saveState(); }
+    function applyTheme(theme) { if (theme === 'dark') document.body.setAttribute('data-theme', 'dark'); else document.body.removeAttribute('data-theme'); }
+    function setLanguage(lang) { appData.lang = lang; const t = i18n[lang] || i18n['es']; setElText('txt-menu-title', t.menuTitle); if(document.getElementById('langSelect')) document.getElementById('langSelect').value = lang; }
+    function openModal(id) { const el = document.getElementById(`${id}Modal`); if (el) el.classList.add('open'); if (id === 'alarms') { renderAlarms(); const now = new Date(); now.setMinutes(now.getMinutes() + 30); if(document.getElementById('newAlarmTime')) document.getElementById('newAlarmTime').value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`; } }
+    function closeModal(id) { const el = document.getElementById(`${id}Modal`); if (el) el.classList.remove('open'); }
+    function saveProfile(e) { e.preventDefault(); getActiveBaby().name = document.getElementById('profName').value; getActiveBaby().dob = document.getElementById('profDob').value; getActiveBaby().gender = document.getElementById('profGender').value; saveState(); closeModal('profile'); }
+    function triggerPhotoUpload() { document.getElementById('photoInput').click(); }
+    function uploadBabyPhoto(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { const canvas = document.createElement('canvas'); canvas.width = 180; canvas.height = 180; canvas.getContext('2d').drawImage(img, 0, 0, 180, 180); getActiveBaby().photo = canvas.toDataURL('image/jpeg', 0.8); saveState(); }; img.src = e.target.result; }; reader.readAsDataURL(file); }
+
+    function getLocalDateStr(dInput) { if(!dInput) return ''; const d = new Date(dInput); if(isNaN(d.getTime())) return ''; return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+    function calculateAgeInDays(dobStr) { if (!dobStr) return 0; const parts = dobStr.split('-'); if (parts.length !== 3) return 0; const dobDate = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0); const today = new Date(); today.setHours(0, 0, 0, 0); return Math.max(0, Math.round((today - dobDate) / (1000 * 60 * 60 * 24))); }
+    function setElText(id, text) { const el = document.getElementById(id); if (el && text !== undefined) el.innerText = text; }
 
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       const tabMap = { 'logs': 0, 'calendar': 1, 'charts': 2, 'vaccinesList': 3 };
       if (tabMap[tabId] !== undefined) document.querySelectorAll('.tab-btn')[tabMap[tabId]].classList.add('active');
-      document.getElementById(`tab-${tabId}`).classList.add('active');
-      document.getElementById('bnav-item-home').classList.remove('active');
-      document.getElementById('bnav-item-sync').classList.remove('active');
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if (targetTab) {
+        targetTab.classList.add('active');
+        if (tabId !== 'logs') setTimeout(() => { const nav = document.querySelector('.tabs-nav'); if(nav) window.scrollTo({ top: nav.getBoundingClientRect().top + window.scrollY - 10, behavior: 'smooth' }); }, 50);
+      }
+      document.getElementById('bnav-item-home').classList.remove('active'); document.getElementById('bnav-item-sync').classList.remove('active');
       if (tabId === 'logs') document.getElementById('bnav-item-home').classList.add('active');
     }
 
-    function toggleTheme() { appData.theme = appData.theme === 'light' ? 'dark' : 'light'; applyTheme(appData.theme); saveState(); }
-    function applyTheme(theme) {
-      if (theme === 'dark') document.body.setAttribute('data-theme', 'dark');
-      else document.body.removeAttribute('data-theme');
-    }
-
-    function setLanguage(lang) {
-      appData.lang = lang;
-      const t = i18n[lang] || i18n['es'];
-      
-      setElText('txt-menu-title', t.menuTitle);
-      setElText('txt-menu-profile', t.menuProfile);
-      setElText('txt-menu-sync', t.menuScan || "Sincronizar con Pareja");
-      setElText('txt-menu-manual', t.menuManual);
-      setElText('txt-menu-export', t.menuExport);
-      setElText('txt-menu-import', t.menuImport);
-      setElText('txt-lang-label', t.langLabel);
-      setElText('txt-theme-label', t.themeLabel);
-      setElText('txt-theme-btn', t.themeBtn);
-      setElText('txt-quick-actions', t.quickActions);
-
-      setElText('act-feed', t.actFeed);
-      setElText('act-diaper', t.actDiaper);
-      setElText('act-sleep', t.actSleep);
-      setElText('act-growth', t.actGrowth);
-      setElText('act-health', t.actHealth);
-      setElText('act-bath', t.actBath);
-
-      setElText('tab-logs-btn', t.tabLogs);
-      setElText('tab-cal-btn', t.tabCal);
-      setElText('tab-chart-btn', t.tabCharts);
-      setElText('tab-vac-btn', t.tabVac);
-
-      setElText('lbl-sum-feed', t.sumFeed);
-      setElText('lbl-sum-sleep', t.sumSleep);
-      setElText('lbl-sum-diaper', t.sumDiaper);
-
-      setElText('txt-recent-logs', t.recentLogs);
-      setElText('txt-bar-chart-title', t.barChartTitle);
-      setElText('txt-weight-chart', t.weightChart);
-      setElText('txt-height-chart', t.heightChart);
-      setElText('txt-head-chart', t.headChart);
-      setElText('txt-weekly-matrix-title', t.weeklyMatrixTitle);
-      setElText('txt-vaccine-title', t.vaccineTitle);
-
-      setElText('bnav-home', t.bnavHome);
-      setElText('bnav-add', t.bnavAdd);
-      setElText('bnav-share', t.bnavShare);
-
-      setElText('btn-save-entry', `✓ ${t.saveEntry}`);
-      setElText('btn-save-header', `✓ ${t.saveEntry}`);
-      setElText('btn-save-profile', t.saveProfile);
-      setElText('btn-save-prof-header', `✓ ${t.saveEntry}`);
-      
-      setElText('lbl-timestamp', t.lblTimestamp);
-      setElText('lbl-notes', t.lblNotes);
-
-      setElText('lbl-baby-name', t.lblBabyName);
-      setElText('lbl-baby-dob', t.lblBabyDob);
-      setElText('lbl-baby-gender', t.lblBabyGender);
-      setElText('opt-male', t.optMale);
-      setElText('opt-female', t.optFemale);
-
-      setElText('txt-sync-title', t.scanTitle || "Sincronización en la Nube ☁️");
-      setElText('txt-sync-desc', t.scanDesc || "Conectado a la base de datos segura.");
-      setElText('txt-btn-upload', t.btnUpload || "Subir a la nube");
-      setElText('txt-btn-download', t.btnDownload || "Descargar de la nube");
-      
-      setElText('opt-7days', t.opt7d);
-      setElText('opt-4weeks', t.opt4w);
-      setElText('opt-6months', t.opt6m);
-      setElText('leg-feed', `${t.legFeed} 🍼`);
-      setElText('leg-sleep', `${t.legSleep} 💤`);
-      setElText('leg-diaper', `${t.legDiaper} 💩`);
-      
-      setElText('txt-baby-select-label', t.babySelect);
-      setElText('txt-btn-add-baby', t.addBaby);
-      setElText('txt-add-baby-title', t.newBabyTitle);
-      setElText('btn-create-baby', t.createBabyBtn);
-      setElText('btn-delete-baby', t.deleteBabyBtn);
-      setElText('txt-menu-alarms', t.menuAlarms);
-      setElText('txt-alarms-title', t.alarmTitle);
-      setElText('txt-new-alarm', t.newAlarmTitle);
-      setElText('lbl-alarm-type', t.alarmType);
-      setElText('lbl-alarm-time', t.alarmTime);
-      setElText('lbl-alarm-sound', t.alarmSound);
-      setElText('btn-save-alarm', t.alarmSaveBtn);
-
-      const filterSelect = document.getElementById('matrixFilterSelect');
-      if (filterSelect && filterSelect.options && filterSelect.options.length >= 5) {
-        filterSelect.options[0].text = t.filterAll;
-        filterSelect.options[1].text = t.filterFeed;
-        filterSelect.options[2].text = t.filterDiaper;
-        filterSelect.options[3].text = t.filterSleep;
-        filterSelect.options[4].text = t.filterBath;
-      }
-
-      if (document.getElementById('txt-manual-header')) {
-        document.getElementById('txt-manual-header').innerHTML = `<i data-lucide="book-open" style="color:var(--primary);"></i> ${t.mHeader}`;
-        setElText('mstep1-title', t.ms1Title); setElText('mstep1-desc', t.ms1Desc);
-        setElText('mstep2-title', t.ms2Title); setElText('mstep2-desc', t.ms2Desc);
-        setElText('mstep3-title', t.ms3Title); setElText('mstep3-desc', t.ms3Desc);
-        setElText('mstep4-title', t.ms4Title); setElText('mstep4-desc', t.ms4Desc);
-        setElText('mstep5-title', t.ms5Title); setElText('mstep5-desc', t.ms5Desc);
-        setElText('mstep6-title', t.ms6Title); setElText('mstep6-desc', t.ms6Desc);
-        setElText('mstep7-title', t.ms7Title); setElText('mstep7-desc', t.ms7Desc);
-        setElText('mstep8-title', t.ms8Title); setElText('mstep8-desc', t.ms8Desc);
-      }
-
-      if (typeof barRoutinesChartInstance !== 'undefined' && barRoutinesChartInstance && barRoutinesChartInstance.data.datasets.length > 2) {
-        barRoutinesChartInstance.data.datasets[0].label = `${t.legFeed} (L) 🍼`;
-        barRoutinesChartInstance.data.datasets[1].label = `${t.legDiaper} 💩`;
-        barRoutinesChartInstance.data.datasets[2].label = `${t.legSleep} (h) 💤`;
-        barRoutinesChartInstance.update();
-      }
-
-      if(document.getElementById('langSelect')) document.getElementById('langSelect').value = lang;
-      
-      try { renderCalendar(); } catch(e){}
-      try { renderWeeklyMatrix24h(); } catch(e){}
-      try { checkAlerts(); } catch(e){}
-    }
-
-    function openModal(id) { 
-      const el = document.getElementById(`${id}Modal`);
-      if (el) el.classList.add('open'); 
-      if (id === 'alarms') {
-        renderAlarms();
-        const nowLocal = new Date();
-        nowLocal.setMinutes(nowLocal.getMinutes() + 30);
-        const hh = String(nowLocal.getHours()).padStart(2, '0');
-        const mm = String(nowLocal.getMinutes()).padStart(2, '0');
-        if(document.getElementById('newAlarmTime')) {
-            document.getElementById('newAlarmTime').value = `${hh}:${mm}`;
-        }
-      }
-    }
-
-    function closeModal(id) { 
-      const el = document.getElementById(`${id}Modal`);
-      if (el) el.classList.remove('open'); 
-    }
-
-    function saveProfile(e) {
-      e.preventDefault();
-      getActiveBaby().name = document.getElementById('profName').value;
-      getActiveBaby().dob = document.getElementById('profDob').value;
-      getActiveBaby().gender = document.getElementById('profGender').value;
-      saveState(); 
-      closeModal('profile');
-    }
-
-    function triggerPhotoUpload() { const input = document.getElementById('photoInput'); input.value = ''; input.click(); }
-    function uploadBabyPhoto(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); canvas.width = 180; canvas.height = 180; ctx.drawImage(img, 0, 0, 180, 180); getActiveBaby().photo = canvas.toDataURL('image/jpeg', 0.8); saveState(); }; img.src = e.target.result; }; reader.readAsDataURL(file); }
-
     function renderBabyProfile() {
-      const baby = getActiveBaby();
-      setElText('babyNameDisplay', baby.name || 'Léo');
-      const diffDays = calculateAgeInDays(baby.dob);
-      const months = Math.floor(diffDays / 30.4);
-      const days = Math.floor(diffDays % 30.4);
-      setElText('babyAgeDisplay', `${months}m ${days}d (${diffDays} días de vida)`);
-      
+      const baby = getActiveBaby(); setElText('babyNameDisplay', baby.name || 'Léo'); const diffDays = calculateAgeInDays(baby.dob);
+      setElText('babyAgeDisplay', `${Math.floor(diffDays / 30.4)}m ${Math.floor(diffDays % 30.4)}d (${diffDays} días de vida)`);
       const avatarDiv = document.getElementById('babyAvatarDisplay');
-      if (avatarDiv) {
-        if (baby.photo) { avatarDiv.innerHTML = `<img src="${baby.photo}" alt="Bebé">`; } 
-        else { avatarDiv.innerHTML = baby.gender === 'female' ? '👧' : '👦'; }
-      }
-      
+      if (avatarDiv) avatarDiv.innerHTML = baby.photo ? `<img src="${baby.photo}" alt="Bebé">` : (baby.gender === 'female' ? '👧' : '👦');
       if(document.getElementById('profName')) document.getElementById('profName').value = baby.name;
       if(document.getElementById('profDob')) document.getElementById('profDob').value = baby.dob;
       if(document.getElementById('profGender')) document.getElementById('profGender').value = baby.gender;
     }
 
     function checkAlerts() {
-      const banner = document.getElementById('alertBanner');
-      const text = document.getElementById('alertText');
-      if (!banner || !text) return;
-      const t = i18n[appData.lang] || i18n['es'];
+      const banner = document.getElementById('alertBanner'); const text = document.getElementById('alertText'); if (!banner || !text) return;
       const feedings = getActiveBaby().logs.filter(l => l.type === 'feeding').sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-      if (feedings.length > 0) {
-        const lastFeed = new Date(feedings[0].timestamp);
-        const hoursAgo = (new Date() - lastFeed) / (1000 * 60 * 60);
-        if (hoursAgo > 3.5) { banner.classList.remove('hidden'); text.innerText = t.alertFeed; return; }
-      }
+      if (feedings.length > 0 && (new Date() - new Date(feedings[0].timestamp)) / 3600000 > 3.5) { banner.classList.remove('hidden'); text.innerText = "⚠️ Alerta: Más de 3.5h desde la última toma."; return; }
       banner.classList.add('hidden');
     }
 
     function changeSelectedDate(days) { selectedDate.setDate(selectedDate.getDate() + days); renderLogs(); }
     function resetToToday() { selectedDate = new Date(); renderLogs(); }
-
     function getTimeAgoString(timestamp) {
-      const now = new Date();
-      const past = new Date(timestamp);
-      const diffMs = now - past;
-      if (diffMs < 0) return '';
-      const diffMins = Math.floor(diffMs / (1000 * 60));
-      const hours = Math.floor(diffMins / 60);
-      const mins = diffMins % 60;
+      const diffMins = Math.floor((new Date() - new Date(timestamp)) / 60000); if (diffMins < 0) return '';
+      const hours = Math.floor(diffMins / 60); const mins = diffMins % 60;
       if (hours === 0 && mins < 2) return 'Hace un momento';
-      if (hours === 0) return `Hace ${mins}m`;
-      if (hours < 24) return `Hace ${hours}h ${mins}m`;
-      const days = Math.floor(hours / 24);
-      return `Hace ${days}d`;
+      if (hours === 0) return `Hace ${mins}m`; if (hours < 24) return `Hace ${hours}h ${mins}m`; return `Hace ${Math.floor(hours / 24)}d`;
     }
 
     function renderLogs() {
-      const container = document.getElementById('logsContainer');
-      if (!container) return;
-      container.innerHTML = '';
+      const container = document.getElementById('logsContainer'); if (!container) return;
       const targetKey = getLocalDateStr(selectedDate);
-      const todayKey = getLocalDateStr(new Date());
-      const t = i18n[appData.lang] || i18n['es'];
+      setElText('currentDateText', selectedDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }));
+      setElText('todayTag', targetKey === getLocalDateStr(new Date()) ? "Hoy" : "Ir a Hoy");
+      const baby = getActiveBaby();
+      const filtered = baby.logs.filter(l => getLocalDateStr(l.timestamp) === targetKey).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-      setElText('currentDateText', selectedDate.toLocaleDateString(appData.lang === 'en' ? 'en-US' : (appData.lang === 'fr' ? 'fr-FR' : 'es-ES'), { day: 'numeric', month: 'short', year: 'numeric' }));
-      setElText('todayTag', (targetKey === todayKey) ? t.today : (appData.lang === 'en' ? 'Go to Today' : 'Ir a Hoy'));
-
-      const filtered = getActiveBaby().logs.filter(l => getLocalDateStr(l.timestamp) === targetKey).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-      let totalMilkMl = 0;
-      let totalSleepMins = 0;
-      let totalDiapersCount = 0;
-
+      let ml = 0, sleepM = 0, diapers = 0;
       filtered.forEach(log => {
-        if (log.type === 'feeding') {
-          if (log.amount) totalMilkMl += parseFloat(log.amount);
-          else if (log.detail) {
-            const match = log.detail.match(/(\d+)\s*ml/i);
-            if (match) totalMilkMl += parseInt(match[1]);
-          }
-        } else if (log.type === 'sleep') {
-          if (log.durationMins) totalSleepMins += parseInt(log.durationMins);
-          else if (log.detail) {
-            const matchH = log.detail.match(/(\d+)\s*h/i);
-            const matchM = log.detail.match(/(\d+)\s*m/i);
-            let mins = 0;
-            if (matchH) mins += parseInt(matchH[1]) * 60;
-            if (matchM) mins += parseInt(matchM[1]);
-            totalSleepMins += mins;
-          }
-        } else if (log.type === 'diaper') {
-          totalDiapersCount++;
-        }
+        if (log.type === 'feeding') { let parsedAm = parseFloat(log.amount); ml += !isNaN(parsedAm) ? parsedAm : (log.detail && log.detail.match(/(\d+)\s*ml/i) ? parseInt(log.detail.match(/(\d+)\s*ml/i)[1]) : 0); }
+        else if (log.type === 'sleep') { let parsedDur = parseInt(log.durationMins); sleepM += !isNaN(parsedDur) ? parsedDur : (log.detail ? ((log.detail.match(/(\d+)\s*h/i)?parseInt(log.detail.match(/(\d+)\s*h/i)[1])*60:0) + (log.detail.match(/(\d+)\s*m/i)?parseInt(log.detail.match(/(\d+)\s*m/i)[1]):0)) : 0); }
+        else if (log.type === 'diaper') { diapers++; }
       });
 
-      const sleepHours = Math.floor(totalSleepMins / 60);
-      const sleepMinsRem = totalSleepMins % 60;
-      const milkLiters = (totalMilkMl / 1000).toFixed(2);
+      setElText('val-sum-feed', `${(ml/1000).toFixed(2)} L`); setElText('val-sum-sleep', `${Math.floor(sleepM/60)}h ${sleepM%60}m`); setElText('val-sum-diaper', `${diapers} t`);
+      if (filtered.length === 0) { container.innerHTML = `<p style="text-align:center; padding:2rem; color:var(--text-muted);">Sin registros para este día.</p>`; return; }
 
-      setElText('val-sum-feed', `${milkLiters} L`);
-      setElText('val-sum-sleep', `${sleepHours}h ${sleepMinsRem}m`);
-      setElText('val-sum-diaper', `${totalDiapersCount} t`);
-
-      const todayFeedings = getActiveBaby().logs.filter(l => getLocalDateStr(l.timestamp) === todayKey && l.type === 'feeding').length;
-      const todayDiapers = getActiveBaby().logs.filter(l => getLocalDateStr(l.timestamp) === todayKey && l.type === 'diaper').length;
-      if (document.getElementById('val-feed-count')) {
-        document.getElementById('val-feed-count').innerText = `${todayFeedings} hoy`;
-        document.getElementById('val-diaper-count').innerText = `${todayDiapers} hoy`;
-      }
-
-      if (filtered.length === 0) {
-        container.innerHTML = `<p style="text-align:center; padding:2rem; color:var(--text-muted);">Sin registros para este día.</p>`;
-        return;
-      }
-
+      let html = '';
       filtered.forEach(log => {
         const timeStr = new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const timeAgo = getTimeAgoString(log.timestamp);
-
-        let icon = 'baby'; let bg = '#FFE599'; let title = 'Alimentación';
-        if (log.type === 'diaper') { icon = 'sparkles'; bg = '#C5E1A5'; title = 'Pañal'; }
-        if (log.type === 'sleep') { icon = 'moon'; bg = '#D7BCE8'; title = 'Sueño'; }
-        if (log.type === 'growth') { icon = 'ruler'; bg = '#AEC6CF'; title = 'Crecimiento'; }
-        if (log.type === 'health') { icon = 'thermometer'; bg = '#FFB3BA'; title = 'Salud'; }
-        if (log.type === 'bath') { icon = 'shower-head'; bg = '#B2EBF2'; title = 'Baño / Ducha'; }
-
-        container.innerHTML += `
-          <div class="timeline-item">
-            <div class="timeline-point" style="background:${bg}; border-color:${bg};"></div>
-            <div class="timeline-content">
-              <div class="timeline-main-info">
-                <h4>${title} - ${log.detail || ''}</h4>
-                <p>${log.notes || ''}</p>
-              </div>
-              <div class="log-actions">
-                <span class="log-time">${timeStr}</span>
-                ${timeAgo ? `<span class="time-ago-badge">${timeAgo}</span>` : ''}
-                <button class="icon-btn edit" onclick="editLog(${log.id})"><i data-lucide="edit-2" style="width:16px;"></i></button>
-                <button class="icon-btn delete" onclick="deleteLog(${log.id})"><i data-lucide="trash-2" style="width:16px;"></i></button>
-              </div>
-            </div>
-          </div>
-        `;
+        const typeData = { feeding:['baby','#FFE599','Alimentación'], diaper:['sparkles','#C5E1A5','Pañal'], sleep:['moon','#D7BCE8','Sueño'], growth:['ruler','#AEC6CF','Crecimiento'], health:['thermometer','#FFB3BA','Salud'], bath:['shower-head','#B2EBF2','Baño / Ducha'] };
+        const [icon, bg, title] = typeData[log.type] || ['baby','#FFE599','Evento'];
+        html += `<div class="timeline-item"><div class="timeline-point" style="background:${bg}; border-color:${bg};"></div><div class="timeline-content"><div class="timeline-main-info"><h4>${title} - ${log.detail || ''}</h4><p>${log.notes || ''}</p></div><div class="log-actions"><span class="log-time">${timeStr}</span>${getTimeAgoString(log.timestamp) ? `<span class="time-ago-badge">${getTimeAgoString(log.timestamp)}</span>` : ''}<button class="icon-btn edit" onclick="editLog(${log.id})"><i data-lucide="edit-2" style="width:16px;"></i></button><button class="icon-btn delete" onclick="deleteLog(${log.id})"><i data-lucide="trash-2" style="width:16px;"></i></button></div></div></div>`;
       });
+      container.innerHTML = html;
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     function renderCalendar() {
-      try {
-        const grid = document.getElementById('calendarGrid'); 
-        if(!grid) return;
-        grid.innerHTML = '';
-        
-        const year = calDate.getFullYear(); const month = calDate.getMonth();
-        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-        setElText('calMonthTitle', `${monthNames[month]} ${year}`);
-        
-        const t = i18n[appData.lang] || i18n['es'];
-        const dayHeaders = t.daysShort || ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-
-        dayHeaders.forEach(d => { grid.innerHTML += `<div class="cal-day-name">${d}</div>`; });
-        const firstDay = new Date(year, month, 1).getDay();
-        const startingPos = (firstDay === 0 ? 6 : firstDay - 1);
-        const totalDays = new Date(year, month + 1, 0).getDate();
-
-        for (let i = 0; i < startingPos; i++) grid.innerHTML += `<div></div>`;
-        const today = new Date();
-
-        for (let day = 1; day <= totalDays; day++) {
-          const dateKey = getLocalDateStr(new Date(year, month, day));
-          const dayLogs = getActiveBaby().logs.filter(l => getLocalDateStr(l.timestamp) === dateKey);
-          const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
-          let dotsHtml = '';
-          if (dayLogs.length > 0) {
-            dotsHtml = '<div class="cal-dots">';
-            if (dayLogs.some(l => l.type === 'feeding')) dotsHtml += '<div class="cal-dot" style="background:#FFE599"></div>';
-            if (dayLogs.some(l => l.type === 'diaper')) dotsHtml += '<div class="cal-dot" style="background:#C5E1A5"></div>';
-            if (dayLogs.some(l => l.type === 'sleep')) dotsHtml += '<div class="cal-dot" style="background:#D7BCE8"></div>';
-            dotsHtml += '</div>';
-          }
-          grid.innerHTML += `<div class="cal-cell ${isToday ? 'today' : ''}" onclick="selectCalendarDate(${year}, ${month}, ${day})"><span>${day}</span>${dotsHtml}</div>`;
+      const grid = document.getElementById('calendarGrid'); if(!grid) return;
+      const year = calDate.getFullYear(); const month = calDate.getMonth();
+      setElText('calMonthTitle', `${["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"][month]} ${year}`);
+      let html = ''; ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach(d => { html += `<div class="cal-day-name">${d}</div>`; });
+      const firstDay = new Date(year, month, 1).getDay(); const startingPos = (firstDay === 0 ? 6 : firstDay - 1);
+      for (let i = 0; i < startingPos; i++) html += `<div></div>`;
+      
+      const today = new Date(); const baby = getActiveBaby();
+      for (let day = 1; day <= new Date(year, month + 1, 0).getDate(); day++) {
+        const dateKey = getLocalDateStr(new Date(year, month, day));
+        const dayLogs = baby.logs.filter(l => getLocalDateStr(l.timestamp) === dateKey);
+        let dotsHtml = '';
+        if (dayLogs.length > 0) {
+          dotsHtml = '<div class="cal-dots">';
+          if (dayLogs.some(l => l.type === 'feeding')) dotsHtml += '<div class="cal-dot" style="background:#FFE599"></div>';
+          if (dayLogs.some(l => l.type === 'diaper')) dotsHtml += '<div class="cal-dot" style="background:#C5E1A5"></div>';
+          if (dayLogs.some(l => l.type === 'sleep')) dotsHtml += '<div class="cal-dot" style="background:#D7BCE8"></div>';
+          dotsHtml += '</div>';
         }
-      } catch(e) { console.error("Error renderCalendar", e); }
+        html += `<div class="cal-cell ${(today.getFullYear()===year && today.getMonth()===month && today.getDate()===day) ? 'today' : ''}" onclick="selectCalendarDate(${year}, ${month}, ${day})"><span>${day}</span>${dotsHtml}</div>`;
+      }
+      grid.innerHTML = html;
     }
 
     function selectCalendarDate(y, m, d) { selectedDate = new Date(y, m, d); switchTab('logs'); renderLogs(); }
     function prevMonth() { calDate.setMonth(calDate.getMonth() - 1); renderCalendar(); }
     function nextMonth() { calDate.setMonth(calDate.getMonth() + 1); renderCalendar(); }
-
-    function changeMatrixWeek(weeksOffset) {
-      selectedMatrixWeekDate.setDate(selectedMatrixWeekDate.getDate() + (weeksOffset * 7));
-      renderWeeklyMatrix24h();
-    }
+    function changeMatrixWeek(weeksOffset) { selectedMatrixWeekDate.setDate(selectedMatrixWeekDate.getDate() + (weeksOffset * 7)); renderWeeklyMatrix24h(); }
 
     function renderWeeklyMatrix24h() {
-      try {
-        const grid = document.getElementById('routine24hGrid');
-        if (!grid) return;
-        grid.innerHTML = '';
+      const grid = document.getElementById('routine24hGrid'); if (!grid) return;
+      const filterVal = document.getElementById('matrixFilterSelect') ? document.getElementById('matrixFilterSelect').value : 'all';
+      const curr = new Date(selectedMatrixWeekDate); const mon = new Date(curr); mon.setDate(curr.getDate() + (curr.getDay() === 0 ? -6 : 1 - curr.getDay()));
+      const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+      if(document.getElementById('matrixWeekLabel')) document.getElementById('matrixWeekLabel').innerText = `Semana del ${mon.getDate()} ${mon.toLocaleDateString('es-ES',{month:'short'})} al ${sun.getDate()} ${sun.toLocaleDateString('es-ES',{month:'short', year:'numeric'})}`;
 
-        const filterSelect = document.getElementById('matrixFilterSelect');
-        const filterVal = filterSelect ? filterSelect.value : 'all';
-
-        const curr = new Date(selectedMatrixWeekDate);
-        const dayOfWeek = curr.getDay();
-        const distanceToMon = (dayOfWeek === 0 ? -6 : 1 - dayOfWeek);
-        
-        const mon = new Date(curr);
-        mon.setDate(curr.getDate() + distanceToMon);
-        const sun = new Date(mon);
-        sun.setDate(mon.getDate() + 6);
-
-        const t = i18n[appData.lang] || i18n['es'];
-        if(document.getElementById('matrixWeekLabel')) document.getElementById('matrixWeekLabel').innerText = `Semana del ${mon.getDate()} ${mon.toLocaleDateString('es-ES',{month:'short'})} al ${sun.getDate()} ${sun.toLocaleDateString('es-ES',{month:'short', year:'numeric'})}`;
-
-        grid.innerHTML += `<div class="grid-header-cell"></div>`;
-        const daysShort = t.daysShort || ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-        const weekDates = [];
-        const todayStr = getLocalDateStr(new Date());
-
-        for (let i = 0; i < 7; i++) {
-          const d = new Date(mon);
-          d.setDate(mon.getDate() + i);
-          const dateStr = getLocalDateStr(d);
-          weekDates.push(dateStr);
-          const isToday = dateStr === todayStr;
-
-          grid.innerHTML += `
-            <div class="grid-header-cell ${isToday ? 'active-day' : ''}">
-              <div>${daysShort[i]}</div>
-              <div style="font-size:0.85rem; font-weight:900;">${d.getDate()}</div>
-            </div>
-          `;
-        }
-
-        let hoursColHtml = '<div style="display:flex; flex-direction:column; height:576px; justify-content:space-between;">';
-        for (let h = 0; h <= 24; h += 3) {
-          hoursColHtml += `<div class="grid-time-label">${h < 10 ? '0' + h : h}</div>`;
-        }
-        hoursColHtml += '</div>';
-        grid.innerHTML += hoursColHtml;
-
-        weekDates.forEach((dateStr) => {
-          let colContent = `<div class="grid-day-col" style="height:576px;">`;
-          let dayBlocks = [];
-
-          getActiveBaby().logs.forEach(log => {
-            if (filterVal !== 'all' && log.type !== filterVal) return;
-
-            let logDateStr = getLocalDateStr(log.timestamp);
-
-            if (log.type === 'sleep' && log.startTimestamp && log.endTimestamp) {
-              const startD = new Date(log.startTimestamp);
-              const endD = new Date(log.endTimestamp);
-              const startStr = getLocalDateStr(startD);
-              const endStr = getLocalDateStr(endD);
-
-              if (startStr !== endStr) {
-                if (dateStr === startStr) {
-                  const startMins = startD.getHours() * 60 + startD.getMinutes();
-                  const dur1 = 1440 - startMins;
-                  dayBlocks.push({ log, startMins, durationMins: dur1 });
-                } else if (dateStr === endStr) {
-                  const endMins = endD.getHours() * 60 + endD.getMinutes();
-                  dayBlocks.push({ log, startMins: 0, durationMins: endMins });
-                }
-              } else if (dateStr === startStr) {
-                const startMins = startD.getHours() * 60 + startD.getMinutes();
-                const dur = Math.max(15, (endD - startD) / 60000);
-                dayBlocks.push({ log, startMins, durationMins: dur });
-              }
-            } else if (logDateStr === dateStr) {
-              const d = new Date(log.timestamp);
-              const startMins = d.getHours() * 60 + d.getMinutes();
-              dayBlocks.push({ log, startMins, durationMins: 20 });
-            }
-          });
-
-          dayBlocks.sort((a,b) => a.startMins - b.startMins);
-
-          dayBlocks.forEach((blockItem, idx) => {
-            const log = blockItem.log;
-            const topPx = (blockItem.startMins / 1440) * 576;
-            let heightPx = (blockItem.durationMins / 1440) * 576;
-
-            if (topPx + heightPx > 576) {
-              heightPx = Math.max(8, 576 - topPx);
-            }
-
-            let className = 'feed';
-            if (log.type === 'sleep') className = 'sleep';
-            else if (log.type === 'diaper') className = 'diaper';
-            else if (log.type === 'bath') className = 'bath';
-
-            let lane = 0;
-            const concurrent = dayBlocks.filter((other, oIdx) => {
-              if (oIdx >= idx) return false;
-              return Math.abs(other.startMins - blockItem.startMins) < 45;
-            });
-            lane = concurrent.length % 3;
-
-            const widthPercent = 30;
-            const leftPercent = lane * 33;
-
-            colContent += `
-              <div class="routine-block ${className}" 
-                   style="top:${topPx}px; height:${heightPx}px; left:${leftPercent}%; width:${widthPercent}%; cursor:pointer;"
-                   onclick="showMatrixBlockDetail('${log.id}')"
-                   title="${log.detail || ''}">
-              </div>
-            `;
-          });
-
-          colContent += `</div>`;
-          grid.innerHTML += colContent;
-        });
-      } catch(err) {
-        console.error("Error al renderizar Matriz 24h", err);
+      let html = `<div class="grid-header-cell"></div>`;
+      const weekDates = []; const todayStr = getLocalDateStr(new Date());
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(mon); d.setDate(mon.getDate() + i); const dateStr = getLocalDateStr(d); weekDates.push(dateStr);
+        html += `<div class="grid-header-cell ${dateStr === todayStr ? 'active-day' : ''}"><div>${['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'][i]}</div><div style="font-size:0.85rem; font-weight:900;">${d.getDate()}</div></div>`;
       }
+      html += '<div style="display:flex; flex-direction:column; height:576px; justify-content:space-between;">';
+      for (let h = 0; h <= 24; h += 3) html += `<div class="grid-time-label">${h < 10 ? '0' + h : h}</div>`;
+      html += '</div>';
+
+      const baby = getActiveBaby();
+      weekDates.forEach((dateStr) => {
+        let colContent = `<div class="grid-day-col" style="height:576px;">`; let dayBlocks = [];
+        baby.logs.forEach(log => {
+          if (filterVal !== 'all' && log.type !== filterVal) return;
+          const logDateStr = getLocalDateStr(log.timestamp);
+          if (log.type === 'sleep' && log.startTimestamp && log.endTimestamp) {
+            const startD = new Date(log.startTimestamp); const endD = new Date(log.endTimestamp);
+            if (getLocalDateStr(startD) !== getLocalDateStr(endD)) {
+              if (dateStr === getLocalDateStr(startD)) dayBlocks.push({ log, startMins: startD.getHours() * 60 + startD.getMinutes(), durationMins: 1440 - (startD.getHours() * 60 + startD.getMinutes()) });
+              else if (dateStr === getLocalDateStr(endD)) dayBlocks.push({ log, startMins: 0, durationMins: endD.getHours() * 60 + endD.getMinutes() });
+            } else if (dateStr === getLocalDateStr(startD)) { dayBlocks.push({ log, startMins: startD.getHours() * 60 + startD.getMinutes(), durationMins: Math.max(15, (endD - startD) / 60000) }); }
+          } else if (logDateStr === dateStr) { dayBlocks.push({ log, startMins: new Date(log.timestamp).getHours() * 60 + new Date(log.timestamp).getMinutes(), durationMins: 20 }); }
+        });
+        dayBlocks.sort((a,b) => a.startMins - b.startMins).forEach((blockItem, idx) => {
+          let heightPx = Math.min((blockItem.durationMins / 1440) * 576, 576 - ((blockItem.startMins / 1440) * 576));
+          colContent += `<div class="routine-block ${blockItem.log.type === 'sleep' ? 'sleep' : (blockItem.log.type === 'diaper' ? 'diaper' : (blockItem.log.type === 'bath' ? 'bath' : 'feed'))}" style="top:${(blockItem.startMins / 1440) * 576}px; height:${Math.max(8, heightPx)}px; left:${(dayBlocks.filter((o, oIdx) => oIdx < idx && Math.abs(o.startMins - blockItem.startMins) < 45).length % 3) * 33}%; width:30%; cursor:pointer;" onclick="showMatrixBlockDetail('${blockItem.log.id}')"></div>`;
+        });
+        html += colContent + `</div>`;
+      });
+      grid.innerHTML = html;
     }
 
     function showMatrixBlockDetail(logId) {
-      const log = getActiveBaby().logs.find(l => l.id == logId);
-      if (!log) return;
-      const timeStr = new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const dateStr = new Date(log.timestamp).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-      
-      let typeTitle = "Alimentación 🍼";
-      if (log.type === 'sleep') typeTitle = "Sueño 💤";
-      if (log.type === 'diaper') typeTitle = "Pañal 💩";
-      if (log.type === 'growth') typeTitle = "Crecimiento 📏";
-      if (log.type === 'bath') typeTitle = "Baño 🧼";
-
-      alert(`${typeTitle}\n• Hora: ${timeStr} (${dateStr})\n• Detalle: ${log.detail || '-'}\n• Notas: ${log.notes || 'Sin observaciones'}`);
+      const log = getActiveBaby().logs.find(l => String(l.id) === String(logId)); if (!log) return;
+      alert(`${{feeding:'Alimentación 🍼', sleep:'Sueño 💤', diaper:'Pañal 💩', growth:'Crecimiento 📏', bath:'Baño 🧼'}[log.type]||'Evento'}\n• Hora: ${new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}\n• Detalle: ${log.detail || '-'}\n• Notas: ${log.notes || 'Sin observaciones'}`);
     }
 
     function getBarChartRealData(range) {
-      const today = new Date();
-      let labels = [];
-      let feedData = [];
-      let diaperData = [];
-      let sleepData = [];
-      const t = i18n[appData.lang] || i18n['es'];
-
+      const today = new Date(); let labels = []; let feedData = []; let diaperData = []; let sleepData = [];
+      const baby = getActiveBaby(); const daysShort = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
       if (range === '7days') {
-        const daysShort = t.daysShort || ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
         for (let i = 6; i >= 0; i--) {
-          const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
-          const dayOfWeek = d.getDay();
-          const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1; 
-          labels.push(`${daysShort[adjustedDay]} ${d.getDate()}`);
-          
-          const dateStr = getLocalDateStr(d);
-          const dayLogs = getActiveBaby().logs.filter(l => getLocalDateStr(l.timestamp) === dateStr);
-
-          let feedsMl = 0;
-          let diapers = 0;
-          let sleepMins = 0;
-
+          const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i); labels.push(`${daysShort[d.getDay()===0?6:d.getDay()-1]} ${d.getDate()}`);
+          const dayLogs = baby.logs.filter(l => getLocalDateStr(l.timestamp) === getLocalDateStr(d));
+          let feedsMl = 0; let diapers = 0; let sleepMins = 0;
           dayLogs.forEach(l => {
-            if (l.type === 'feeding') {
-              if (l.amount) feedsMl += parseFloat(l.amount);
-              else if (l.detail) {
-                const match = l.detail.match(/(\d+)\s*ml/i);
-                if (match) feedsMl += parseInt(match[1]);
-              }
-            } else if (l.type === 'diaper') {
-              diapers++;
-            } else if (l.type === 'sleep') {
-              if (l.durationMins) sleepMins += parseInt(l.durationMins);
-              else if (l.detail) {
-                const matchH = l.detail.match(/(\d+)\s*h/i);
-                const matchM = l.detail.match(/(\d+)\s*m/i);
-                if (matchH) sleepMins += parseInt(matchH[1]) * 60;
-                if (matchM) sleepMins += parseInt(matchM[1]);
-              }
-            }
+            if (l.type === 'feeding') { let am = parseFloat(l.amount); if (!isNaN(am)) feedsMl += am; else if (l.detail) { const match = l.detail.match(/(\d+)\s*ml/i); if (match) feedsMl += parseInt(match[1]); } }
+            else if (l.type === 'diaper') diapers++;
+            else if (l.type === 'sleep') { let dur = parseInt(l.durationMins); if (!isNaN(dur)) sleepMins += dur; else if (l.detail) { const matchH = l.detail.match(/(\d+)\s*h/i); const matchM = l.detail.match(/(\d+)\s*m/i); if (matchH) sleepMins += parseInt(matchH[1]) * 60; if (matchM) sleepMins += parseInt(matchM[1]); } }
           });
-
-          feedData.push(parseFloat((feedsMl / 1000).toFixed(2)));
-          diaperData.push(diapers);
-          sleepData.push(parseFloat((sleepMins / 60).toFixed(1)));
+          feedData.push(parseFloat((feedsMl / 1000).toFixed(2))); diaperData.push(diapers); sleepData.push(parseFloat((sleepMins / 60).toFixed(1)));
         }
       } else if (range === '6months') {
         const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
         for (let i = 5; i >= 0; i--) {
-          const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
-          const y = d.getFullYear();
-          const m = d.getMonth();
-          labels.push(monthNames[m]);
-
-          const monthLogs = getActiveBaby().logs.filter(l => {
-            const ld = new Date(l.timestamp);
-            return ld.getFullYear() === y && ld.getMonth() === m;
+          const d = new Date(today.getFullYear(), today.getMonth() - i, 1); labels.push(monthNames[d.getMonth()]);
+          const monthLogs = baby.logs.filter(l => { const ld = new Date(l.timestamp); return ld.getFullYear() === d.getFullYear() && ld.getMonth() === d.getMonth(); });
+          let feedsMl = 0; let diapers = 0; let sleepMins = 0;
+          monthLogs.forEach(l => {
+            if (l.type === 'feeding') { let am=parseFloat(l.amount); if(!isNaN(am)) feedsMl+=am; else if(l.detail){const m=l.detail.match(/(\d+)\s*ml/i); if(m) feedsMl+=parseInt(m[1]);} }
+            else if (l.type === 'diaper') diapers++;
+            else if (l.type === 'sleep') { let dur=parseInt(l.durationMins); if(!isNaN(dur)) sleepMins+=dur; else if(l.detail){const mh=l.detail.match(/(\d+)\s*h/i); const mm=l.detail.match(/(\d+)\s*m/i); if(mh) sleepMins+=parseInt(mh[1])*60; if(mm) sleepMins+=parseInt(mm[1]);} }
           });
-
-          let feedsMl = 0;
-          monthLogs.filter(l => l.type === 'feeding').forEach(l => {
-            if (l.amount) feedsMl += parseFloat(l.amount);
-            else if (l.detail) {
-              const match = l.detail.match(/(\d+)\s*ml/i);
-              if (match) feedsMl += parseInt(match[1]);
-            }
-          });
-
-          let diapers = monthLogs.filter(l => l.type === 'diaper').length;
-          let sleepMins = 0;
-          monthLogs.filter(l => l.type === 'sleep').forEach(l => {
-            if (l.durationMins) sleepMins += parseInt(l.durationMins);
-            else if (l.detail) {
-              const matchH = l.detail.match(/(\d+)\s*h/i);
-              const matchM = l.detail.match(/(\d+)\s*m/i);
-              if (matchH) sleepMins += parseInt(matchH[1]) * 60;
-              if (matchM) sleepMins += parseInt(matchM[1]);
-            }
-          });
-
-          feedData.push(parseFloat((feedsMl / 1000).toFixed(2)));
-          diaperData.push(diapers);
-          sleepData.push(parseFloat((sleepMins / 60).toFixed(1)));
+          feedData.push(parseFloat((feedsMl / 1000).toFixed(2))); diaperData.push(diapers); sleepData.push(parseFloat((sleepMins / 60).toFixed(1)));
         }
       } else {
-        const currentDay = today.getDay();
-        const distToMon = (currentDay === 0 ? -6 : 1 - currentDay);
-        const thisMon = new Date(today);
-        thisMon.setDate(today.getDate() + distToMon);
-
+        const currentDay = today.getDay(); const thisMon = new Date(today); thisMon.setDate(today.getDate() + (currentDay === 0 ? -6 : 1 - currentDay));
         for (let i = 3; i >= 0; i--) {
-          const mon = new Date(thisMon);
-          mon.setDate(thisMon.getDate() - (i * 7));
-          const sun = new Date(mon);
-          sun.setDate(mon.getDate() + 6);
-
-          const labelStr = `${mon.getDate()} ${mon.toLocaleDateString('es-ES',{month:'short'})} - ${sun.getDate()} ${sun.toLocaleDateString('es-ES',{month:'short'})}`;
-          labels.push(labelStr);
-
-          const monStr = getLocalDateStr(mon);
-          const sunStr = getLocalDateStr(sun);
-
-          const weekLogs = getActiveBaby().logs.filter(l => {
-            const dateStr = getLocalDateStr(l.timestamp);
-            return dateStr >= monStr && dateStr <= sunStr;
+          const mon = new Date(thisMon); mon.setDate(thisMon.getDate() - (i * 7)); const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+          labels.push(`${mon.getDate()} ${mon.toLocaleDateString('es-ES',{month:'short'})} - ${sun.getDate()} ${sun.toLocaleDateString('es-ES',{month:'short'})}`);
+          const weekLogs = baby.logs.filter(l => { const dateStr = getLocalDateStr(l.timestamp); return dateStr >= getLocalDateStr(mon) && dateStr <= getLocalDateStr(sun); });
+          let feedsMl = 0; let diapers = 0; let sleepMins = 0;
+          weekLogs.forEach(l => {
+            if (l.type === 'feeding') { let am=parseFloat(l.amount); if(!isNaN(am)) feedsMl+=am; else if(l.detail){const m=l.detail.match(/(\d+)\s*ml/i); if(m) feedsMl+=parseInt(m[1]);} }
+            else if (l.type === 'diaper') diapers++;
+            else if (l.type === 'sleep') { let dur=parseInt(l.durationMins); if(!isNaN(dur)) sleepMins+=dur; else if(l.detail){const mh=l.detail.match(/(\d+)\s*h/i); const mm=l.detail.match(/(\d+)\s*m/i); if(mh) sleepMins+=parseInt(mh[1])*60; if(mm) sleepMins+=parseInt(mm[1]);} }
           });
-
-          let feedsMl = 0;
-          weekLogs.filter(l => l.type === 'feeding').forEach(l => {
-            if (l.amount) feedsMl += parseFloat(l.amount);
-            else if (l.detail) {
-              const match = l.detail.match(/(\d+)\s*ml/i);
-              if (match) feedsMl += parseInt(match[1]);
-            }
-          });
-
-          let diapers = weekLogs.filter(l => l.type === 'diaper').length;
-          let sleepMins = 0;
-          weekLogs.filter(l => l.type === 'sleep').forEach(l => {
-            if (l.durationMins) sleepMins += parseInt(l.durationMins);
-            else if (l.detail) {
-              const matchH = l.detail.match(/(\d+)\s*h/i);
-              const matchM = l.detail.match(/(\d+)\s*m/i);
-              if (matchH) sleepMins += parseInt(matchH[1]) * 60;
-              if (matchM) sleepMins += parseInt(matchM[1]);
-            }
-          });
-
-          feedData.push(parseFloat((feedsMl / 1000).toFixed(2)));
-          diaperData.push(diapers);
-          sleepData.push(parseFloat((sleepMins / 60).toFixed(1)));
+          feedData.push(parseFloat((feedsMl / 1000).toFixed(2))); diaperData.push(diapers); sleepData.push(parseFloat((sleepMins / 60).toFixed(1)));
         }
       }
-
       return { labels, feedData, diaperData, sleepData };
     }
 
     function initBarChart() {
-      try {
-        if (typeof Chart === 'undefined') return;
-        const ctxBar = document.getElementById('barRoutinesChart');
-        if (!ctxBar) return;
-        const selectVal = document.getElementById('barRangeSelect') ? document.getElementById('barRangeSelect').value : '7days';
-        const realData = getBarChartRealData(selectVal);
-        const t = i18n[appData.lang] || i18n['es'];
-
-        barRoutinesChartInstance = new Chart(ctxBar.getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: realData.labels,
-            datasets: [
-              { label: `${t.legFeed} (L) 🍼`, data: realData.feedData, backgroundColor: '#FFE599', borderRadius: 6, yAxisID: 'y1' },
-              { label: `${t.legDiaper} 💩`, data: realData.diaperData, backgroundColor: '#C5E1A5', borderRadius: 6, yAxisID: 'y' },
-              { label: `${t.legSleep} (h) 💤`, data: realData.sleepData, backgroundColor: '#D7BCE8', borderRadius: 6, yAxisID: 'y' }
-            ]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { position: 'bottom' },
-              tooltip: { enabled: true, mode: 'index', intersect: false }
-            },
-            interaction: { mode: 'nearest', axis: 'x', intersect: false },
-            scales: {
-              y: { type: 'linear', display: true, position: 'left', beginAtZero: true },
-              y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, beginAtZero: true }
-            }
-          }
-        });
-      } catch(err) { console.error("Error initBarChart", err); }
+      if (typeof Chart === 'undefined') { setTimeout(initBarChart, 500); return; }
+      const canvas = document.getElementById('barRoutinesChart'); if (!canvas) return;
+      if (barRoutinesChartInstance) barRoutinesChartInstance.destroy();
+      const realData = getBarChartRealData(document.getElementById('barRangeSelect') ? document.getElementById('barRangeSelect').value : '7days');
+      barRoutinesChartInstance = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: { labels: realData.labels, datasets: [{ label: `Leche (L) 🍼`, data: realData.feedData, backgroundColor: '#FFE599', borderRadius: 6, yAxisID: 'y1' }, { label: `Pañal 💩`, data: realData.diaperData, backgroundColor: '#C5E1A5', borderRadius: 6, yAxisID: 'y' }, { label: `Sueño (h) 💤`, data: realData.sleepData, backgroundColor: '#D7BCE8', borderRadius: 6, yAxisID: 'y' }] },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { type: 'linear', display: true, position: 'left' }, y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false } } } }
+      });
     }
 
-    function updateBarChartRange(range) {
-      if (!barRoutinesChartInstance) return;
-      const realData = getBarChartRealData(range);
+    function updateBarChart() {
+      if (!barRoutinesChartInstance) { initBarChart(); return; }
+      const realData = getBarChartRealData(document.getElementById('barRangeSelect') ? document.getElementById('barRangeSelect').value : '7days');
       barRoutinesChartInstance.data.labels = realData.labels;
       barRoutinesChartInstance.data.datasets[0].data = realData.feedData;
       barRoutinesChartInstance.data.datasets[1].data = realData.diaperData;
@@ -1473,364 +565,169 @@
       barRoutinesChartInstance.update();
     }
 
-    function updateBarChart() {
-      if (barRoutinesChartInstance) {
-        const selectVal = document.getElementById('barRangeSelect') ? document.getElementById('barRangeSelect').value : '7days';
-        updateBarChartRange(selectVal);
-      }
-    }
-
     function initChart() {
-      try {
-        if (typeof Chart === 'undefined') return;
-        const ctxWeight = document.getElementById('weightChart');
-        if (ctxWeight) {
-          weightChartInstance = new Chart(ctxWeight.getContext('2d'), {
+      if (typeof Chart === 'undefined') { setTimeout(initChart, 500); return; }
+      ['weight','height','head'].forEach((type, idx) => {
+        const canvas = document.getElementById(`${type}Chart`);
+        if (canvas) {
+          if (window[`${type}ChartInstance`]) window[`${type}ChartInstance`].destroy();
+          window[`${type}ChartInstance`] = new Chart(canvas.getContext('2d'), {
             type: 'line',
-            data: {
-              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'],
-              datasets: [
-                { label: 'Léo (Kg)', data: [3.3, 4.2, 5.4, null, null, null], borderColor: '#FF8B94', backgroundColor: 'rgba(255,139,148,0.2)', borderWidth: 3, tension: 0.3 },
-                { label: 'OMS Mediana (P50)', data: [3.3, 4.5, 5.6, 6.4, 7.0, 7.5, 7.9], borderColor: '#AEC6CF', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-              ]
-            },
+            data: { labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'], datasets: [{ label: `Léo`, data: [null, null, null, null, null, null, null], borderColor: ['#FF8B94','#779ECB','#B2AC88'][idx], borderWidth: 3 }, { label: 'OMS (P50)', data: [[3.3,4.5,5.6,6.4,7.0,7.5,7.9],[49.9,54.7,58.4,61.4,63.9,65.9,67.6],[34.5,36.9,38.3,39.5,40.5,41.3,42.0]][idx], borderColor: '#AEC6CF', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }] },
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
           });
         }
-
-        const ctxHeight = document.getElementById('heightChart');
-        if (ctxHeight) {
-          heightChartInstance = new Chart(ctxHeight.getContext('2d'), {
-            type: 'line',
-            data: {
-              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'],
-              datasets: [
-                { label: 'Léo (cm)', data: [50, 54.5, 58, null, null, null], borderColor: '#779ECB', backgroundColor: 'rgba(119,158,203,0.2)', borderWidth: 3, tension: 0.3 },
-                { label: 'OMS Mediana (P50)', data: [49.9, 54.7, 58.4, 61.4, 63.9, 65.9, 67.6], borderColor: '#B2AC88', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-              ]
-            },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-          });
-        }
-
-        const ctxHead = document.getElementById('headChart');
-        if (ctxHead) {
-          headChartInstance = new Chart(ctxHead.getContext('2d'), {
-            type: 'line',
-            data: {
-              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'],
-              datasets: [
-                { label: 'Léo (cm)', data: [34.5, 36.8, 38, null, null, null], borderColor: '#B2AC88', backgroundColor: 'rgba(178,172,136,0.2)', borderWidth: 3, tension: 0.3 },
-                { label: 'OMS Mediana (P50)', data: [34.5, 36.9, 38.3, 39.5, 40.5, 41.3, 42.0], borderColor: '#AEC6CF', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-              ]
-            },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-          });
-        }
-      } catch(e) { console.error("Error initChart", e); }
+      });
+      updateChart();
     }
 
     function updateChart() {
-      try {
-        if (!weightChartInstance) return;
-        const growthLogs = getActiveBaby().logs.filter(l => l.type === 'growth').sort((a,b) => new Date(a.timestamp) - new Date(a.timestamp));
-        if (growthLogs.length > 0) {
-          const weights = growthLogs.map(l => l.weight).filter(w => w);
-          const heights = growthLogs.map(l => l.height).filter(h => h);
-          const heads = growthLogs.map(l => l.head).filter(h => h);
-
-          if (weights.length > 0 && weightChartInstance.data.datasets[0]) { weightChartInstance.data.datasets[0].data = weights; weightChartInstance.update(); }
-          if (heights.length > 0 && heightChartInstance.data.datasets[0]) { heightChartInstance.data.datasets[0].data = heights; heightChartInstance.update(); }
-          if (heads.length > 0 && headChartInstance.data.datasets[0]) { headChartInstance.data.datasets[0].data = heads; headChartInstance.update(); }
-        }
-      } catch(err) { console.error("Error updateChart", err); }
+      if (!weightChartInstance) return;
+      const growthLogs = getActiveBaby().logs.filter(l => l.type === 'growth').sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
+      if (growthLogs.length > 0) {
+        const weights = growthLogs.map(l => parseFloat(l.weight)).filter(w => !isNaN(w)); const heights = growthLogs.map(l => parseFloat(l.height)).filter(h => !isNaN(h)); const heads = growthLogs.map(l => parseFloat(l.head)).filter(h => !isNaN(h));
+        if (weights.length > 0) { weightChartInstance.data.datasets[0].data = weights; weightChartInstance.update(); }
+        if (heights.length > 0) { heightChartInstance.data.datasets[0].data = heights; heightChartInstance.update(); }
+        if (heads.length > 0) { headChartInstance.data.datasets[0].data = heads; headChartInstance.update(); }
+      }
     }
 
     function renderVaccines() {
-      const container = document.getElementById('vaccinesListContainer'); container.innerHTML = '';
-      standardVaccines.forEach(v => {
-        const isDone = getActiveBaby().vaccines[v.id] || false;
-        container.innerHTML += `<div class="vaccine-item ${isDone ? 'done' : ''}"><div><strong>${v.age}</strong>: ${v.name}</div><div class="checkbox-custom" onclick="toggleVaccine('${v.id}')">${isDone ? '✓' : ''}</div></div>`;
-      });
+      const container = document.getElementById('vaccinesListContainer'); if (!container) return; container.innerHTML = '';
+      standardVaccines.forEach(v => { container.innerHTML += `<div class="vaccine-item ${getActiveBaby().vaccines[v.id] ? 'done' : ''}"><div><strong>${v.age}</strong>: ${v.name}</div><div class="checkbox-custom" onclick="toggleVaccine('${v.id}')">${getActiveBaby().vaccines[v.id] ? '✓' : ''}</div></div>`; });
     }
 
     function toggleVaccine(id) { getActiveBaby().vaccines[id] = !getActiveBaby().vaccines[id]; saveState(); renderVaccines(); }
-
-    function deleteLog(id) { if (confirm("¿Estás seguro de eliminar este registro?")) { getActiveBaby().logs = getActiveBaby().logs.filter(l => l.id !== id); saveState(); } }
-    function editLog(id) { const log = getActiveBaby().logs.find(l => l.id === id); if (log) openFormModal(log.type, log); }
+    function deleteLog(id) { if (confirm("¿Estás seguro de eliminar este registro?")) { getActiveBaby().logs = getActiveBaby().logs.filter(l => String(l.id) !== String(id)); saveState(); } }
+    function editLog(id) { const log = getActiveBaby().logs.find(l => String(l.id) === String(id)); if (log) openFormModal(log.type, log); }
 
     function openFormModal(type, existingLog = null) {
-      document.getElementById('entryType').value = type;
-      document.getElementById('editingLogId').value = existingLog ? existingLog.id : '';
-      const fields = document.getElementById('dynamicFormFields');
-      const title = document.getElementById('modalFormTitle');
-
-      let nowLocal = existingLog ? new Date(existingLog.timestamp) : new Date();
-      const localIsoStr = new Date(nowLocal.getTime() - (nowLocal.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
-      document.getElementById('entryTimestamp').value = localIsoStr;
-      document.getElementById('entryNotes').value = existingLog ? (existingLog.notes || '') : '';
-
+      document.getElementById('entryType').value = type; document.getElementById('editingLogId').value = existingLog ? existingLog.id : '';
+      const fields = document.getElementById('dynamicFormFields'); const title = document.getElementById('modalFormTitle');
+      let nowLocal = existingLog ? new Date(existingLog.timestamp) : new Date(); const localIsoStr = new Date(nowLocal.getTime() - (nowLocal.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+      document.getElementById('entryTimestamp').value = localIsoStr; document.getElementById('entryNotes').value = existingLog ? (existingLog.notes || '') : '';
       document.getElementById('groupTimestampMain').style.display = (type === 'sleep') ? 'none' : 'block';
 
       if (type === 'feeding') {
         title.innerText = existingLog ? "Editar Toma / Leche 🍼" : "Registrar Toma / Leche 🍼";
-        fields.innerHTML = `
-          <div class="form-group">
-            <label>Tipo de Alimentación</label>
-            <select class="form-control" id="fType">
-              <option value="Leche Materna Extraída" selected>Leche Extraída 🍼</option>
-              <option value="Pecho">Pecho 🤱</option>
-              <option value="Biberón Fórmula">Biberón Fórmula 🍼</option>
-              <option value="Sólidos / Papilla">Sólidos 🥣</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Cantidad (ml)</label>
-            <input type="number" class="form-control" id="fAmount" placeholder="Ej: 110">
-          </div>
-        `;
-        if (existingLog) {
-          if (existingLog.amount) document.getElementById('fAmount').value = existingLog.amount;
-        } else {
-          document.getElementById('fAmount').value = '110';
-        }
+        fields.innerHTML = `<div class="form-group"><label>Tipo</label><select class="form-control" id="fType"><option value="Leche Materna Extraída" selected>Leche Extraída 🍼</option><option value="Pecho">Pecho 🤱</option><option value="Biberón Fórmula">Biberón Fórmula 🍼</option><option value="Sólidos / Papilla">Sólidos 🥣</option></select></div><div class="form-group"><label>Cantidad (ml)</label><input type="number" class="form-control" id="fAmount" placeholder="Ej: 110"></div>`;
+        if (existingLog && existingLog.amount) document.getElementById('fAmount').value = existingLog.amount; else if(!existingLog) document.getElementById('fAmount').value = '110';
       } else if (type === 'sleep') {
         title.innerText = existingLog ? "Editar Sueño 💤" : "Registrar Sueño 💤";
-        
-        let startTime = localIsoStr;
-        let endTime = localIsoStr;
-        if (existingLog && existingLog.startTimestamp && existingLog.endTimestamp) {
-          startTime = new Date(new Date(existingLog.startTimestamp).getTime() - (new Date(existingLog.startTimestamp).getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
-          endTime = new Date(new Date(existingLog.endTimestamp).getTime() - (new Date(existingLog.endTimestamp).getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
-        }
-
-        fields.innerHTML = `
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label>Hora Inicio</label>
-              <input type="datetime-local" class="form-control" id="fSleepStart" value="${startTime}" onchange="calcSleepDuration()">
-            </div>
-            <div class="form-group">
-              <label>Hora Fin</label>
-              <input type="datetime-local" class="form-control" id="fSleepEnd" value="${endTime}" onchange="calcSleepDuration()">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Duración Calculada</label>
-            <input type="text" class="form-control" id="fSleepDurationDisplay" readonly placeholder="Calculando..." style="background:var(--bg-color);">
-          </div>
-        `;
+        let sTime = localIsoStr, eTime = localIsoStr;
+        if (existingLog && existingLog.startTimestamp && existingLog.endTimestamp) { sTime = new Date(new Date(existingLog.startTimestamp).getTime() - (new Date(existingLog.startTimestamp).getTimezoneOffset() * 60000)).toISOString().slice(0, 16); eTime = new Date(new Date(existingLog.endTimestamp).getTime() - (new Date(existingLog.endTimestamp).getTimezoneOffset() * 60000)).toISOString().slice(0, 16); }
+        fields.innerHTML = `<div class="form-grid-2"><div class="form-group"><label>Hora Inicio</label><input type="datetime-local" class="form-control" id="fSleepStart" value="${sTime}" onchange="calcSleepDuration()"></div><div class="form-group"><label>Hora Fin</label><input type="datetime-local" class="form-control" id="fSleepEnd" value="${eTime}" onchange="calcSleepDuration()"></div></div><div class="form-group"><label>Duración</label><input type="text" class="form-control" id="fSleepDurationDisplay" readonly placeholder="Calculando..." style="background:var(--bg-color);"></div>`;
         setTimeout(calcSleepDuration, 100);
       } else if (type === 'growth') {
         title.innerText = existingLog ? "Editar Crecimiento 📏" : "Registrar Crecimiento 📏";
-        fields.innerHTML = `<div class="form-grid-2"><div class="form-group"><label>Peso (Kg)</label><input type="number" step="0.01" class="form-control" id="fWeight" placeholder="Ej: 5.45"></div><div class="form-group"><label>Talla (cm)</label><input type="number" step="0.1" class="form-control" id="fHeight" placeholder="Ej: 58.5"></div></div><div class="form-group"><label>Perímetro Cefálico (cm)</label><input type="number" step="0.1" class="form-control" id="fHead" placeholder="Ej: 38.0"></div>`;
-        if (existingLog) {
-          document.getElementById('fWeight').value = existingLog.weight || '';
-          document.getElementById('fHeight').value = existingLog.height || '';
-          document.getElementById('fHead').value = existingLog.head || '';
-        }
-      } else if (type === 'bath') {
-        title.innerText = existingLog ? "Editar Baño 🧼" : "Registrar Baño / Ducha 🧼";
-        fields.innerHTML = `<div class="form-group"><label>Detalle / Productos</label><input type="text" class="form-control" id="fDetail" placeholder="Ej: Baño relajante con crema suave"></div>`;
-        if (existingLog) document.getElementById('fDetail').value = existingLog.detail || '';
+        fields.innerHTML = `<div class="form-grid-2"><div class="form-group"><label>Peso (Kg)</label><input type="number" step="0.01" class="form-control" id="fWeight"></div><div class="form-group"><label>Talla (cm)</label><input type="number" step="0.1" class="form-control" id="fHeight"></div></div><div class="form-group"><label>Perímetro (cm)</label><input type="number" step="0.1" class="form-control" id="fHead"></div>`;
+        if (existingLog) { document.getElementById('fWeight').value = existingLog.weight || ''; document.getElementById('fHeight').value = existingLog.height || ''; document.getElementById('fHead').value = existingLog.head || ''; }
       } else {
         title.innerText = existingLog ? "Editar Evento" : "Registrar Evento";
-        fields.innerHTML = `<div class="form-group"><label>Detalle</label><input type="text" class="form-control" id="fDetail" value="${existingLog ? existingLog.detail : ''}"></div>`;
+        fields.innerHTML = `<div class="form-group"><label>Detalle</label><input type="text" class="form-control" id="fDetail" value="${existingLog ? (existingLog.detail||'') : ''}"></div>`;
       }
       openModal('form');
     }
 
     function calcSleepDuration() {
-      const startVal = document.getElementById('fSleepStart').value;
-      const endVal = document.getElementById('fSleepEnd').value;
-      if (!startVal || !endVal) return;
-
-      const diffMs = new Date(endVal) - new Date(startVal);
-      if (diffMs < 0) {
-        document.getElementById('fSleepDurationDisplay').value = "Hora de fin anterior al inicio";
-        return;
-      }
-      const totalMins = Math.floor(diffMs / (1000 * 60));
-      const hours = Math.floor(totalMins / 60);
-      const mins = totalMins % 60;
-      document.getElementById('fSleepDurationDisplay').value = `${hours}h ${mins}m (${totalMins} mins)`;
+      const startVal = document.getElementById('fSleepStart').value; const endVal = document.getElementById('fSleepEnd').value; if (!startVal || !endVal) return;
+      const diffMs = new Date(endVal) - new Date(startVal); if (diffMs < 0) { document.getElementById('fSleepDurationDisplay').value = "Hora de fin anterior"; return; }
+      const totalMins = Math.floor(diffMs / 60000); document.getElementById('fSleepDurationDisplay').value = `${Math.floor(totalMins / 60)}h ${totalMins % 60}m (${totalMins} mins)`;
     }
 
     function closeFormModal() { closeModal('form'); }
 
     function saveLogEntry(e) {
       e.preventDefault();
-      const editingId = document.getElementById('editingLogId').value;
-      const type = document.getElementById('entryType').value;
-      const timestampInput = document.getElementById('entryTimestamp').value;
-      const notes = document.getElementById('entryNotes').value;
-
-      let detail = ''; let weight = null; let height = null; let head = null;
-      let amount = null; let startTimestamp = null; let endTimestamp = null; let durationMins = null;
+      const editingId = document.getElementById('editingLogId').value; const type = document.getElementById('entryType').value;
+      const timestampInput = document.getElementById('entryTimestamp').value; const notes = document.getElementById('entryNotes').value;
+      let detail = '', weight = null, height = null, head = null, amount = null, startTimestamp = null, endTimestamp = null, durationMins = null;
       let isoTimestamp = new Date(timestampInput).toISOString();
 
       if (type === 'feeding') {
-        const ft = document.getElementById('fType').value;
-        const am = document.getElementById('fAmount').value;
-        amount = am ? parseFloat(am) : null;
-        detail = `${ft} (${am ? am + ' ml' : ''})`;
+        const ft = document.getElementById('fType').value; const am = document.getElementById('fAmount').value;
+        amount = am ? parseFloat(am) : null; detail = `${ft} (${am ? am + ' ml' : ''})`;
       } else if (type === 'sleep') {
-        const sVal = document.getElementById('fSleepStart').value;
-        const eVal = document.getElementById('fSleepEnd').value;
-        startTimestamp = new Date(sVal).toISOString();
-        endTimestamp = new Date(eVal).toISOString();
-        isoTimestamp = endTimestamp;
-
-        const diffMs = new Date(eVal) - new Date(sVal);
-        durationMins = Math.max(0, Math.floor(diffMs / (1000 * 60)));
-        const hours = Math.floor(durationMins / 60);
-        const mins = durationMins % 60;
-        detail = `Siesta (${hours}h ${mins}m)`;
+        const sVal = document.getElementById('fSleepStart').value; const eVal = document.getElementById('fSleepEnd').value;
+        startTimestamp = new Date(sVal).toISOString(); endTimestamp = new Date(eVal).toISOString(); isoTimestamp = endTimestamp;
+        durationMins = Math.max(0, Math.floor((new Date(eVal) - new Date(sVal)) / 60000)); detail = `Siesta (${Math.floor(durationMins / 60)}h ${durationMins % 60}m)`;
       } else if (type === 'growth') {
-        const w = document.getElementById('fWeight').value;
-        const h = document.getElementById('fHeight').value;
-        const hd = document.getElementById('fHead').value;
-        detail = `Peso: ${w}kg, Talla: ${h}cm, Cabeza: ${hd}cm`;
-        weight = parseFloat(w); height = parseFloat(h); head = parseFloat(hd);
-      } else {
-        detail = document.getElementById('fDetail').value;
-      }
+        weight = parseFloat(document.getElementById('fWeight').value); height = parseFloat(document.getElementById('fHeight').value); head = parseFloat(document.getElementById('fHead').value);
+        detail = `Peso: ${weight}kg, Talla: ${height}cm, Cabeza: ${head}cm`;
+      } else { detail = document.getElementById('fDetail').value; }
 
-      if (editingId) {
-        const idx = getActiveBaby().logs.findIndex(l => l.id == editingId);
-        if (idx !== -1) getActiveBaby().logs[idx] = { ...getActiveBaby().logs[idx], type, detail, timestamp: isoTimestamp, notes, weight, height, head, amount, startTimestamp, endTimestamp, durationMins };
-      } else {
-        getActiveBaby().logs.push({ id: Date.now(), type, detail, timestamp: isoTimestamp, notes, weight, height, head, amount, startTimestamp, endTimestamp, durationMins });
-      }
+      const logObj = { id: editingId ? parseInt(editingId) : Date.now(), type, detail, timestamp: isoTimestamp, notes, weight, height, head, amount, startTimestamp, endTimestamp, durationMins };
+      if (editingId) { const idx = getActiveBaby().logs.findIndex(l => String(l.id) === String(editingId)); if (idx !== -1) getActiveBaby().logs[idx] = logObj; } else { getActiveBaby().logs.push(logObj); }
       saveState(); closeFormModal();
     }
 
-    // --- FUNCIONES DE SINCRONIZACIÓN EN LA NUBE ---
-    
-    function uploadToCloud() {
-      if (!confirm("¿Seguro que quieres subir los datos a la nube? Esto reemplazará los datos guardados allí con tu versión actual.")) return;
-      
-      const btn = document.getElementById('btn-upload-cloud');
-      if (btn) btn.innerText = "Subiendo datos...";
-      
-      database.ref('babycare_data').set(appData)
-        .then(() => {
-          alert("¡Datos subidos con éxito a la nube! ☁️");
-          closeModal('sync');
-        })
-        .catch((error) => {
-          alert("Error al subir a la nube: " + error.message);
-        })
-        .finally(() => {
-          if (btn) btn.innerHTML = '☁️ <span id="txt-btn-upload">Subir a la nube</span>';
-        });
-    }
-
-    function downloadFromCloud() {
-      if (!confirm("¿Seguro que quieres descargar los datos? Esto borrará tus datos locales actuales y los reemplazará por los de la nube.")) return;
-      
-      const btn = document.getElementById('btn-download-cloud');
-      if (btn) btn.innerText = "Descargando datos...";
-
-      database.ref('babycare_data').once('value')
-        .then((snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            appData = data;
-            saveState(); // Esto guarda los datos descargados en la memoria local y recarga la pantalla
-            alert("¡Datos descargados y sincronizados correctamente! ⬇️");
-            closeModal('sync');
-          } else {
-            alert("No se han encontrado datos en la nube. Sube los datos desde el otro dispositivo primero.");
-          }
-        })
-        .catch((error) => {
-          alert("Error al descargar de la nube: " + error.message);
-        })
-        .finally(() => {
-          if (btn) btn.innerHTML = '⬇️ <span id="txt-btn-download">Descargar de la nube</span>';
-        });
-    }
-
     function exportJSON() {
-      try {
-        const dataStr = JSON.stringify(appData, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const anchor = document.createElement('a');
-        anchor.setAttribute("href", url);
-        anchor.setAttribute("download", `babycare_v1.9.0_${getActiveBaby().name}.json`);
-        document.body.appendChild(anchor);
-        anchor.click();
-        anchor.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 5000);
-      } catch(e) {
-        alert("Error al descargar archivo. Inténtelo de nuevo.");
-      }
+      const url = URL.createObjectURL(new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' }));
+      const anchor = document.createElement('a'); anchor.href = url; anchor.download = `babycare_v3.0.0_${getActiveBaby().name}.json`;
+      document.body.appendChild(anchor); anchor.click(); anchor.remove(); setTimeout(() => URL.revokeObjectURL(url), 5000);
     }
 
     function triggerFileInput() {
       let fileInput = document.getElementById('syncFileInput');
-      if (!fileInput) {
-        fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.id = 'syncFileInput';
-        fileInput.accept = '*/*';
-        fileInput.style.display = 'none';
-        fileInput.onchange = (e) => importJSON(e);
-        document.body.appendChild(fileInput);
-      }
-      fileInput.value = '';
-      fileInput.click();
+      if (!fileInput) { fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.id = 'syncFileInput'; fileInput.style.display = 'none'; fileInput.onchange = (e) => importJSON(e); document.body.appendChild(fileInput); }
+      fileInput.value = ''; fileInput.click();
     }
 
     function importJSON(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
+      const file = event.target.files[0]; if (!file) return; const reader = new FileReader();
       reader.onload = (e) => {
         try {
-          let text = e.target.result.trim();
-          if (text.startsWith('data:')) {
-             const commaIdx = text.indexOf(',');
-             if (commaIdx !== -1) text = decodeURIComponent(text.substring(commaIdx + 1));
-          }
-          if (text.startsWith('%7B')) { text = decodeURIComponent(text); }
-          
-          const firstBrace = text.indexOf('{');
-          const lastBrace = text.lastIndexOf('}');
-          if (firstBrace !== -1 && lastBrace !== -1) {
-            text = text.substring(firstBrace, lastBrace + 1);
-          }
+          let text = e.target.result.trim(); if (text.startsWith('data:')) { const commaIdx = text.indexOf(','); if (commaIdx !== -1) text = decodeURIComponent(text.substring(commaIdx + 1)); }
+          if (text.startsWith('%7B')) text = decodeURIComponent(text);
+          const firstBrace = text.indexOf('{'); const lastBrace = text.lastIndexOf('}'); if (firstBrace !== -1 && lastBrace !== -1) text = text.substring(firstBrace, lastBrace + 1);
           
           const imported = JSON.parse(text);
-          
           if (imported.babies || imported.logs || (imported.baby && imported.logs)) {
-            if (imported.babies) {
-               appData = imported;
-            } else {
-               if (!appData.babies || appData.babies.length === 0) {
-                   appData.babies = [{ id: 1, name: 'Léo', dob: '2026-07-19', gender: 'male', photo: null, logs: [], vaccines: {}, alarms: [] }];
-               }
-               appData.babies[0].logs = imported.logs || [];
-               appData.babies[0].vaccines = imported.vaccines || {};
-               if (imported.baby) {
-                   appData.babies[0].name = imported.baby.name || 'Léo';
-                   appData.babies[0].dob = imported.baby.dob || '2026-07-19';
-                   appData.babies[0].gender = imported.baby.gender || 'male';
-               }
+            if (imported.babies) { appData = sanitizeData(imported); } 
+            else {
+               if (!appData.babies || appData.babies.length === 0) appData.babies = [{ id: 1, name: 'Léo', dob: '2026-07-19', gender: 'male', photo: null, logs: [], vaccines: {}, alarms: [] }];
+               appData.babies[0].logs = imported.logs || []; appData.babies[0].vaccines = imported.vaccines || {};
+               if (imported.baby) { appData.babies[0].name = imported.baby.name || 'Léo'; appData.babies[0].dob = imported.baby.dob || '2026-07-19'; appData.babies[0].gender = imported.baby.gender || 'male'; }
+               appData = sanitizeData(appData);
             }
-            saveState();
-            alert("¡Datos locales restaurados con éxito!");
-          } else {
-            alert("El archivo no contiene registros válidos de BabyCare.");
-          }
-        } catch(err) {
-          alert("Error al leer el archivo JSON. Verifica que sea el correcto.");
-        }
+            saveState(); closeModal('syncModal'); alert("¡Datos locales restaurados!");
+          } else { alert("El archivo no contiene registros válidos."); }
+        } catch(err) { alert("Error al leer el archivo JSON."); }
       };
       reader.readAsText(file);
     }
+
+    function addAlarm() {
+      const type = document.getElementById('newAlarmType').value; const timeStr = document.getElementById('newAlarmTime').value; const sound = document.getElementById('newAlarmSound').value;
+      if (!timeStr) { alert("Selecciona una hora válida"); return; }
+      const [hours, minutes] = timeStr.split(':'); let targetTime = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), parseInt(hours), parseInt(minutes), 0).getTime();
+      if (targetTime < new Date().getTime()) targetTime += 86400000;
+      getActiveBaby().alarms.push({ id: Date.now(), title: type, time: targetTime, sound: sound, triggered: false }); saveState(); renderAlarms(); alert(`Alarma añadida para las ${timeStr}.`);
+    }
+
+    function deleteAlarm(id) { getActiveBaby().alarms = getActiveBaby().alarms.filter(a => String(a.id) !== String(id)); saveState(); renderAlarms(); }
+
+    function renderAlarms() {
+      const container = document.getElementById('alarmsContainer'); if (!container) return; container.innerHTML = '';
+      const activeAlarms = getActiveBaby().alarms.filter(a => !a.triggered).sort((a,b) => a.time - b.time);
+      if (activeAlarms.length === 0) { container.innerHTML = `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">No hay alarmas pendientes.</p>`; return; }
+      activeAlarms.forEach(al => {
+        container.innerHTML += `<div class="alarm-item"><div><strong style="font-size:0.85rem;">${al.title}</strong><div style="font-size:0.75rem; color:var(--text-muted);">${new Date(al.time).toLocaleDateString([], { day: 'numeric', month: 'short' })}, a las ${new Date(al.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div></div><button onclick="deleteAlarm(${al.id})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button></div>`;
+      });
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    setInterval(() => {
+      const now = Date.now(); let changed = false;
+      appData.babies.forEach(baby => {
+        if (baby && baby.alarms) {
+          baby.alarms.forEach(al => {
+            if (al && !al.triggered && now >= al.time) { al.triggered = true; changed = true; new Audio(al.sound === 'chime' ? 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg' : 'https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg').play().catch(()=>{}); alert(`⏰ ¡Aviso para ${baby.name}!\n\n🔔 ${al.title}`); }
+          });
+        }
+      });
+      if (changed) saveState();
+    }, 30000);
   </script>
 </body>
 </html>
