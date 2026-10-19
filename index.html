@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BabyCare Test - v3.0.4</title>
+  <title>BabyCare Test - v3.0.5</title>
   
   <meta name="theme-color" content="#FDE6E3">
   
@@ -211,7 +211,7 @@
           <i data-lucide="book-open" style="color:var(--primary);"></i> Manual de Uso Paso a Paso
         </h3>
         <div class="manual-step"><div class="step-number">1</div><div class="step-content"><h4 id="mstep1-title">Personalizar Perfil</h4><p id="mstep1-desc">Pulsa sobre la foto circular para subir la foto real de tu bebé. Toca el icono del lápiz para editar su nombre.</p></div></div>
-        <div class="manual-step"><div class="step-number">2</div><div class="step-content"><h4 id="mstep2-title">Registro Rápido</h4><p id="mstep2-desc">Pulsa cualquier botón de la cuadrícula superior.</p></div></div>
+        <div class="manual-step"><div class="step-number">2</div><div class="step-content"><h4 id="mstep2-title">Registro Rápido</h4><p id="mstep2-desc">Pulsa cualquier botón de la cuadrícula superior. La hora actual se selecciona por defecto.</p></div></div>
         <div class="manual-step"><div class="step-number">3</div><div class="step-content"><h4 id="mstep3-title">Registro de Sueño</h4><p id="mstep3-desc">Indica la 'Hora Inicio' y 'Hora Fin'.</p></div></div>
         <div class="manual-step"><div class="step-number">4</div><div class="step-content"><h4 id="mstep4-title">Diario y Totales</h4><p id="mstep4-desc">Navega con las flechas día a día.</p></div></div>
         <div class="manual-step"><div class="step-number">5</div><div class="step-content"><h4 id="mstep5-title">Calendario y Matriz 24h</h4><p id="mstep5-desc">Consulta el calendario mensual y matriz.</p></div></div>
@@ -230,8 +230,6 @@
   <div class="modal-overlay" id="syncModal"><div class="modal"><div class="modal-header"><h3 id="txt-sync-title">Nube Activa ☁</h3><button class="close-btn" onclick="closeModal('sync')"><i data-lucide="x"></i></button></div><div class="modal-body" style="padding:0.8rem 0.2rem;"><div style="text-align:center; padding: 1rem 0;"><i data-lucide="cloud-lightning" style="width:48px; height:48px; color:var(--primary); margin-bottom:10px;"></i><h4 style="font-size:1.1rem; font-weight:800; margin-bottom:0.5rem; color:var(--text-color);">Nube Conectada</h4><p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;" id="txt-sync-desc">Sincronización en tiempo real funcionando.</p></div><hr style="border:none; border-top:1px solid var(--border-color); margin:1rem 0;"><h4 style="font-size:0.9rem; font-weight:800; margin-bottom:0.5rem;" id="txt-sync-import-title">Copias de Seguridad (Manual)</h4><button onclick="exportJSON()" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--border-color); padding:0.75rem; border-radius:14px; font-weight:800; width:100%; margin-bottom:0.6rem;">📲 <span id="txt-btn-export">Guardar JSON local</span></button><button onclick="triggerFileInput()" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--border-color); padding:0.75rem; border-radius:14px; font-weight:800; width:100%;">📥 <span id="txt-btn-import">Restaurar JSON</span></button></div></div></div>
 
   <script>
-    if ('serviceWorker' in navigator) { const swCode = `self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));`; navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' }))).catch(()=>{}); }
-
     let database = null; let isSyncing = false; 
     let appData = { lang: 'es', theme: 'light', activeBabyId: 1, babies: [] };
     let selectedDate = new Date(); let selectedMatrixWeekDate = new Date(); let calDate = new Date(); 
@@ -270,14 +268,14 @@
 
     function limpiarDatosLocales() {
       if (confirm("Esto borrará la memoria local del navegador. Útil para vaciar el entorno de pruebas. ¿Continuar?")) {
-        localStorage.removeItem('babycare_data_v3_0_0');
+        localStorage.removeItem('babycare_test_data');
         location.reload();
       }
     }
 
     window.addEventListener('DOMContentLoaded', () => { 
       try {
-        const local = localStorage.getItem('babycare_data_v3_0_0');
+        const local = localStorage.getItem('babycare_test_data');
         if (local) appData = sanitizeData(JSON.parse(local));
         else appData = sanitizeData(appData);
       } catch(e) { appData = sanitizeData(null); }
@@ -302,7 +300,7 @@
             if (data) {
               isSyncing = true;
               appData = sanitizeData(data); 
-              try { localStorage.setItem('babycare_data_v3_0_0', JSON.stringify(appData)); } catch(e){}
+              try { localStorage.setItem('babycare_test_data', JSON.stringify(appData)); } catch(e){}
               triggerFullRender();
               isSyncing = false; 
             }
@@ -326,7 +324,7 @@
     }
 
     function saveState() { 
-      try { localStorage.setItem('babycare_data_v3_0_0', JSON.stringify(appData)); } catch(e) {}
+      try { localStorage.setItem('babycare_test_data', JSON.stringify(appData)); } catch(e) {}
       if (database && !isSyncing) { try { database.ref('babycare_data').set(appData).catch(()=>{}); } catch(e) {} }
       triggerFullRender();
     }
