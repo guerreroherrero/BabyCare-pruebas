@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- Forzando nuevo despliegue de GitHub Pages -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BabyCare Test - v3.0.2</title>
+  <title>BabyCare Test - v3.0.3</title>
   
   <meta name="theme-color" content="#FDE6E3">
   
@@ -284,7 +285,6 @@
       
       setLanguage(appData.lang); applyTheme(appData.theme);
       
-      // FIREBASE TEST ENVIRONMENT
       try {
         if (typeof firebase !== 'undefined') {
           firebase.initializeApp({
@@ -416,7 +416,8 @@
     function resetToToday() { selectedDate = new Date(); renderLogs(); }
     
     function getTimeAgoString(timestamp) {
-      const diffMins = Math.floor((new Date() - new Date(timestamp)) / 60000); if (diffMins < 0) return '';
+      let diffMins = Math.floor((new Date() - new Date(timestamp)) / 60000); 
+      if (diffMins < 0) diffMins = 0; 
       const hours = Math.floor(diffMins / 60); const mins = diffMins % 60;
       if (hours === 0 && mins < 2) return 'Hace un momento';
       if (hours === 0) return `Hace ${mins}m`; if (hours < 24) return `Hace ${hours}h ${mins}m`; return `Hace ${Math.floor(hours / 24)}d`;
@@ -494,7 +495,7 @@
           if (dayLogs.some(l => l.type === 'sleep')) dotsHtml += '<div class="cal-dot" style="background:#D7BCE8"></div>';
           dotsHtml += '</div>';
         }
-        html += `<div class="cal-cell ${(today.getFullYear()===year && today.getMonth()===month && today.getDate()===day) ? 'today' : ''}" onclick="selectCalendarDate(${year}, ${month}, ${day})"><span>${day}</span>${dotsHtml}</div>`;
+        html += `<div class="cal-cell ${(today.getFullYear()===year && today.getMonth()===month && today.getDate()===day) ? 'today' : ''}" onclick="window.selectCalendarDate(${year}, ${month}, ${day})"><span>${day}</span>${dotsHtml}</div>`;
       }
       grid.innerHTML = html;
     }
@@ -624,7 +625,13 @@
           if (window[`${type}ChartInstance`]) window[`${type}ChartInstance`].destroy();
           window[`${type}ChartInstance`] = new Chart(canvas.getContext('2d'), {
             type: 'line',
-            data: { labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'], datasets: [{ label: `Léo`, data: [null, null, null, null, null, null, null], borderColor: ['#FF8B94','#779ECB','#B2AC88'][idx], borderWidth: 3 }, { label: 'OMS (P50)', data: [[3.3,4.5,5.6,6.4,7.0,7.5,7.9],[49.9,54.7,58.4,61.4,63.9,65.9,67.6],[34.5,36.9,38.3,39.5,40.5,41.3,42.0]][idx], borderColor: '#AEC6CF', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }] },
+            data: { 
+              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'], 
+              datasets: [
+                { label: getActiveBaby().name, data: [null, null, null, null, null, null, null], borderColor: ['#FF8B94','#779ECB','#B2AC88'][idx], borderWidth: 3, pointRadius: 5, pointBackgroundColor: ['#FF8B94','#779ECB','#B2AC88'][idx], spanGaps: true }, 
+                { label: 'OMS (P50)', data: [[3.3,4.5,5.6,6.4,7.0,7.5,7.9],[49.9,54.7,58.4,61.4,63.9,65.9,67.6],[34.5,36.9,38.3,39.5,40.5,41.3,42.0]][idx], borderColor: '#AEC6CF', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+              ] 
+            },
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
           });
         }
@@ -634,18 +641,28 @@
 
     function updateChart() {
       if (!weightChartInstance) return;
-      const growthLogs = getActiveBaby().logs.filter(l => l.type === 'growth').sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
+      const baby = getActiveBaby();
+      const growthLogs = baby.logs.filter(l => l.type === 'growth').sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
       
-      let wData = [], hData = [], hcData = [];
+      let wData = [null, null, null, null, null, null, null];
+      let hData = [null, null, null, null, null, null, null];
+      let hcData = [null, null, null, null, null, null, null];
+      
       growthLogs.forEach(l => {
-         wData.push(l.weight ? parseFloat(l.weight) : null);
-         hData.push(l.height ? parseFloat(l.height) : null);
-         hcData.push(l.head ? parseFloat(l.head) : null);
+         const logDate = new Date(l.timestamp);
+         const dobDate = new Date(baby.dob);
+         let diffMonths = Math.round((logDate - dobDate) / (1000 * 60 * 60 * 24 * 30.4));
+         
+         if (diffMonths >= 0 && diffMonths <= 6) {
+           if(l.weight) wData[diffMonths] = parseFloat(l.weight);
+           if(l.height) hData[diffMonths] = parseFloat(l.height);
+           if(l.head) hcData[diffMonths] = parseFloat(l.head);
+         }
       });
       
-      weightChartInstance.data.datasets[0].data = wData.length ? wData : [null]; weightChartInstance.update();
-      heightChartInstance.data.datasets[0].data = hData.length ? hData : [null]; heightChartInstance.update();
-      headChartInstance.data.datasets[0].data = hcData.length ? hcData : [null]; headChartInstance.update();
+      weightChartInstance.data.datasets[0].data = wData; weightChartInstance.update();
+      heightChartInstance.data.datasets[0].data = hData; heightChartInstance.update();
+      headChartInstance.data.datasets[0].data = hcData; headChartInstance.update();
     }
 
     function renderVaccines() {
