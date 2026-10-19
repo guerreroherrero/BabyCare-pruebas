@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- Forzando nuevo despliegue de GitHub Pages -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BabyCare Test - v3.0.3</title>
+  <title>BabyCare Test - v3.0.4</title>
   
   <meta name="theme-color" content="#FDE6E3">
   
@@ -212,7 +211,7 @@
           <i data-lucide="book-open" style="color:var(--primary);"></i> Manual de Uso Paso a Paso
         </h3>
         <div class="manual-step"><div class="step-number">1</div><div class="step-content"><h4 id="mstep1-title">Personalizar Perfil</h4><p id="mstep1-desc">Pulsa sobre la foto circular para subir la foto real de tu bebé. Toca el icono del lápiz para editar su nombre.</p></div></div>
-        <div class="manual-step"><div class="step-number">2</div><div class="step-content"><h4 id="mstep2-title">Registro Rápido</h4><p id="mstep2-desc">Pulsa cualquier botón de la cuadrícula superior. La hora actual se selecciona por defecto.</p></div></div>
+        <div class="manual-step"><div class="step-number">2</div><div class="step-content"><h4 id="mstep2-title">Registro Rápido</h4><p id="mstep2-desc">Pulsa cualquier botón de la cuadrícula superior.</p></div></div>
         <div class="manual-step"><div class="step-number">3</div><div class="step-content"><h4 id="mstep3-title">Registro de Sueño</h4><p id="mstep3-desc">Indica la 'Hora Inicio' y 'Hora Fin'.</p></div></div>
         <div class="manual-step"><div class="step-number">4</div><div class="step-content"><h4 id="mstep4-title">Diario y Totales</h4><p id="mstep4-desc">Navega con las flechas día a día.</p></div></div>
         <div class="manual-step"><div class="step-number">5</div><div class="step-content"><h4 id="mstep5-title">Calendario y Matriz 24h</h4><p id="mstep5-desc">Consulta el calendario mensual y matriz.</p></div></div>
@@ -623,13 +622,14 @@
         const canvas = document.getElementById(`${type}Chart`);
         if (canvas) {
           if (window[`${type}ChartInstance`]) window[`${type}ChartInstance`].destroy();
+          const color = ['#FF8B94','#779ECB','#B2AC88'][idx];
           window[`${type}ChartInstance`] = new Chart(canvas.getContext('2d'), {
             type: 'line',
             data: { 
               labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'], 
               datasets: [
-                { label: getActiveBaby().name, data: [null, null, null, null, null, null, null], borderColor: ['#FF8B94','#779ECB','#B2AC88'][idx], borderWidth: 3, pointRadius: 5, pointBackgroundColor: ['#FF8B94','#779ECB','#B2AC88'][idx], spanGaps: true }, 
-                { label: 'OMS (P50)', data: [[3.3,4.5,5.6,6.4,7.0,7.5,7.9],[49.9,54.7,58.4,61.4,63.9,65.9,67.6],[34.5,36.9,38.3,39.5,40.5,41.3,42.0]][idx], borderColor: '#AEC6CF', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+                { label: getActiveBaby().name, data: [null, null, null, null, null, null, null], borderColor: color, backgroundColor: color, borderWidth: 3, pointRadius: 5, pointBackgroundColor: color, spanGaps: true }, 
+                { label: 'OMS (P50)', data: [[3.3,4.5,5.6,6.4,7.0,7.5,7.9],[49.9,54.7,58.4,61.4,63.9,65.9,67.6],[34.5,36.9,38.3,39.5,40.5,41.3,42.0]][idx], borderColor: '#AEC6CF', backgroundColor: 'transparent', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
               ] 
             },
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
@@ -648,15 +648,17 @@
       let hData = [null, null, null, null, null, null, null];
       let hcData = [null, null, null, null, null, null, null];
       
+      let dobParts = baby.dob ? baby.dob.split('-') : [];
+      let dobDate = dobParts.length === 3 ? new Date(dobParts[0], dobParts[1] - 1, dobParts[2]) : new Date();
+
       growthLogs.forEach(l => {
          const logDate = new Date(l.timestamp);
-         const dobDate = new Date(baby.dob);
          let diffMonths = Math.round((logDate - dobDate) / (1000 * 60 * 60 * 24 * 30.4));
          
          if (diffMonths >= 0 && diffMonths <= 6) {
-           if(l.weight) wData[diffMonths] = parseFloat(l.weight);
-           if(l.height) hData[diffMonths] = parseFloat(l.height);
-           if(l.head) hcData[diffMonths] = parseFloat(l.head);
+           if(l.weight && !isNaN(parseFloat(l.weight))) wData[diffMonths] = parseFloat(l.weight);
+           if(l.height && !isNaN(parseFloat(l.height))) hData[diffMonths] = parseFloat(l.height);
+           if(l.head && !isNaN(parseFloat(l.head))) hcData[diffMonths] = parseFloat(l.head);
          }
       });
       
@@ -725,8 +727,18 @@
         startTimestamp = new Date(sVal).toISOString(); endTimestamp = new Date(eVal).toISOString(); isoTimestamp = endTimestamp;
         durationMins = Math.max(0, Math.floor((new Date(eVal) - new Date(sVal)) / 60000)); detail = `Siesta (${Math.floor(durationMins / 60)}h ${durationMins % 60}m)`;
       } else if (type === 'growth') {
-        weight = parseFloat(document.getElementById('fWeight').value); height = parseFloat(document.getElementById('fHeight').value); head = parseFloat(document.getElementById('fHead').value);
-        detail = `Peso: ${weight}kg, Talla: ${height}cm, Cabeza: ${head}cm`;
+        const wVal = document.getElementById('fWeight').value;
+        const hVal = document.getElementById('fHeight').value;
+        const hcVal = document.getElementById('fHead').value;
+        weight = wVal ? parseFloat(wVal) : null;
+        height = hVal ? parseFloat(hVal) : null;
+        head = hcVal ? parseFloat(hcVal) : null;
+        
+        let gDetails = [];
+        if (weight) gDetails.push(`Peso: ${weight}kg`);
+        if (height) gDetails.push(`Talla: ${height}cm`);
+        if (head) gDetails.push(`Cabeza: ${head}cm`);
+        detail = gDetails.length > 0 ? gDetails.join(', ') : 'Crecimiento sin medidas';
       } else { detail = document.getElementById('fDetail').value; }
 
       const logObj = { id: editingId ? parseInt(editingId) : Date.now(), type, detail, timestamp: isoTimestamp, notes, weight, height, head, amount, startTimestamp, endTimestamp, durationMins };
