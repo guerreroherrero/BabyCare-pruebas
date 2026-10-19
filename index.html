@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BabyCare Test - v3.0.5</title>
+  <title>BabyCare Test - v3.0.6</title>
   
   <meta name="theme-color" content="#FDE6E3">
   
@@ -33,7 +33,7 @@
     .baby-profile-card { background: var(--card-bg); border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow); border: 1px solid var(--border-color); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 1rem; }
     .baby-avatar-container { position: relative; cursor: pointer; width: 68px; height: 68px; flex-shrink: 0; }
     .baby-avatar { width: 100%; height: 100%; border-radius: 50%; background: #FFE599; display: flex; align-items: center; justify-content: center; font-size: 2rem; border: 3px solid var(--primary); overflow: hidden; }
-    .baby-avatar img { width: 100%; height: 100%; object-fit: cover; } .avatar-edit-badge { position: absolute; bottom: -2px; right: -2px; background: var(--primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--card-bg); }
+    .baby-avatar img { width: 100%; height: 100%; object-fit: cover; } .avatar-edit-badge { position: absolute; bottom: -2px; right: -2px; background: var(--primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: border: 2px solid var(--card-bg); }
     .baby-info h2 { font-size: 1.3rem; font-weight: 800; } .baby-info p { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
     .alert-banner { background: var(--warning); border: 1px solid var(--warning-border); border-radius: 16px; padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 12px; font-size: 0.9rem; font-weight: 700; } .alert-banner.hidden { display: none; }
     .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.8rem; display: flex; justify-content: space-between; }
@@ -230,10 +230,10 @@
   <div class="modal-overlay" id="syncModal"><div class="modal"><div class="modal-header"><h3 id="txt-sync-title">Nube Activa ☁</h3><button class="close-btn" onclick="closeModal('sync')"><i data-lucide="x"></i></button></div><div class="modal-body" style="padding:0.8rem 0.2rem;"><div style="text-align:center; padding: 1rem 0;"><i data-lucide="cloud-lightning" style="width:48px; height:48px; color:var(--primary); margin-bottom:10px;"></i><h4 style="font-size:1.1rem; font-weight:800; margin-bottom:0.5rem; color:var(--text-color);">Nube Conectada</h4><p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;" id="txt-sync-desc">Sincronización en tiempo real funcionando.</p></div><hr style="border:none; border-top:1px solid var(--border-color); margin:1rem 0;"><h4 style="font-size:0.9rem; font-weight:800; margin-bottom:0.5rem;" id="txt-sync-import-title">Copias de Seguridad (Manual)</h4><button onclick="exportJSON()" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--border-color); padding:0.75rem; border-radius:14px; font-weight:800; width:100%; margin-bottom:0.6rem;">📲 <span id="txt-btn-export">Guardar JSON local</span></button><button onclick="triggerFileInput()" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--border-color); padding:0.75rem; border-radius:14px; font-weight:800; width:100%;">📥 <span id="txt-btn-import">Restaurar JSON</span></button></div></div></div>
 
   <script>
+    let weightChartInstance = null; let heightChartInstance = null; let headChartInstance = null; let barRoutinesChartInstance = null;
     let database = null; let isSyncing = false; 
     let appData = { lang: 'es', theme: 'light', activeBabyId: 1, babies: [] };
     let selectedDate = new Date(); let selectedMatrixWeekDate = new Date(); let calDate = new Date(); 
-    let weightChartInstance = null; let heightChartInstance = null; let headChartInstance = null; let barRoutinesChartInstance = null;
 
     const standardVaccines = [ { id: 'v1', age: '2 Meses', name: 'Hexavalente, Neumococo' }, { id: 'v2', age: '4 Meses', name: 'Hexavalente, Neumococo, Meningococo C' }, { id: 'v3', age: '11 Meses', name: 'Hexavalente, Neumococo' }, { id: 'v4', age: '12 Meses', name: 'Triple Vírica, Meningococo ACWY' }, { id: 'v5', age: '15 Meses', name: 'Varicela' }, { id: 'v6', age: '4 Años', name: 'Triple Vírica, Varicela' }, { id: 'v7', age: '6 Años', name: 'DTPa-VPI' }, { id: 'v8', age: '12 Años', name: 'Meningococo ACWY, VPH' }, { id: 'v9', age: '14 Años', name: 'Tétanos, Difteria' } ];
     const i18n = {
@@ -616,29 +616,46 @@
 
     function initChart() {
       if (typeof Chart === 'undefined') { setTimeout(initChart, 500); return; }
-      ['weight','height','head'].forEach((type, idx) => {
-        const canvas = document.getElementById(`${type}Chart`);
-        if (canvas) {
-          if (window[`${type}ChartInstance`]) window[`${type}ChartInstance`].destroy();
-          const color = ['#FF8B94','#779ECB','#B2AC88'][idx];
-          window[`${type}ChartInstance`] = new Chart(canvas.getContext('2d'), {
-            type: 'line',
-            data: { 
-              labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'], 
-              datasets: [
-                { label: getActiveBaby().name, data: [null, null, null, null, null, null, null], borderColor: color, backgroundColor: color, borderWidth: 3, pointRadius: 5, pointBackgroundColor: color, spanGaps: true }, 
-                { label: 'OMS (P50)', data: [[3.3,4.5,5.6,6.4,7.0,7.5,7.9],[49.9,54.7,58.4,61.4,63.9,65.9,67.6],[34.5,36.9,38.3,39.5,40.5,41.3,42.0]][idx], borderColor: '#AEC6CF', backgroundColor: 'transparent', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-              ] 
-            },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-          });
-        }
-      });
+      
+      const getConfig = (idx) => {
+        const color = ['#FF8B94','#779ECB','#B2AC88'][idx];
+        return {
+          type: 'line',
+          data: { 
+            labels: ['Nacimiento', '1m', '2m', '3m', '4m', '5m', '6m'], 
+            datasets: [
+              { label: getActiveBaby().name, data: [null, null, null, null, null, null, null], borderColor: color, backgroundColor: color, borderWidth: 3, pointRadius: 5, pointBackgroundColor: color, spanGaps: true }, 
+              { label: 'OMS (P50)', data: [[3.3,4.5,5.6,6.4,7.0,7.5,7.9],[49.9,54.7,58.4,61.4,63.9,65.9,67.6],[34.5,36.9,38.3,39.5,40.5,41.3,42.0]][idx], borderColor: '#AEC6CF', backgroundColor: 'transparent', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+            ] 
+          },
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        };
+      };
+
+      const wCtx = document.getElementById('weightChart');
+      if (wCtx) {
+        if (weightChartInstance) weightChartInstance.destroy();
+        weightChartInstance = new Chart(wCtx.getContext('2d'), getConfig(0));
+      }
+
+      const hCtx = document.getElementById('heightChart');
+      if (hCtx) {
+        if (heightChartInstance) heightChartInstance.destroy();
+        heightChartInstance = new Chart(hCtx.getContext('2d'), getConfig(1));
+      }
+
+      const hcCtx = document.getElementById('headChart');
+      if (hcCtx) {
+        if (headChartInstance) headChartInstance.destroy();
+        headChartInstance = new Chart(hcCtx.getContext('2d'), getConfig(2));
+      }
+
       updateChart();
     }
 
     function updateChart() {
-      if (!weightChartInstance) return;
+      if (!weightChartInstance || !heightChartInstance || !headChartInstance) return;
+
       const baby = getActiveBaby();
       const growthLogs = baby.logs.filter(l => l.type === 'growth').sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
       
@@ -646,17 +663,20 @@
       let hData = [null, null, null, null, null, null, null];
       let hcData = [null, null, null, null, null, null, null];
       
-      let dobParts = baby.dob ? baby.dob.split('-') : [];
-      let dobDate = dobParts.length === 3 ? new Date(dobParts[0], dobParts[1] - 1, dobParts[2]) : new Date();
+      let dobDate = new Date(baby.dob);
+      if (isNaN(dobDate.getTime())) {
+          let dobParts = baby.dob ? baby.dob.split('-') : [];
+          dobDate = dobParts.length === 3 ? new Date(dobParts[0], dobParts[1] - 1, dobParts[2]) : new Date();
+      }
 
       growthLogs.forEach(l => {
          const logDate = new Date(l.timestamp);
-         let diffMonths = Math.round((logDate - dobDate) / (1000 * 60 * 60 * 24 * 30.4));
+         let diffMonths = Math.max(0, Math.round((logDate - dobDate) / (1000 * 60 * 60 * 24 * 30.4368)));
          
          if (diffMonths >= 0 && diffMonths <= 6) {
-           if(l.weight && !isNaN(parseFloat(l.weight))) wData[diffMonths] = parseFloat(l.weight);
-           if(l.height && !isNaN(parseFloat(l.height))) hData[diffMonths] = parseFloat(l.height);
-           if(l.head && !isNaN(parseFloat(l.head))) hcData[diffMonths] = parseFloat(l.head);
+           if(l.weight !== null && l.weight !== undefined && !isNaN(parseFloat(l.weight))) wData[diffMonths] = parseFloat(l.weight);
+           if(l.height !== null && l.height !== undefined && !isNaN(parseFloat(l.height))) hData[diffMonths] = parseFloat(l.height);
+           if(l.head !== null && l.head !== undefined && !isNaN(parseFloat(l.head))) hcData[diffMonths] = parseFloat(l.head);
          }
       });
       
