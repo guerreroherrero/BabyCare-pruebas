@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- Forzando nuevo despliegue de GitHub Pages -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BabyCare Test - v3.0.1</title>
+  <title>BabyCare Test - v3.0.2</title>
   
   <meta name="theme-color" content="#FDE6E3">
   
@@ -66,7 +65,6 @@
 </head>
 <body>
 
-  <!-- Header Banner -->
   <header>
     <div class="brand">
       <div class="brand-title">BabyCare <small style="font-size:0.8rem; color:#8E94A2; font-weight:800; margin-left:4px;">Test Mode</small></div>
@@ -74,7 +72,6 @@
     <button class="burger-btn" onclick="openDrawer()"><i data-lucide="menu"></i></button>
   </header>
 
-  <!-- Drawer Menu -->
   <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
   <div class="drawer" id="drawer">
     <div class="drawer-header"><h3 id="txt-menu-title" style="font-weight:900;">Menú BabyCare</h3><button class="close-btn" onclick="closeDrawer()"><i data-lucide="x"></i></button></div>
@@ -88,6 +85,7 @@
     <div class="drawer-item" onclick="closeDrawer(); switchTab('manual');"><i data-lucide="book-open"></i><span id="txt-menu-manual">Manual de Uso</span></div>
     <div class="drawer-item" onclick="exportJSON()"><i data-lucide="download"></i><span id="txt-menu-export">Exportar Archivo JSON</span></div>
     <div class="drawer-item" onclick="closeDrawer(); triggerFileInput()"><i data-lucide="upload"></i><span id="txt-menu-import">Importar Archivo JSON</span></div>
+    <div class="drawer-item" onclick="limpiarDatosLocales()" style="color:var(--danger); border-color:var(--danger);"><i data-lucide="trash"></i><span>Borrar Memoria Local</span></div>
     <hr style="border:none; border-top:1px solid var(--border-color); margin: 0.4rem 0;">
     <div class="form-group">
       <label id="txt-lang-label">Idioma / Language</label>
@@ -270,6 +268,13 @@
       return b || appData.babies[0];
     }
 
+    function limpiarDatosLocales() {
+      if (confirm("Esto borrará la memoria local del navegador. Útil para vaciar el entorno de pruebas. ¿Continuar?")) {
+        localStorage.removeItem('babycare_data_v3_0_0');
+        location.reload();
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => { 
       try {
         const local = localStorage.getItem('babycare_data_v3_0_0');
@@ -305,7 +310,8 @@
           });
         }
       } catch(e) { 
-        document.getElementById('txt-sync-desc').innerHTML = "⚠️ <b>Conexión a la nube bloqueada</b>."; 
+        const el = document.getElementById('txt-sync-desc');
+        if (el) el.innerHTML = "⚠️ <b>Conexión a la nube bloqueada</b>."; 
       }
       
       triggerFullRender();
@@ -340,6 +346,7 @@
     function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
     function toggleTheme() { appData.theme = appData.theme === 'light' ? 'dark' : 'light'; applyTheme(appData.theme); saveState(); }
     function applyTheme(theme) { if (theme === 'dark') document.body.setAttribute('data-theme', 'dark'); else document.body.removeAttribute('data-theme'); }
+    
     function setLanguage(lang) {
       appData.lang = lang; const t = i18n[lang] || i18n['es'];
       const idMap = { 'txt-menu-title': 'menuTitle', 'txt-menu-profile': 'menuProfile', 'txt-menu-sync': 'menuScan', 'txt-menu-manual': 'menuManual', 'txt-lang-label': 'langLabel', 'txt-theme-label': 'themeLabel', 'txt-theme-btn': 'themeBtn', 'txt-quick-actions': 'quickActions', 'act-feed': 'actFeed', 'act-diaper': 'actDiaper', 'act-sleep': 'actSleep', 'act-growth': 'actGrowth', 'act-health': 'actHealth', 'act-bath': 'actBath', 'tab-logs-btn': 'tabLogs', 'tab-cal-btn': 'tabCal', 'tab-chart-btn': 'tabCharts', 'tab-vac-btn': 'tabVac', 'lbl-sum-feed': 'sumFeed', 'lbl-sum-sleep': 'sumSleep', 'lbl-sum-diaper': 'sumDiaper', 'txt-bar-chart-title': 'barChartTitle', 'txt-weight-chart': 'weightChart', 'txt-height-chart': 'heightChart', 'txt-head-chart': 'headChart', 'txt-weekly-matrix-title': 'weeklyMatrixTitle', 'txt-vaccine-title': 'vaccineTitle', 'bnav-home': 'bnavHome', 'bnav-add': 'bnavAdd', 'bnav-share': 'bnavShare', 'lbl-timestamp': 'lblTimestamp', 'lbl-notes': 'lblNotes', 'lbl-baby-name': 'lblBabyName', 'lbl-baby-dob': 'lblBabyDob', 'lbl-baby-gender': 'lblBabyGender', 'opt-male': 'optMale', 'opt-female': 'optFemale', 'txt-sync-title': 'scanTitle', 'txt-sync-desc': 'scanDesc', 'txt-btn-export': 'btnExport', 'txt-btn-import': 'btnImport', 'txt-sync-import-title': 'syncImportTitle', 'opt-7days': 'opt7d', 'opt-4weeks': 'opt4w', 'opt-6months': 'opt6m', 'txt-baby-select-label': 'babySelect', 'txt-btn-add-baby': 'addBaby', 'txt-add-baby-title': 'newBabyTitle', 'btn-create-baby': 'createBabyBtn', 'btn-delete-baby': 'deleteBabyBtn', 'txt-menu-alarms': 'menuAlarms', 'txt-alarms-title': 'alarmTitle', 'txt-new-alarm': 'newAlarmTitle', 'lbl-alarm-type': 'alarmType', 'lbl-alarm-time': 'alarmTime', 'lbl-alarm-sound': 'alarmSound', 'btn-save-alarm': 'alarmSaveBtn', 'mstep1-title': 'ms1Title', 'mstep1-desc': 'ms1Desc', 'mstep2-title': 'ms2Title', 'mstep2-desc': 'ms2Desc', 'mstep3-title': 'ms3Title', 'mstep3-desc': 'ms3Desc', 'mstep4-title': 'ms4Title', 'mstep4-desc': 'ms4Desc', 'mstep5-title': 'ms5Title', 'mstep5-desc': 'ms5Desc', 'mstep6-title': 'ms6Title', 'mstep6-desc': 'ms6Desc', 'mstep7-title': 'ms7Title', 'mstep7-desc': 'ms7Desc', 'mstep8-title': 'ms8Title', 'mstep8-desc': 'ms8Desc' };
@@ -351,27 +358,41 @@
       const filterSelect = document.getElementById('matrixFilterSelect'); if (filterSelect && filterSelect.options.length >= 5) { filterSelect.options[0].text = t.filterAll; filterSelect.options[1].text = t.filterFeed; filterSelect.options[2].text = t.filterDiaper; filterSelect.options[3].text = t.filterSleep; filterSelect.options[4].text = t.filterBath; }
       if (barRoutinesChartInstance && barRoutinesChartInstance.data.datasets.length > 2) { barRoutinesChartInstance.data.datasets[0].label = `${t.legFeed} (L) 🍼`; barRoutinesChartInstance.data.datasets[1].label = `${t.legDiaper} 💩`; barRoutinesChartInstance.data.datasets[2].label = `${t.legSleep} (h) 💤`; barRoutinesChartInstance.update(); }
     }
+    
     function openModal(id) { const el = document.getElementById(`${id}Modal`); if (el) el.classList.add('open'); if (id === 'alarms') { renderAlarms(); const now = new Date(); now.setMinutes(now.getMinutes() + 30); if(document.getElementById('newAlarmTime')) document.getElementById('newAlarmTime').value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`; } }
     function closeModal(id) { const el = document.getElementById(`${id}Modal`); if (el) el.classList.remove('open'); }
     function saveProfile(e) { e.preventDefault(); getActiveBaby().name = document.getElementById('profName').value; getActiveBaby().dob = document.getElementById('profDob').value; getActiveBaby().gender = document.getElementById('profGender').value; saveState(); closeModal('profile'); }
     function triggerPhotoUpload() { document.getElementById('photoInput').click(); }
-    function uploadBabyPhoto(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { const canvas = document.createElement('canvas'); canvas.width = 180; canvas.height = 180; canvas.getContext('2d').drawImage(img, 0, 0, 180, 180); getActiveBaby().photo = canvas.toDataURL('image/jpeg', 0.8); saveState(); }; img.src = e.target.result; }; reader.readAsDataURL(file); }
+    
+    function uploadBabyPhoto(event) { 
+      const file = event.target.files[0]; if (!file) return; 
+      const reader = new FileReader(); 
+      reader.onload = (e) => { 
+        const img = new Image(); 
+        img.onload = () => { 
+          const canvas = document.createElement('canvas'); canvas.width = 180; canvas.height = 180; 
+          canvas.getContext('2d').drawImage(img, 0, 0, 180, 180); 
+          getActiveBaby().photo = canvas.toDataURL('image/jpeg', 0.8); 
+          saveState(); 
+        }; 
+        img.src = e.target.result; 
+      }; 
+      reader.readAsDataURL(file); 
+    }
 
     function getLocalDateStr(dInput) { if(!dInput) return ''; const d = new Date(dInput); if(isNaN(d.getTime())) return ''; return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
     function calculateAgeInDays(dobStr) { if (!dobStr) return 0; const parts = dobStr.split('-'); if (parts.length !== 3) return 0; const dobDate = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0); const today = new Date(); today.setHours(0, 0, 0, 0); return Math.max(0, Math.round((today - dobDate) / (1000 * 60 * 60 * 24))); }
     function setElText(id, text) { const el = document.getElementById(id); if (el && text !== undefined) el.innerText = text; }
 
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); 
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       const tabMap = { 'logs': 0, 'calendar': 1, 'charts': 2, 'vaccinesList': 3 };
       if (tabMap[tabId] !== undefined) document.querySelectorAll('.tab-btn')[tabMap[tabId]].classList.add('active');
       const targetTab = document.getElementById(`tab-${tabId}`);
       if (targetTab) {
         targetTab.classList.add('active');
-        if (tabId !== 'logs') setTimeout(() => { const nav = document.querySelector('.tabs-nav'); if(nav) window.scrollTo({ top: nav.getBoundingClientRect().top + window.scrollY - 10, behavior: 'smooth' }); }, 50);
       }
-      document.getElementById('bnav-item-home').classList.remove('active'); document.getElementById('bnav-item-sync').classList.remove('active');
-      if (tabId === 'logs') document.getElementById('bnav-item-home').classList.add('active');
     }
 
     function renderBabyProfile() {
@@ -383,6 +404,7 @@
       if(document.getElementById('profDob')) document.getElementById('profDob').value = baby.dob;
       if(document.getElementById('profGender')) document.getElementById('profGender').value = baby.gender;
     }
+    
     function checkAlerts() {
       const banner = document.getElementById('alertBanner'); const text = document.getElementById('alertText'); if (!banner || !text) return;
       const feedings = getActiveBaby().logs.filter(l => l.type === 'feeding').sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -392,6 +414,7 @@
 
     function changeSelectedDate(days) { selectedDate.setDate(selectedDate.getDate() + days); renderLogs(); }
     function resetToToday() { selectedDate = new Date(); renderLogs(); }
+    
     function getTimeAgoString(timestamp) {
       const diffMins = Math.floor((new Date() - new Date(timestamp)) / 60000); if (diffMins < 0) return '';
       const hours = Math.floor(diffMins / 60); const mins = diffMins % 60;
@@ -427,11 +450,29 @@
         const timeStr = new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const typeData = { feeding:['baby','#FFE599',t.actFeed], diaper:['sparkles','#C5E1A5',t.actDiaper], sleep:['moon','#D7BCE8',t.actSleep], growth:['ruler','#AEC6CF',t.actGrowth], health:['thermometer','#FFB3BA',t.actHealth], bath:['shower-head','#B2EBF2',t.actBath] };
         const [icon, bg, title] = typeData[log.type] || ['baby','#FFE599','Evento'];
-        html += `<div class="timeline-item"><div class="timeline-point" style="background:${bg}; border-color:${bg};"></div><div class="timeline-content"><div class="timeline-main-info"><h4>${title} - ${log.detail || ''}</h4><p>${log.notes || ''}</p></div><div class="log-actions"><span class="log-time">${timeStr}</span>${getTimeAgoString(log.timestamp) ? `<span class="time-ago-badge">\${getTimeAgoString(log.timestamp)}</span>` : ''}<button class="icon-btn edit" onclick="editLog(${log.id})"><i data-lucide="edit-2" style="width:16px;"></i></button><button class="icon-btn delete" onclick="deleteLog(${log.id})"><i data-lucide="trash-2" style="width:16px;"></i></button></div></div></div>`;
+        
+        let timeBadge = '';
+        const agoStr = getTimeAgoString(log.timestamp);
+        if (agoStr) {
+            timeBadge = `<span class="time-ago-badge">${agoStr}</span>`;
+        }
+
+        html += `<div class="timeline-item"><div class="timeline-point" style="background:${bg}; border-color:${bg};"></div><div class="timeline-content"><div class="timeline-main-info"><h4>${title} - ${log.detail || ''}</h4><p>${log.notes || ''}</p></div><div class="log-actions"><span class="log-time">${timeStr}</span>${timeBadge}<button class="icon-btn edit" onclick="editLog(${log.id})"><i data-lucide="edit-2" style="width:16px;"></i></button><button class="icon-btn delete" onclick="deleteLog(${log.id})"><i data-lucide="trash-2" style="width:16px;"></i></button></div></div></div>`;
       });
       container.innerHTML = html;
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
+
+    window.selectCalendarDate = function(y, m, d) { 
+      try {
+        selectedDate = new Date(y, m, d, 12, 0, 0); 
+        switchTab('logs'); 
+        renderLogs(); 
+        window.scrollTo(0, 0);
+      } catch(e) {
+        console.error("Error cambiando fecha", e);
+      }
+    };
 
     function renderCalendar() {
       const grid = document.getElementById('calendarGrid'); if(!grid) return;
@@ -453,17 +494,10 @@
           if (dayLogs.some(l => l.type === 'sleep')) dotsHtml += '<div class="cal-dot" style="background:#D7BCE8"></div>';
           dotsHtml += '</div>';
         }
-        html += `<div class="cal-cell ${(today.getFullYear()===year && today.getMonth()===month && today.getDate()===day) ? 'today' : ''}" onclick="window.selectCalendarDate(${year}, ${month}, ${day})"><span>${day}</span>${dotsHtml}</div>`;
+        html += `<div class="cal-cell ${(today.getFullYear()===year && today.getMonth()===month && today.getDate()===day) ? 'today' : ''}" onclick="selectCalendarDate(${year}, ${month}, ${day})"><span>${day}</span>${dotsHtml}</div>`;
       }
       grid.innerHTML = html;
     }
-
-    window.selectCalendarDate = function(y, m, d) { 
-      selectedDate = new Date(y, m, d, 12, 0, 0); 
-      switchTab('logs'); 
-      renderLogs(); 
-      setTimeout(() => { try { window.scrollTo(0, 0); } catch(e){} }, 50);
-    };
 
     function prevMonth() { calDate.setMonth(calDate.getMonth() - 1); renderCalendar(); }
     function nextMonth() { calDate.setMonth(calDate.getMonth() + 1); renderCalendar(); }
