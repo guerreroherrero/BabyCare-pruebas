@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- Forzando nuevo despliegue de GitHub Pages -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BabyCare 3.0.0 - Cloud Native Sync</title>
+  <title>BabyCare Test - v3.0.1</title>
   
   <meta name="theme-color" content="#FDE6E3">
   
   <link rel="icon" type="image/png" sizes="192x192" href="https://img.icons8.com/emoji/192/baby-emoji.png">
   <link rel="apple-touch-icon" href="https://img.icons8.com/emoji/192/baby-emoji.png">
+  <link rel="manifest" href="manifest.json">
   
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
-  <!-- LIBRERÍAS DE FIREBASE -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -68,7 +69,7 @@
   <!-- Header Banner -->
   <header>
     <div class="brand">
-      <div class="brand-title">BabyCare <small style="font-size:0.8rem; color:#8E94A2; font-weight:800; margin-left:4px;">v3.0</small></div>
+      <div class="brand-title">BabyCare <small style="font-size:0.8rem; color:#8E94A2; font-weight:800; margin-left:4px;">Test Mode</small></div>
     </div>
     <button class="burger-btn" onclick="openDrawer()"><i data-lucide="menu"></i></button>
   </header>
@@ -110,7 +111,6 @@
 
     <div class="alert-banner hidden" id="alertBanner"><i data-lucide="alert-circle" style="color: #D97706; flex-shrink:0;"></i><span id="alertText"></span></div>
 
-    <!-- Acciones Rápidas -->
     <div class="section-title"><span id="txt-quick-actions">Registrar Evento</span></div>
     <div class="grid-actions">
       <div class="action-btn" onclick="openFormModal('feeding')"><div class="action-icon" style="background: #FFE599; color: #B45309;"><i data-lucide="baby"></i></div><span id="act-feed">Toma / Leche</span></div>
@@ -206,22 +206,23 @@
       <div class="card"><h3 style="font-size:1rem; font-weight:800; margin-bottom:1rem;" id="txt-vaccine-title">Calendario Vacunal Recomendado</h3><div id="vaccinesListContainer"></div></div>
     </div>
 
-    <!-- TAB 5: Manual -->
+<!-- TAB 5: MANUAL COMPLETO -->
     <div class="tab-content" id="tab-manual">
       <div class="card">
-        <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1.2rem; display:flex; align-items:center; gap:8px;" id="txt-manual-header"><i data-lucide="book-open" style="color:var(--primary);"></i> Manual de Uso</h3>
-        <div class="manual-step"><div class="step-number">1</div><div class="step-content"><h4 id="mstep1-title">Personalizar Perfil</h4><p id="mstep1-desc">Sube foto de tu bebé y edita su nombre.</p></div></div>
-        <div class="manual-step"><div class="step-number">2</div><div class="step-content"><h4 id="mstep2-title">Registro Rápido</h4><p id="mstep2-desc">Pulsa en cualquier icono superior para registrar.</p></div></div>
-        <div class="manual-step"><div class="step-number">3</div><div class="step-content"><h4 id="mstep7-title">Sincronización Automática</h4><p id="mstep7-desc">Todo se guardará en la nube sin tocar ningún botón.</p></div></div>
+        <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1.2rem; display:flex; align-items:center; gap:8px;" id="txt-manual-header">
+          <i data-lucide="book-open" style="color:var(--primary);"></i> Manual de Uso Paso a Paso
+        </h3>
+        <div class="manual-step"><div class="step-number">1</div><div class="step-content"><h4 id="mstep1-title">Personalizar Perfil</h4><p id="mstep1-desc">Pulsa sobre la foto circular para subir la foto real de tu bebé. Toca el icono del lápiz para editar su nombre.</p></div></div>
+        <div class="manual-step"><div class="step-number">2</div><div class="step-content"><h4 id="mstep2-title">Registro Rápido</h4><p id="mstep2-desc">Pulsa cualquier botón de la cuadrícula superior. La hora actual se selecciona por defecto.</p></div></div>
+        <div class="manual-step"><div class="step-number">3</div><div class="step-content"><h4 id="mstep3-title">Registro de Sueño</h4><p id="mstep3-desc">Indica la 'Hora Inicio' y 'Hora Fin'.</p></div></div>
+        <div class="manual-step"><div class="step-number">4</div><div class="step-content"><h4 id="mstep4-title">Diario y Totales</h4><p id="mstep4-desc">Navega con las flechas día a día.</p></div></div>
+        <div class="manual-step"><div class="step-number">5</div><div class="step-content"><h4 id="mstep5-title">Calendario y Matriz 24h</h4><p id="mstep5-desc">Consulta el calendario mensual y matriz.</p></div></div>
+        <div class="manual-step"><div class="step-number">6</div><div class="step-content"><h4 id="mstep6-title">Gráficas de Crecimiento</h4><p id="mstep6-desc">Examina las gráficas vs OMS.</p></div></div>
+        <div class="manual-step"><div class="step-number">7</div><div class="step-content"><h4 id="mstep7-title">Nube Automática</h4><p id="mstep7-desc">Todo se sincroniza automáticamente.</p></div></div>
+        <div class="manual-step"><div class="step-number">8</div><div class="step-content"><h4 id="mstep8-title">Alarmas y Copias</h4><p id="mstep8-desc">Crea avisos o exporta archivos JSON.</p></div></div>
       </div>
     </div>
   </div>
-
-  <nav class="bottom-nav">
-    <div class="nav-item active" id="bnav-item-home" onclick="switchTab('logs')"><i data-lucide="list"></i><span id="bnav-home">Inicio</span></div>
-    <div class="nav-item" onclick="openFormModal('feeding')"><i data-lucide="plus-circle" style="width:28px; height:28px; color:var(--primary);"></i><span id="bnav-add">Añadir</span></div>
-    <div class="nav-item" id="bnav-item-sync" onclick="openModal('sync')"><i data-lucide="cloud-lightning"></i><span id="bnav-share">Nube</span></div>
-  </nav>
 
   <!-- Modales Generales -->
   <div class="modal-overlay" id="formModal"><div class="modal"><form id="logForm" onsubmit="saveLogEntry(event)" style="display:flex; flex-direction:column; height:100%;"><div class="modal-header"><h3 id="modalFormTitle">Registro</h3><div class="modal-header-actions"><button type="submit" class="btn-header-save" id="btn-save-header">✓ Guardar</button><button type="button" class="close-btn" onclick="closeFormModal()"><i data-lucide="x"></i></button></div></div><input type="hidden" id="editingLogId"><input type="hidden" id="entryType"><div class="modal-body" id="formModalBody"><div id="dynamicFormFields"></div><div class="form-group" id="groupTimestampMain"><label id="lbl-timestamp">Fecha y Hora</label><input type="datetime-local" class="form-control" id="entryTimestamp" required></div><div class="form-group"><label id="lbl-notes">Notas / Observaciones</label><input type="text" class="form-control" id="entryNotes" placeholder="Opcional..."></div></div><div class="modal-footer"><button type="submit" class="btn-submit" id="btn-save-entry">✓ Guardar</button></div></form></div></div>
@@ -231,10 +232,8 @@
   <div class="modal-overlay" id="syncModal"><div class="modal"><div class="modal-header"><h3 id="txt-sync-title">Nube Activa ☁</h3><button class="close-btn" onclick="closeModal('sync')"><i data-lucide="x"></i></button></div><div class="modal-body" style="padding:0.8rem 0.2rem;"><div style="text-align:center; padding: 1rem 0;"><i data-lucide="cloud-lightning" style="width:48px; height:48px; color:var(--primary); margin-bottom:10px;"></i><h4 style="font-size:1.1rem; font-weight:800; margin-bottom:0.5rem; color:var(--text-color);">Nube Conectada</h4><p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;" id="txt-sync-desc">Sincronización en tiempo real funcionando.</p></div><hr style="border:none; border-top:1px solid var(--border-color); margin:1rem 0;"><h4 style="font-size:0.9rem; font-weight:800; margin-bottom:0.5rem;" id="txt-sync-import-title">Copias de Seguridad (Manual)</h4><button onclick="exportJSON()" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--border-color); padding:0.75rem; border-radius:14px; font-weight:800; width:100%; margin-bottom:0.6rem;">📲 <span id="txt-btn-export">Guardar JSON local</span></button><button onclick="triggerFileInput()" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--border-color); padding:0.75rem; border-radius:14px; font-weight:800; width:100%;">📥 <span id="txt-btn-import">Restaurar JSON</span></button></div></div></div>
 
   <script>
-    // PWA Service Worker
     if ('serviceWorker' in navigator) { const swCode = `self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));`; navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' }))).catch(()=>{}); }
 
-    // --- VARIABLES Y TRADUCCIONES GLOBALES ---
     let database = null; let isSyncing = false; 
     let appData = { lang: 'es', theme: 'light', activeBabyId: 1, babies: [] };
     let selectedDate = new Date(); let selectedMatrixWeekDate = new Date(); let calDate = new Date(); 
@@ -242,14 +241,11 @@
 
     const standardVaccines = [ { id: 'v1', age: '2 Meses', name: 'Hexavalente, Neumococo' }, { id: 'v2', age: '4 Meses', name: 'Hexavalente, Neumococo, Meningococo C' }, { id: 'v3', age: '11 Meses', name: 'Hexavalente, Neumococo' }, { id: 'v4', age: '12 Meses', name: 'Triple Vírica, Meningococo ACWY' }, { id: 'v5', age: '15 Meses', name: 'Varicela' }, { id: 'v6', age: '4 Años', name: 'Triple Vírica, Varicela' }, { id: 'v7', age: '6 Años', name: 'DTPa-VPI' }, { id: 'v8', age: '12 Años', name: 'Meningococo ACWY, VPH' }, { id: 'v9', age: '14 Años', name: 'Tétanos, Difteria' } ];
     const i18n = {
-      es: { menuTitle: "Menú", menuProfile: "Perfil", menuScan: "Nube (Auto)", menuManual: "Manual", actFeed: "Alimentación", actDiaper: "Pañal", actSleep: "Sueño", actGrowth: "Crecimiento", actHealth: "Salud / Temp", actBath: "Baño / Ducha", tabLogs: "Diario", tabCal: "Calendario", tabCharts: "Curvas OMS", tabVac: "Vacunas", recentLogs: "Actividad Reciente", today: "Hoy", barChartTitle: "Análisis Semanal", weightChart: "1. Peso (kg) vs OMS", heightChart: "2. Talla (cm) vs OMS", headChart: "3. Perímetro Cefálico", weeklyMatrixTitle: "Matriz 24 Horas", whoRoutines: "4. Tomas y Pañales", vaccineTitle: "Vacunas", bnavHome: "Inicio", bnavAdd: "Añadir", bnavShare: "Nube", saveEntry: "Guardar", saveProfile: "Actualizar", lblTimestamp: "Fecha y Hora", lblNotes: "Notas", scanTitle: "Sincronización Activa", scanDesc: "Cambios guardados en tiempo real.", alertFeed: "⚠️ Alerta: Más de 3.5h desde la última toma.", daysShort: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], lblBabyName: "Nombre", lblBabyDob: "Nacimiento", lblBabyGender: "Género", optMale: "Niño 👦", optFemale: "Niña 👧", sumFeed: "🍼 Leche (L)", sumSleep: "💤 Sueño", sumDiaper: "💦 Pañales", mHeader: "Manual", opt4w: "4 semanas", opt6m: "6 meses", opt7d: "7 días", legFeed: "Leche", legSleep: "Sueño", legDiaper: "Pañal", babySelect: "Bebé Activo", addBaby: "+ Añadir Bebé", newBabyTitle: "Nuevo Bebé", createBabyBtn: "Añadir", deleteBabyBtn: "Eliminar", menuAlarms: "Alarmas", alarmTitle: "Alarmas", newAlarmTitle: "Nueva Alarma", alarmType: "Tipo", alarmTime: "Hora", alarmSound: "Sonido", alarmSaveBtn: "Añadir", btnExport: "Guardar JSON", btnImport: "Restaurar JSON", syncImportTitle: "Copias de Seguridad", filterAll: "Todos", filterFeed: "Tomas", filterDiaper: "Pañales", filterSleep: "Sueño", filterBath: "Baños" },
-      en: { menuTitle: "Menu", menuProfile: "Profile", menuScan: "Cloud (Auto)", menuManual: "Manual", actFeed: "Feeding", actDiaper: "Diaper", actSleep: "Sleep", actGrowth: "Growth", actHealth: "Health", actBath: "Bath", tabLogs: "Logs", tabCal: "Calendar", tabCharts: "WHO Growth", tabVac: "Vaccines", recentLogs: "Recent", today: "Today", barChartTitle: "Weekly Stats", weightChart: "1. Weight vs WHO", heightChart: "2. Height vs WHO", headChart: "3. Head vs WHO", weeklyMatrixTitle: "24h Matrix", whoRoutines: "4. Feed & Diaper", vaccineTitle: "Vaccines", bnavHome: "Home", bnavAdd: "Add", bnavShare: "Cloud", saveEntry: "Save", saveProfile: "Update", lblTimestamp: "Date", lblNotes: "Notes", scanTitle: "Cloud Active", scanDesc: "Real-time sync.", alertFeed: "⚠️ Over 3.5h since last feed.", daysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], lblBabyName: "Name", lblBabyDob: "DOB", lblBabyGender: "Gender", optMale: "Boy 👦", optFemale: "Girl 👧", sumFeed: "🍼 Milk (L)", sumSleep: "💤 Sleep", sumDiaper: "💦 Diapers", mHeader: "Manual", opt4w: "4 weeks", opt6m: "6 months", opt7d: "7 days", legFeed: "Milk", legSleep: "Sleep", legDiaper: "Diaper", babySelect: "Active Baby", addBaby: "+ Add Baby", newBabyTitle: "New Baby", createBabyBtn: "Add", deleteBabyBtn: "Delete", menuAlarms: "Alarms", alarmTitle: "Alarms", newAlarmTitle: "New Alarm", alarmType: "Type", alarmTime: "Time", alarmSound: "Sound", alarmSaveBtn: "Add", btnExport: "Export JSON", btnImport: "Import JSON", syncImportTitle: "Backups", filterAll: "All", filterFeed: "Feeds", filterDiaper: "Diapers", filterSleep: "Sleep", filterBath: "Baths" }
+      es: { menuTitle: "Menú BabyCare", menuProfile: "Perfil del Bebé", menuScan: "Nube (Auto)", menuManual: "Manual de Uso", actFeed: "Alimentación", actDiaper: "Pañal", actSleep: "Sueño", actGrowth: "Crecimiento", actHealth: "Salud / Temp", actBath: "Baño / Ducha", tabLogs: "Diario", tabCal: "Calendario", tabCharts: "Curvas OMS", tabVac: "Vacunas", recentLogs: "Actividad Reciente", today: "Hoy", barChartTitle: "Análisis Semanal", weightChart: "1. Peso (kg) vs OMS", heightChart: "2. Talla (cm) vs OMS", headChart: "3. Perímetro Cefálico", weeklyMatrixTitle: "Matriz 24 Horas", whoRoutines: "4. Tomas y Pañales", vaccineTitle: "Calendario Vacunal", bnavHome: "Inicio", bnavAdd: "Añadir", bnavShare: "Nube", saveEntry: "Guardar", saveProfile: "Actualizar", lblTimestamp: "Fecha y Hora", lblNotes: "Notas", scanTitle: "Nube Activa ☁️", scanDesc: "Sincronización conectada.", alertFeed: "⚠️ Alerta: Más de 3.5h desde la última toma.", daysShort: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], lblBabyName: "Nombre", lblBabyDob: "Nacimiento", lblBabyGender: "Género", optMale: "Niño 👦", optFemale: "Niña 👧", sumFeed: "🍼 Leche (L)", sumSleep: "💤 Sueño", sumDiaper: "💦 Pañales", mHeader: "Manual de Uso Paso a Paso", ms1Title: "1. Personalizar Perfil", ms1Desc: "Edita el nombre y perfil de tu bebé.", ms2Title: "2. Registro Rápido", ms2Desc: "Pulsa cualquier botón superior.", ms3Title: "3. Registro de Sueño", ms3Desc: "Indica 'Hora Inicio' y 'Hora Fin'.", ms4Title: "4. Diario y Totales", ms4Desc: "Navega con las flechas día a día.", ms5Title: "5. Calendario y Matriz", ms5Desc: "Consulta el calendario mensual.", ms6Title: "6. Gráficas de Crecimiento", ms6Desc: "Examina las gráficas vs OMS.", ms7Title: "7. Nube Automática", ms7Desc: "Sincronización instantánea.", ms8Title: "8. Alarmas y Copias", ms8Desc: "Crea avisos o exporta JSON.", opt4w: "4 semanas", opt6m: "6 meses", opt7d: "7 días", legFeed: "Leche", legSleep: "Sueño", legDiaper: "Pañal", babySelect: "Bebé Activo", addBaby: "+ Añadir Bebé", newBabyTitle: "Nuevo Bebé", createBabyBtn: "Añadir", deleteBabyBtn: "Eliminar", menuAlarms: "Alarmas y Avisos", alarmTitle: "Alarmas", newAlarmTitle: "Nueva Alarma", alarmType: "Tipo", alarmTime: "Hora", alarmSound: "Sonido", alarmSaveBtn: "Añadir Alarma", btnExport: "Guardar JSON local", btnImport: "Restaurar JSON", syncImportTitle: "Copias Manuales", filterAll: "Todos", filterFeed: "Tomas", filterDiaper: "Pañales", filterSleep: "Sueño", filterBath: "Baños" },
+      en: { menuTitle: "BabyCare Menu", menuProfile: "Profile", menuScan: "Cloud (Auto)", menuManual: "Manual", actFeed: "Feeding", actDiaper: "Diaper", actSleep: "Sleep", actGrowth: "Growth", actHealth: "Health / Temp", actBath: "Bath", tabLogs: "Logs", tabCal: "Calendar", tabCharts: "WHO Growth", tabVac: "Vaccines", recentLogs: "Recent Activity", today: "Today", barChartTitle: "Weekly Stats", weightChart: "1. Weight vs WHO", heightChart: "2. Height vs WHO", headChart: "3. Head Circ. vs WHO", weeklyMatrixTitle: "24h Matrix", whoRoutines: "4. Feeds & Diapers", vaccineTitle: "Recommended Vaccines", bnavHome: "Home", bnavAdd: "Add", bnavShare: "Cloud", saveEntry: "Save", saveProfile: "Update", lblTimestamp: "Date and Time", lblNotes: "Notes", scanTitle: "Cloud Sync ☁️", scanDesc: "Real-time sync connected.", alertFeed: "⚠️ Alert: Over 3.5h since last feed.", daysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], lblBabyName: "Name", lblBabyDob: "Birth Date", lblBabyGender: "Gender", optMale: "Boy 👦", optFemale: "Girl 👧", sumFeed: "🍼 Milk (L)", sumSleep: "💤 Total Sleep", sumDiaper: "💦 Diapers", mHeader: "Step-by-step Manual", ms1Title: "1. Customize Profile", ms1Desc: "Edit your baby's profile.", ms2Title: "2. Quick Log", ms2Desc: "Tap any top button.", ms3Title: "3. Sleep Tracking", ms3Desc: "Set 'Start' and 'End' Time.", ms4Title: "4. Timeline & Totals", ms4Desc: "Navigate daily logs.", ms5Title: "5. Calendar & Matrix", ms5Desc: "Check the calendar.", ms6Title: "6. Growth Charts", ms6Desc: "Check charts vs WHO standards.", ms7Title: "7. Automatic Cloud", ms7Desc: "Changes are synced instantly.", ms8Title: "8. Alarms & Backups", ms8Desc: "Create alerts or export JSON.", opt4w: "4 weeks", opt6m: "6 months", opt7d: "7 days", legFeed: "Milk", legSleep: "Sleep", legDiaper: "Diaper", babySelect: "Active Baby", addBaby: "+ Add Baby", newBabyTitle: "New Baby", createBabyBtn: "Add Baby", deleteBabyBtn: "Delete", menuAlarms: "Alarms & Alerts", alarmTitle: "Alarms", newAlarmTitle: "New Alarm", alarmType: "Type", alarmTime: "Time", alarmSound: "Sound", alarmSaveBtn: "Add Alarm", btnExport: "Save local JSON", btnImport: "Restore JSON", syncImportTitle: "Manual Backups", filterAll: "All", filterFeed: "Feeds", filterDiaper: "Diapers", filterSleep: "Sleep", filterBath: "Baths" },
+      fr: { menuTitle: "Menu BabyCare", menuProfile: "Profil", menuScan: "Cloud (Auto)", menuManual: "Guide", actFeed: "Allaitement", actDiaper: "Couche", actSleep: "Sommeil", actGrowth: "Croissance", actHealth: "Santé", actBath: "Bain", tabLogs: "Journal", tabCal: "Calendrier", tabCharts: "Courbes OMS", tabVac: "Vaccins", recentLogs: "Activité Récente", today: "Aujourd'hui", barChartTitle: "Stats Hebdo", weightChart: "1. Poids vs OMS", heightChart: "2. Taille vs OMS", headChart: "3. Périmètre vs OMS", weeklyMatrixTitle: "Matrice 24h", whoRoutines: "4. Tétées et Couches", vaccineTitle: "Vaccins Recommandés", bnavHome: "Accueil", bnavAdd: "Ajout", bnavShare: "Cloud", saveEntry: "Enregistrer", saveProfile: "Mettre à jour", lblTimestamp: "Date et Heure", lblNotes: "Notes", scanTitle: "Cloud Actif ☁️", scanDesc: "Synchronisation auto activée.", alertFeed: "⚠️ Alerte: Plus de 3.5h depuis la dernière tétée.", daysShort: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'], lblBabyName: "Nom", lblBabyDob: "Naissance", lblBabyGender: "Sexe", optMale: "Garçon 👦", optFemale: "Fille 👧", sumFeed: "🍼 Lait (L)", sumSleep: "💤 Sommeil", sumDiaper: "💦 Couches", mHeader: "Guide d'Utilisation", ms1Title: "1. Profil", ms1Desc: "Modifiez le profil du bébé.", ms2Title: "2. Ajout Rapide", ms2Desc: "Utilisez les boutons de la grille.", ms3Title: "3. Sommeil", ms3Desc: "Indiquez l'heure de début et fin.", ms4Title: "4. Journal", ms4Desc: "Naviguez jour par jour.", ms5Title: "5. Calendrier", ms5Desc: "Consultez le calendrier.", ms6Title: "6. Croissance", ms6Desc: "Courbes comparées à l'OMS.", ms7Title: "7. Cloud Automatique", ms7Desc: "Synchronisation automatique.", ms8Title: "8. Alarmes", ms8Desc: "Créez des alertes ou exportez JSON.", opt4w: "4 semaines", opt6m: "6 mois", opt7d: "7 jours", legFeed: "Lait", legSleep: "Sommeil", legDiaper: "Couche", babySelect: "Bébé Actif", addBaby: "+ Ajouter Bébé", newBabyTitle: "Nouveau Bébé", createBabyBtn: "Ajouter", deleteBabyBtn: "Supprimer", menuAlarms: "Alarmes", alarmTitle: "Alarmes", newAlarmTitle: "Nouvelle Alarme", alarmType: "Type", alarmTime: "Heure", alarmSound: "Son", alarmSaveBtn: "Ajouter", btnExport: "Sauvegarder JSON", btnImport: "Restaurer JSON", syncImportTitle: "Sauvegardes", filterAll: "Tout", filterFeed: "Lait", filterDiaper: "Couches", filterSleep: "Sommeil", filterBath: "Bains" }
     };
 
-    // =========================================================================
-    // ESCUDO ANTI-FIREBASE (FORCE-ARRAY)
-    // Transforma cualquier objeto degenerado de Firebase en una Lista estricta.
-    // =========================================================================
     function forceArray(obj) {
       if (!obj) return [];
       if (Array.isArray(obj)) return obj.filter(item => item !== null && item !== undefined);
@@ -274,7 +270,6 @@
       return b || appData.babies[0];
     }
 
-    // --- INICIALIZACIÓN ---
     window.addEventListener('DOMContentLoaded', () => { 
       try {
         const local = localStorage.getItem('babycare_data_v3_0_0');
@@ -284,17 +279,17 @@
       
       setLanguage(appData.lang); applyTheme(appData.theme);
       
-      // Conexión Firebase con protección Anti-Bloqueos
+      // FIREBASE TEST ENVIRONMENT
       try {
         if (typeof firebase !== 'undefined') {
           firebase.initializeApp({
-            apiKey: "AIzaSyA0Pv37" + "BQVN3lP0ANrcK" + "m0wzBKozZyntPk", 
-            authDomain: "babycarebd.firebaseapp.com",
-            databaseURL: "https://babycarebd-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "babycarebd",
-            storageBucket: "babycarebd.firebasestorage.app",
-            messagingSenderId: "960072637608",
-            appId: "1:960072637608:web:4668d5cef6783e74bf369d"
+            apiKey: "AIzaSyCPxRAvlokGe00UnU2LwMnxb2Cq1tCVL3k",
+            authDomain: "babycare-testmode.firebaseapp.com",
+            databaseURL: "https://babycare-testmode-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "babycare-testmode",
+            storageBucket: "babycare-testmode.firebasestorage.app",
+            messagingSenderId: "567686472",
+            appId: "1:567686472:web:5bc83adc34031a165cef7d"
           });
           database = firebase.database();
           
@@ -319,7 +314,10 @@
 
     function triggerFullRender() {
       populateBabySelector(); renderBabyProfile(); renderLogs(); renderCalendar();
-      checkAlerts(); initChart(); initBarChart(); renderWeeklyMatrix24h(); renderAlarms(); renderVaccines();
+      checkAlerts(); 
+      if (!weightChartInstance) initChart(); else updateChart(); 
+      if (!barRoutinesChartInstance) initBarChart(); else updateBarChart(); 
+      renderWeeklyMatrix24h(); renderAlarms(); renderVaccines();
     }
 
     function saveState() { 
@@ -328,7 +326,6 @@
       triggerFullRender();
     }
 
-    // --- FUNCIONES UI ---
     function populateBabySelector() {
       const sel = document.getElementById('babySelector'); if(!sel) return; sel.innerHTML = '';
       appData.babies.forEach(b => { const opt = document.createElement('option'); opt.value = b.id; opt.text = b.name; if(String(b.id) === String(appData.activeBabyId)) opt.selected = true; sel.appendChild(opt); });
@@ -343,7 +340,17 @@
     function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
     function toggleTheme() { appData.theme = appData.theme === 'light' ? 'dark' : 'light'; applyTheme(appData.theme); saveState(); }
     function applyTheme(theme) { if (theme === 'dark') document.body.setAttribute('data-theme', 'dark'); else document.body.removeAttribute('data-theme'); }
-    function setLanguage(lang) { appData.lang = lang; const t = i18n[lang] || i18n['es']; setElText('txt-menu-title', t.menuTitle); if(document.getElementById('langSelect')) document.getElementById('langSelect').value = lang; }
+    function setLanguage(lang) {
+      appData.lang = lang; const t = i18n[lang] || i18n['es'];
+      const idMap = { 'txt-menu-title': 'menuTitle', 'txt-menu-profile': 'menuProfile', 'txt-menu-sync': 'menuScan', 'txt-menu-manual': 'menuManual', 'txt-lang-label': 'langLabel', 'txt-theme-label': 'themeLabel', 'txt-theme-btn': 'themeBtn', 'txt-quick-actions': 'quickActions', 'act-feed': 'actFeed', 'act-diaper': 'actDiaper', 'act-sleep': 'actSleep', 'act-growth': 'actGrowth', 'act-health': 'actHealth', 'act-bath': 'actBath', 'tab-logs-btn': 'tabLogs', 'tab-cal-btn': 'tabCal', 'tab-chart-btn': 'tabCharts', 'tab-vac-btn': 'tabVac', 'lbl-sum-feed': 'sumFeed', 'lbl-sum-sleep': 'sumSleep', 'lbl-sum-diaper': 'sumDiaper', 'txt-bar-chart-title': 'barChartTitle', 'txt-weight-chart': 'weightChart', 'txt-height-chart': 'heightChart', 'txt-head-chart': 'headChart', 'txt-weekly-matrix-title': 'weeklyMatrixTitle', 'txt-vaccine-title': 'vaccineTitle', 'bnav-home': 'bnavHome', 'bnav-add': 'bnavAdd', 'bnav-share': 'bnavShare', 'lbl-timestamp': 'lblTimestamp', 'lbl-notes': 'lblNotes', 'lbl-baby-name': 'lblBabyName', 'lbl-baby-dob': 'lblBabyDob', 'lbl-baby-gender': 'lblBabyGender', 'opt-male': 'optMale', 'opt-female': 'optFemale', 'txt-sync-title': 'scanTitle', 'txt-sync-desc': 'scanDesc', 'txt-btn-export': 'btnExport', 'txt-btn-import': 'btnImport', 'txt-sync-import-title': 'syncImportTitle', 'opt-7days': 'opt7d', 'opt-4weeks': 'opt4w', 'opt-6months': 'opt6m', 'txt-baby-select-label': 'babySelect', 'txt-btn-add-baby': 'addBaby', 'txt-add-baby-title': 'newBabyTitle', 'btn-create-baby': 'createBabyBtn', 'btn-delete-baby': 'deleteBabyBtn', 'txt-menu-alarms': 'menuAlarms', 'txt-alarms-title': 'alarmTitle', 'txt-new-alarm': 'newAlarmTitle', 'lbl-alarm-type': 'alarmType', 'lbl-alarm-time': 'alarmTime', 'lbl-alarm-sound': 'alarmSound', 'btn-save-alarm': 'alarmSaveBtn', 'mstep1-title': 'ms1Title', 'mstep1-desc': 'ms1Desc', 'mstep2-title': 'ms2Title', 'mstep2-desc': 'ms2Desc', 'mstep3-title': 'ms3Title', 'mstep3-desc': 'ms3Desc', 'mstep4-title': 'ms4Title', 'mstep4-desc': 'ms4Desc', 'mstep5-title': 'ms5Title', 'mstep5-desc': 'ms5Desc', 'mstep6-title': 'ms6Title', 'mstep6-desc': 'ms6Desc', 'mstep7-title': 'ms7Title', 'mstep7-desc': 'ms7Desc', 'mstep8-title': 'ms8Title', 'mstep8-desc': 'ms8Desc' };
+      Object.keys(idMap).forEach(id => setElText(id, t[idMap[id]]));
+      setElText('btn-save-entry', `✓ ${t.saveEntry}`); setElText('btn-save-header', `✓ ${t.saveEntry}`); setElText('btn-save-profile', t.saveProfile); setElText('btn-save-prof-header', `✓ ${t.saveEntry}`);
+      setElText('leg-feed', `${t.legFeed} 🍼`); setElText('leg-sleep', `${t.legSleep} 💤`); setElText('leg-diaper', `${t.legDiaper} 💩`);
+      if(document.getElementById('langSelect')) document.getElementById('langSelect').value = lang;
+      const mHeader = document.getElementById('txt-manual-header'); if (mHeader) mHeader.innerHTML = `<i data-lucide="book-open" style="color:var(--primary);"></i> ${t.mHeader}`;
+      const filterSelect = document.getElementById('matrixFilterSelect'); if (filterSelect && filterSelect.options.length >= 5) { filterSelect.options[0].text = t.filterAll; filterSelect.options[1].text = t.filterFeed; filterSelect.options[2].text = t.filterDiaper; filterSelect.options[3].text = t.filterSleep; filterSelect.options[4].text = t.filterBath; }
+      if (barRoutinesChartInstance && barRoutinesChartInstance.data.datasets.length > 2) { barRoutinesChartInstance.data.datasets[0].label = `${t.legFeed} (L) 🍼`; barRoutinesChartInstance.data.datasets[1].label = `${t.legDiaper} 💩`; barRoutinesChartInstance.data.datasets[2].label = `${t.legSleep} (h) 💤`; barRoutinesChartInstance.update(); }
+    }
     function openModal(id) { const el = document.getElementById(`${id}Modal`); if (el) el.classList.add('open'); if (id === 'alarms') { renderAlarms(); const now = new Date(); now.setMinutes(now.getMinutes() + 30); if(document.getElementById('newAlarmTime')) document.getElementById('newAlarmTime').value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`; } }
     function closeModal(id) { const el = document.getElementById(`${id}Modal`); if (el) el.classList.remove('open'); }
     function saveProfile(e) { e.preventDefault(); getActiveBaby().name = document.getElementById('profName').value; getActiveBaby().dob = document.getElementById('profDob').value; getActiveBaby().gender = document.getElementById('profGender').value; saveState(); closeModal('profile'); }
@@ -369,14 +376,13 @@
 
     function renderBabyProfile() {
       const baby = getActiveBaby(); setElText('babyNameDisplay', baby.name || 'Léo'); const diffDays = calculateAgeInDays(baby.dob);
-      setElText('babyAgeDisplay', `${Math.floor(diffDays / 30.4)}m ${Math.floor(diffDays % 30.4)}d (${diffDays} días de vida)`);
-      const avatarDiv = document.getElementById('babyAvatarDisplay');
-      if (avatarDiv) avatarDiv.innerHTML = baby.photo ? `<img src="${baby.photo}" alt="Bebé">` : (baby.gender === 'female' ? '👧' : '👦');
+      const txtDias = appData.lang === 'en' ? 'days old' : (appData.lang === 'fr' ? 'jours de vie' : 'días de vida');
+      setElText('babyAgeDisplay', `${Math.floor(diffDays / 30.4)}m ${Math.floor(diffDays % 30.4)}d (${diffDays} ${txtDias})`);
+      const avatarDiv = document.getElementById('babyAvatarDisplay'); if (avatarDiv) avatarDiv.innerHTML = baby.photo ? `<img src="${baby.photo}" alt="Bebé">` : (baby.gender === 'female' ? '👧' : '👦');
       if(document.getElementById('profName')) document.getElementById('profName').value = baby.name;
       if(document.getElementById('profDob')) document.getElementById('profDob').value = baby.dob;
       if(document.getElementById('profGender')) document.getElementById('profGender').value = baby.gender;
     }
-
     function checkAlerts() {
       const banner = document.getElementById('alertBanner'); const text = document.getElementById('alertText'); if (!banner || !text) return;
       const feedings = getActiveBaby().logs.filter(l => l.type === 'feeding').sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -396,8 +402,13 @@
     function renderLogs() {
       const container = document.getElementById('logsContainer'); if (!container) return;
       const targetKey = getLocalDateStr(selectedDate);
-      setElText('currentDateText', selectedDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }));
-      setElText('todayTag', targetKey === getLocalDateStr(new Date()) ? "Hoy" : "Ir a Hoy");
+      const isToday = targetKey === getLocalDateStr(new Date());
+      const t = i18n[appData.lang] || i18n['es'];
+
+      setElText('txt-recent-logs', isToday ? t.recentLogs : (appData.lang === 'en' ? 'Daily Log' : (appData.lang === 'fr' ? 'Journal Quotidien' : 'Registro Diario')));
+      setElText('currentDateText', selectedDate.toLocaleDateString(appData.lang === 'en' ? 'en-US' : (appData.lang === 'fr' ? 'fr-FR' : 'es-ES'), { day: 'numeric', month: 'short', year: 'numeric' }));
+      setElText('todayTag', isToday ? t.today : (appData.lang === 'en' ? 'Go to Today' : 'Ir a Hoy'));
+      
       const baby = getActiveBaby();
       const filtered = baby.logs.filter(l => getLocalDateStr(l.timestamp) === targetKey).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
 
@@ -414,9 +425,9 @@
       let html = '';
       filtered.forEach(log => {
         const timeStr = new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const typeData = { feeding:['baby','#FFE599','Alimentación'], diaper:['sparkles','#C5E1A5','Pañal'], sleep:['moon','#D7BCE8','Sueño'], growth:['ruler','#AEC6CF','Crecimiento'], health:['thermometer','#FFB3BA','Salud'], bath:['shower-head','#B2EBF2','Baño / Ducha'] };
+        const typeData = { feeding:['baby','#FFE599',t.actFeed], diaper:['sparkles','#C5E1A5',t.actDiaper], sleep:['moon','#D7BCE8',t.actSleep], growth:['ruler','#AEC6CF',t.actGrowth], health:['thermometer','#FFB3BA',t.actHealth], bath:['shower-head','#B2EBF2',t.actBath] };
         const [icon, bg, title] = typeData[log.type] || ['baby','#FFE599','Evento'];
-        html += `<div class="timeline-item"><div class="timeline-point" style="background:${bg}; border-color:${bg};"></div><div class="timeline-content"><div class="timeline-main-info"><h4>${title} - ${log.detail || ''}</h4><p>${log.notes || ''}</p></div><div class="log-actions"><span class="log-time">${timeStr}</span>${getTimeAgoString(log.timestamp) ? `<span class="time-ago-badge">${getTimeAgoString(log.timestamp)}</span>` : ''}<button class="icon-btn edit" onclick="editLog(${log.id})"><i data-lucide="edit-2" style="width:16px;"></i></button><button class="icon-btn delete" onclick="deleteLog(${log.id})"><i data-lucide="trash-2" style="width:16px;"></i></button></div></div></div>`;
+        html += `<div class="timeline-item"><div class="timeline-point" style="background:${bg}; border-color:${bg};"></div><div class="timeline-content"><div class="timeline-main-info"><h4>${title} - ${log.detail || ''}</h4><p>${log.notes || ''}</p></div><div class="log-actions"><span class="log-time">${timeStr}</span>${getTimeAgoString(log.timestamp) ? `<span class="time-ago-badge">\${getTimeAgoString(log.timestamp)}</span>` : ''}<button class="icon-btn edit" onclick="editLog(${log.id})"><i data-lucide="edit-2" style="width:16px;"></i></button><button class="icon-btn delete" onclick="deleteLog(${log.id})"><i data-lucide="trash-2" style="width:16px;"></i></button></div></div></div>`;
       });
       container.innerHTML = html;
       if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -442,12 +453,18 @@
           if (dayLogs.some(l => l.type === 'sleep')) dotsHtml += '<div class="cal-dot" style="background:#D7BCE8"></div>';
           dotsHtml += '</div>';
         }
-        html += `<div class="cal-cell ${(today.getFullYear()===year && today.getMonth()===month && today.getDate()===day) ? 'today' : ''}" onclick="selectCalendarDate(${year}, ${month}, ${day})"><span>${day}</span>${dotsHtml}</div>`;
+        html += `<div class="cal-cell ${(today.getFullYear()===year && today.getMonth()===month && today.getDate()===day) ? 'today' : ''}" onclick="window.selectCalendarDate(${year}, ${month}, ${day})"><span>${day}</span>${dotsHtml}</div>`;
       }
       grid.innerHTML = html;
     }
 
-    function selectCalendarDate(y, m, d) { selectedDate = new Date(y, m, d); switchTab('logs'); renderLogs(); }
+    window.selectCalendarDate = function(y, m, d) { 
+      selectedDate = new Date(y, m, d, 12, 0, 0); 
+      switchTab('logs'); 
+      renderLogs(); 
+      setTimeout(() => { try { window.scrollTo(0, 0); } catch(e){} }, 50);
+    };
+
     function prevMonth() { calDate.setMonth(calDate.getMonth() - 1); renderCalendar(); }
     function nextMonth() { calDate.setMonth(calDate.getMonth() + 1); renderCalendar(); }
     function changeMatrixWeek(weeksOffset) { selectedMatrixWeekDate.setDate(selectedMatrixWeekDate.getDate() + (weeksOffset * 7)); renderWeeklyMatrix24h(); }
@@ -584,12 +601,17 @@
     function updateChart() {
       if (!weightChartInstance) return;
       const growthLogs = getActiveBaby().logs.filter(l => l.type === 'growth').sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
-      if (growthLogs.length > 0) {
-        const weights = growthLogs.map(l => parseFloat(l.weight)).filter(w => !isNaN(w)); const heights = growthLogs.map(l => parseFloat(l.height)).filter(h => !isNaN(h)); const heads = growthLogs.map(l => parseFloat(l.head)).filter(h => !isNaN(h));
-        if (weights.length > 0) { weightChartInstance.data.datasets[0].data = weights; weightChartInstance.update(); }
-        if (heights.length > 0) { heightChartInstance.data.datasets[0].data = heights; heightChartInstance.update(); }
-        if (heads.length > 0) { headChartInstance.data.datasets[0].data = heads; headChartInstance.update(); }
-      }
+      
+      let wData = [], hData = [], hcData = [];
+      growthLogs.forEach(l => {
+         wData.push(l.weight ? parseFloat(l.weight) : null);
+         hData.push(l.height ? parseFloat(l.height) : null);
+         hcData.push(l.head ? parseFloat(l.head) : null);
+      });
+      
+      weightChartInstance.data.datasets[0].data = wData.length ? wData : [null]; weightChartInstance.update();
+      heightChartInstance.data.datasets[0].data = hData.length ? hData : [null]; heightChartInstance.update();
+      headChartInstance.data.datasets[0].data = hcData.length ? hcData : [null]; headChartInstance.update();
     }
 
     function renderVaccines() {
